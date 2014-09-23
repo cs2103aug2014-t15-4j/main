@@ -15,4 +15,7 @@ public interface Magic8TaskInterface {
 	
 	public ArrayList<Integer> getTagIds();
 	public void setTagIds(ArrayList<Integer> tagIds);
+	
+	public void addTagId(int id);
+	public void removeTagId(int id);
 }
