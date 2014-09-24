@@ -62,7 +62,7 @@ public class Magic8 implements Magic8Interface {
                 JSONObject taskJsonObj = new JSONObject();
                 taskJsonObj.put("id", task.getId());
                 taskJsonObj.put("desc", task.getDesc());
-                taskJsonObj.put("deadline", task.getDeadline());
+                taskJsonObj.put("deadline", task.getDeadline().toString());
 
                 // Adding tags to map using linked list
                 LinkedList tagIdList = new LinkedList();
