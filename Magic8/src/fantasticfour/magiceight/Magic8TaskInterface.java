@@ -3,7 +3,7 @@ package fantasticfour.magiceight;
 import java.util.ArrayList;
 import java.util.Date;
 
-public interface Magic8TaskInterface {
+interface Magic8TaskInterface {
     public int getId();
 
     public void setId(int id);

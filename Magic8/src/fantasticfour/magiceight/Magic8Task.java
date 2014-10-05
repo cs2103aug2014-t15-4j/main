@@ -3,11 +3,19 @@ package fantasticfour.magiceight;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Magic8Task implements Magic8TaskInterface {
+class Magic8Task implements Magic8TaskInterface {
     private int id;
     private String desc;
     private Date deadline;
     private ArrayList<Integer> tagIds;
+    
+    public Magic8Task(int id, String desc, Date deadline,
+            ArrayList<Integer> tagIds) {
+        this.id = id;
+        this.desc = desc;
+        this.deadline = deadline;
+        this.tagIds = tagIds;
+    }
 
     public int getId() {
         return id;
@@ -52,4 +60,6 @@ public class Magic8Task implements Magic8TaskInterface {
             this.tagIds.remove(id);
         }
     }
+    
+    
 }
