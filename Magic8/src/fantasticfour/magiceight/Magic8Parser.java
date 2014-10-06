@@ -5,8 +5,8 @@ public class Magic8Parser implements Magic8ParserInterface {
 		// TODO Call Magic8Interface Commands
 	}
 
-	public static Object isCommandValid(String command) {
+	public static boolean isCommandValid(String command) {
 		// TODO Auto-generated method stub
-		return null;
+		return true;
 	}
 }
