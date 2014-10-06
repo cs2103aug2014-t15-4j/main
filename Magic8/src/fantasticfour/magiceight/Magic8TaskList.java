@@ -40,7 +40,7 @@ class Magic8TaskList implements Magic8TaskListInterface {
         boolean result = false;
 
         if (!this.taskList.isEmpty()) {
-            this.taskList = new HashMap<Integer, Magic8Task>();
+            this.taskList.clear();
             result = true;
         }
 
