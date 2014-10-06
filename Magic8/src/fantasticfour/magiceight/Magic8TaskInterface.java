@@ -23,6 +23,6 @@ interface Magic8TaskInterface {
     public void addTag(String tag);
 
     public void removeTag(String tag);
-    
+
     public void replaceTag(String newTag, String oldTag);
 }
