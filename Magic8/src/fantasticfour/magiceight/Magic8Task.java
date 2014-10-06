@@ -1,20 +1,20 @@
 package fantasticfour.magiceight;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 
 class Magic8Task implements Magic8TaskInterface {
     private int id;
     private String desc;
     private Date deadline;
-    private ArrayList<Integer> tagIds;
+    private HashSet<String> tags;
     
     public Magic8Task(int id, String desc, Date deadline,
-            ArrayList<Integer> tagIds) {
+            HashSet<String> tags) {
         this.id = id;
         this.desc = desc;
         this.deadline = deadline;
-        this.tagIds = tagIds;
+        this.tags = tags;
     }
 
     public int getId() {
@@ -41,25 +41,24 @@ class Magic8Task implements Magic8TaskInterface {
         this.deadline = deadline;
     }
 
-    public ArrayList<Integer> getTagIds() {
-        return tagIds;
+    public HashSet<String> getTags() {
+        return this.tags;
     }
 
-    public void setTagIds(ArrayList<Integer> tagIds) {
-        this.tagIds = tagIds;
+    public void setTags(HashSet<String> tags) {
+        this.tags = tags;
     }
 
-    public void addTagId(int id) {
-        if (!tagIds.contains(id)) {
-            this.tagIds.add(id);
-        }
+    public void addTag(String tag) {
+        this.tags.add(tag);
     }
 
-    public void removeTagId(int id) {
-        if (!tagIds.contains(id)) {
-            this.tagIds.remove(id);
-        }
+    public void removeTag(String tag) {
+        this.tags.remove(tag);
     }
-    
-    
+
+    public void replaceTag(String newTag, String oldTag) {
+        this.tags.remove(oldTag);
+        this.tags.add(newTag);
+    }
 }
