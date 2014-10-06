@@ -86,7 +86,7 @@ class Magic8Task implements Magic8TaskInterface {
         int taskId = Integer.parseInt(tokens[0]);
         String desc = tokens[1];
         Date deadline = df.parse(tokens[2]);
-        HashSet<String> tags = new HashSet(Arrays.asList(tokens[3].split(" ")));
+        HashSet<String> tags = new HashSet<String>(Arrays.asList(tokens[3].split(" ")));
         Magic8Task task = new Magic8Task(taskId, desc, deadline, tags);
         return task;
     }
