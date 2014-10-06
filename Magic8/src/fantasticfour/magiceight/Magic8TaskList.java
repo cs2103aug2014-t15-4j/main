@@ -1,16 +1,26 @@
 package fantasticfour.magiceight;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.TreeMap;
 
 class Magic8TaskList implements Magic8TaskListInterface {
     private HashMap<Integer, Magic8Task> taskList;
+    private TreeMap<Integer, Magic8Task> bufferedTaskList;
     private int id;
     private HashMap<String, HashSet<Integer>> tagToTaskIdsMap;
+    private Magic8Storage storage;
 
-    public Magic8TaskList(HashMap<Integer, Magic8Task> taskList, int id) {
-        this.taskList = taskList;
-        this.id = id;
+    public Magic8TaskList(String fileName) throws ParseException, IOException {
+        storage = new Magic8Storage(fileName);
+        taskList = storage.getTaskList();
+        id = storage.getId();
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            indexTask(entry.getValue());
+        }
     }
 
     public Magic8Task addTask(Magic8Task task) {
@@ -88,5 +98,23 @@ class Magic8TaskList implements Magic8TaskListInterface {
         }
 
         return result;
+    }
+
+    public TreeMap<Integer, Magic8Task> getAllTasks() {
+        this.bufferedTaskList.clear();
+        this.bufferedTaskList.putAll(taskList);
+
+        return this.bufferedTaskList;
+    }
+
+    public TreeMap<Integer, Magic8Task> getTasksWithTag(String tag) {
+        this.bufferedTaskList.clear();
+
+        HashSet<Integer> taskIdsWithTag = tagToTaskIdsMap.get(tag);
+        for (Integer taskId : taskIdsWithTag) {
+            bufferedTaskList.put(taskId, taskList.get(taskId));
+        }
+
+        return this.bufferedTaskList;
     }
 }

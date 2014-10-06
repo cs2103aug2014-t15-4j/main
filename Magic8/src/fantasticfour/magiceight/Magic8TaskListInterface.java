@@ -1,5 +1,7 @@
 package fantasticfour.magiceight;
 
+import java.util.TreeMap;
+
 interface Magic8TaskListInterface {
     /**
      * Updates the task id,
@@ -37,4 +39,19 @@ interface Magic8TaskListInterface {
      *          false   if task list was empty.
      */
     public boolean clearTasks();
+    
+    /**
+     * Returns all tasks in the task list ordered by the task id.
+     * 
+     * @return	all tasks in the task list ordered by the task id.
+     */
+    public TreeMap<Integer, Magic8Task> getAllTasks();
+    
+    /**
+     * Returns all tasks in the task list with the specified tag, ordered by the task id.
+     * 
+     * @param tag	Tag to retrieve tasks with.
+     * @return		all tasks in the task list with the specified tag, ordered by the task id.
+     */
+    public TreeMap<Integer, Magic8Task> getTasksWithTag(String tag);
 }
