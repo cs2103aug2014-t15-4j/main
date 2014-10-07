@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 class Magic8TaskList implements Magic8TaskListInterface {
-    private HashMap<Integer, Magic8Task> taskList;
+    private TreeMap<Integer, Magic8Task> taskList;
     private TreeMap<Integer, Magic8Task> bufferedTaskList;
     private int id;
     private HashMap<String, HashSet<Integer>> tagToTaskIdsMap;
@@ -23,27 +23,27 @@ class Magic8TaskList implements Magic8TaskListInterface {
         }
     }
 
-    public Magic8Task addTask(Magic8Task task) {
+    public Magic8Task addTask(Magic8Task task) throws IOException {
         int taskId = this.id++;
         task.setId(taskId);
         this.taskList.put(taskId, task);
         indexTask(task);
-
+        storage.writeToFile(taskId, taskList);
         return task;
     }
 
-    public Magic8Task removeTask(Magic8Task task) {
+    public Magic8Task removeTask(Magic8Task task) throws IOException {
         int taskId = task.getId();
         Magic8Task storedTask = this.taskList.remove(taskId);
 
         if (storedTask != null) {
             unindexTask(task);
         }
-
+        storage.writeToFile(taskId, taskList);
         return storedTask;
     }
 
-    public boolean updateTask(Magic8Task task) {
+    public boolean updateTask(Magic8Task task) throws IOException {
         boolean result = false;
 
         Magic8Task storedTask = removeTask(task);
@@ -55,14 +55,14 @@ class Magic8TaskList implements Magic8TaskListInterface {
         return result;
     }
 
-    public boolean clearTasks() {
+    public boolean clearTasks() throws IOException {
         boolean result = false;
 
         if (!this.taskList.isEmpty()) {
             this.taskList.clear();
             result = true;
         }
-
+        storage.writeToFile(id, taskList);
         return result;
     }
 
