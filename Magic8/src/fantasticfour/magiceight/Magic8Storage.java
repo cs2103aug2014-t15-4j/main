@@ -7,16 +7,16 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
 
 class Magic8Storage implements Magic8StorageInterface {
-    private static final String DELIMITER = ",";
     private String fileName;
     private File file;
     private int id;
@@ -46,21 +46,14 @@ class Magic8Storage implements Magic8StorageInterface {
 
     public void writeToFile(int id, Map<Integer, Magic8Task> taskList)
             throws IOException {
-        if (taskList instanceof TreeMap) {
-            this.taskList = (TreeMap<Integer, Magic8Task>) taskList;
-        } else {
-            this.taskList.putAll(taskList);
-        }
         this.id = id;
-        PrintWriter pw = new PrintWriter(new BufferedWriter(
-                new FileWriter(file)));
-        Magic8Task task;
-        pw.println(this.id);
-        for (Map.Entry<Integer, Magic8Task> entry : this.taskList.entrySet()) {
-            task = entry.getValue();
-            pw.println(task.toString(DELIMITER));
-        }
-        pw.close();
+        CSVWriter csvw = new CSVWriter(new BufferedWriter(new FileWriter(file)));
+        String[] firstLine = { Integer.toString(id) };
+        ArrayList<String[]> list = convertMapToArrayList(taskList);
+
+        csvw.writeNext(firstLine);
+        csvw.writeAll(list);
+        csvw.close();
     }
 
     public int getId() {
@@ -79,5 +72,14 @@ class Magic8Storage implements Magic8StorageInterface {
                     Magic8Task.stringArrayToMagic8Task(stringArray));
         }
         return treeMap;
+    }
+
+    public ArrayList<String[]> convertMapToArrayList(
+            Map<Integer, Magic8Task> map) {
+        ArrayList<String[]> list = new ArrayList<String[]>();
+        for (Map.Entry<Integer, Magic8Task> entry : map.entrySet()) {
+            list.add(entry.getValue().magic8TaskToStringArray());
+        }
+        return list;
     }
 }
