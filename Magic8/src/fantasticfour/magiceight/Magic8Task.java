@@ -142,4 +142,29 @@ class Magic8Task implements Magic8TaskInterface {
         Magic8Task task = new Magic8Task(taskId, desc, deadline, tags);
         return task;
     }
+
+    public String[] Magic8TaskToStringArray() {
+        String[] stringArray = new String[4];
+        stringArray[0] = Integer.toString(id);
+        stringArray[1] = this.desc;
+
+        if (this.deadline == null) {
+            stringArray[2] = "@null";
+        } else {
+            stringArray[2] = deadline.toString();
+        }
+
+        if (this.tags == null) {
+            stringArray[3] = "@null";
+        } else if (this.tags.size() == 0) {
+            stringArray[3] = "@empty";
+        } else {
+            stringArray[3] = "";
+            for (String tag : this.tags) {
+                stringArray[3] += " " + tag;
+            }
+        }
+
+        return stringArray;
+    }
 }
