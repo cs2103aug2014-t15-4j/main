@@ -7,11 +7,14 @@ import java.util.Date;
 import java.util.HashSet;
 
 class Magic8Task implements Magic8TaskInterface {
-    private static final String ERROR_EMPTY_TAG = "Tags should not be empty strings";
-    private static final String ERROR_NULL_TAGS = "tags should not contain null strings";
-    private static final String ERROR_INVALID_DESCRIPTION = "description cannot be empty";
-    private static final String ERROR_NON_ALPHANUMERIC_TAG = "tags must be alphanumeric";
-    private static final String ERROR_INVALID_ID = "id must be non-negative";
+    private static final String ERROR_NEGATIVE_ID = "id cannot be negative";
+    private static final String ERROR_ZERO_ID = "id cannot be zero";
+    private static final String ERROR_EMPTY_DESCRIPTION = "description must be non-empty string";
+    private static final String ERROR_EMPTY_TAG = "tag cannot be empty";
+    private static final String ERROR_NON_ALPHANUMERIC_TAG = "tag must be alphanumeric";
+
+    private static final String EMPTY_STRING = "";
+
     private int id;
     private String desc;
     private Date deadline;
@@ -21,7 +24,7 @@ class Magic8Task implements Magic8TaskInterface {
     public Magic8Task(int id, String desc, Date deadline, HashSet<String> tags)
             throws IllegalArgumentException {
         if (id < 0) {
-            throw new IllegalArgumentException(ERROR_INVALID_ID);
+            throw new IllegalArgumentException(ERROR_NEGATIVE_ID);
         }
 
         this.id = id;
@@ -40,9 +43,14 @@ class Magic8Task implements Magic8TaskInterface {
     }
 
     public void setId(int id) throws IllegalArgumentException {
-        if (id <= 0) {
-            throw new IllegalArgumentException(ERROR_INVALID_ID);
+        if (id < 0) {
+            throw new IllegalArgumentException(ERROR_NEGATIVE_ID);
         }
+
+        if (id == 0) {
+            throw new IllegalArgumentException(ERROR_ZERO_ID);
+        }
+
         this.id = id;
     }
 
@@ -51,9 +59,10 @@ class Magic8Task implements Magic8TaskInterface {
     }
 
     public void setDesc(String desc) throws IllegalArgumentException {
-        if (desc == null || desc.length() == 0) {
-            throw new IllegalArgumentException(ERROR_INVALID_DESCRIPTION);
+        if (desc == null || desc.isEmpty()) {
+            throw new IllegalArgumentException(ERROR_EMPTY_DESCRIPTION);
         }
+
         this.desc = desc;
     }
 
@@ -70,12 +79,14 @@ class Magic8Task implements Magic8TaskInterface {
     }
 
     public void setTags(HashSet<String> tags) throws IllegalArgumentException {
-        if (tags.contains(null)) {
-            throw new IllegalArgumentException(ERROR_NULL_TAGS);
+        if (tags == null) {
+            tags = new HashSet<String>();
         }
-        if (tags.contains("")) {
+
+        if (tags.contains(null) || tags.contains(EMPTY_STRING)) {
             throw new IllegalArgumentException(ERROR_EMPTY_TAG);
         }
+
         for (String tag : tags) {
             if (!tag.matches("[A-Za-z0-9]+")) {
                 throw new IllegalArgumentException(ERROR_NON_ALPHANUMERIC_TAG);
@@ -85,15 +96,14 @@ class Magic8Task implements Magic8TaskInterface {
     }
 
     public void addTag(String tag) throws IllegalArgumentException {
-        if (tag == null) {
-            throw new IllegalArgumentException(ERROR_NULL_TAGS);
-        }
-        if (tag.equals("")) {
+        if (tag == null || tag.equals(EMPTY_STRING)) {
             throw new IllegalArgumentException(ERROR_EMPTY_TAG);
         }
+
         if (!tag.matches("[A-Za-z0-9]+")) {
             throw new IllegalArgumentException(ERROR_NON_ALPHANUMERIC_TAG);
         }
+
         this.tags.add(tag);
     }
 
