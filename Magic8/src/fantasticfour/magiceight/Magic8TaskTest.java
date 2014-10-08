@@ -1,239 +1,271 @@
 package fantasticfour.magiceight;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import java.text.DateFormat;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 
 import org.junit.Test;
 
-import java.util.Date;
-
 public class Magic8TaskTest {
-    private static final String FAILURE_EXCEPTION_EXPECTED_FOR_NULL_TAG_LIST = "Exception expected for null tag list";
-    private static final String FAILURE_EXCEPTION_EXPECTED_FOR_ID_ZERO = "Exception expected for id = 0";
-    private static final String FAILURE_EXCEPTION_EXPECTED_FOR_EMPTY_TAGS = "Exception expected for empty tags";
-    private static final String FAILURE_EXCEPTION_EXPECTED_FOR_NULL_TAGS = "Exception expected for null tags";
-    private static final String FAILURE_EXCEPTION_EXPECTED_FOR_NON_ALPHANUMERIC_TAG_INPUT = "Exception expected for non-alphanumeric tag input";
-    private static final String FAILURE_EXCEPTION_EXPECTED_FOR_EMPTY_DESCRIPTION_INPUT = "Exception expected for empty description input";
-    private static final String FAILURE_EXCEPTION_EXPECTED_FOR_NULL_DESCRIPTION_INPUT = "Exception expected for null description input";
-    private static final String FAILURE_EXCEPTION_EXPCETED_FOR_NEGATIVE_ID_INPUT = "Exception expected for negative id input";
+    private static final String EXCEPTION_EXPECTED_NEGATIVE_ID = "Exception expected for negative id";
+    private static final String EXCEPTION_EXPECTED_ZERO_ID = "Exception expected for zero id";
+    private static final String EXCEPTION_EXPECTED_EMPTY_DESCRIPTION = "Exception expected for empty description";
+    private static final String EXCEPTION_EXPECTED_EMPTY_TAG = "Exception expected for empty tag";
+    private static final String EXCEPTION_EXPECTED_NON_ALPHANUMERIC_TAG = "Exception expected for non-alphanumeric tag";
 
-    private static final int TEST_POSITIVE_ID = 1;
     private static final int TEST_NEGATIVE_ID = -1;
-    private static final String TEST_TASK_DESCRIPTION = "Task description";
+    private static final int TEST_ZERO_ID = 0;
+    private static final int TEST_POSITIVE_ID = 1;
+    private static final String TEST_DESCRIPTION = "Task description";
     private static final Date TEST_DATE = new Date(0);
+    private static final HashSet<String> TEST_TAGS = new HashSet<String>(
+            Arrays.asList("tag1", "tag2", "tag3"));
+
+    private static final String TEST_EMPTY_STRING = "";
+    private static final String TEST_NON_ALPHANUMERIC_TAG = "tag4!";
+
     private static DateFormat df = DateFormat.getDateInstance();
     private static final String TEST_DATE_STRING = df.format(TEST_DATE);
 
     @Test
     public void testMagic8Task() {
-        HashSet<String> testTags = new HashSet<String>();
-        testTags.add("tag1");
-        testTags.add("tag2");
-        testTags.add("tag3");
-
+        // Test with valid parameters
         try {
-            new Magic8Task(0, TEST_TASK_DESCRIPTION, TEST_DATE, testTags);
+            new Magic8Task(TEST_POSITIVE_ID, TEST_DESCRIPTION, TEST_DATE,
+                    TEST_TAGS);
         } catch (Exception e) {
             fail(e.getMessage());
         }
 
+        // Test without id parameter
         try {
-            new Magic8Task(0, TEST_TASK_DESCRIPTION, null, testTags);
+            new Magic8Task(TEST_DESCRIPTION, TEST_DATE, TEST_TAGS);
         } catch (Exception e) {
             fail(e.getMessage());
         }
 
+        // Test with zero id
         try {
-            new Magic8Task(0, TEST_TASK_DESCRIPTION, TEST_DATE, null);
-            fail(FAILURE_EXCEPTION_EXPECTED_FOR_NULL_TAG_LIST);
+            new Magic8Task(TEST_ZERO_ID, TEST_DESCRIPTION, TEST_DATE, TEST_TAGS);
         } catch (Exception e) {
-
+            fail(e.getMessage());
         }
 
+        // Test with negative id
         try {
-            new Magic8Task(TEST_NEGATIVE_ID, TEST_TASK_DESCRIPTION, TEST_DATE,
-                    testTags);
-            fail(FAILURE_EXCEPTION_EXPCETED_FOR_NEGATIVE_ID_INPUT);
-        } catch (IllegalArgumentException e) {
+            new Magic8Task(TEST_NEGATIVE_ID, TEST_DESCRIPTION, TEST_DATE,
+                    TEST_TAGS);
+            fail(EXCEPTION_EXPECTED_NEGATIVE_ID);
+        } catch (Exception e) {
         }
 
+        // Test with null description
         try {
-            new Magic8Task(0, null, TEST_DATE, testTags);
-            fail(FAILURE_EXCEPTION_EXPECTED_FOR_NULL_DESCRIPTION_INPUT);
-        } catch (IllegalArgumentException e) {
+            new Magic8Task(TEST_POSITIVE_ID, null, TEST_DATE, TEST_TAGS);
+            fail(EXCEPTION_EXPECTED_EMPTY_DESCRIPTION);
+        } catch (Exception e) {
         }
 
+        // Test with empty string description
         try {
-            new Magic8Task(0, "", TEST_DATE, testTags);
-            fail(FAILURE_EXCEPTION_EXPECTED_FOR_EMPTY_DESCRIPTION_INPUT);
-        } catch (IllegalArgumentException e) {
+            new Magic8Task(TEST_POSITIVE_ID, TEST_EMPTY_STRING, TEST_DATE,
+                    TEST_TAGS);
+            fail(EXCEPTION_EXPECTED_EMPTY_DESCRIPTION);
+        } catch (Exception e) {
         }
 
+        // Test without date parameter
         try {
-            testTags.add("tag!");
-            new Magic8Task(0, "", TEST_DATE, testTags);
-            fail(FAILURE_EXCEPTION_EXPECTED_FOR_NON_ALPHANUMERIC_TAG_INPUT);
-        } catch (IllegalArgumentException e) {
-            testTags.remove("tag!");
+            new Magic8Task(TEST_POSITIVE_ID, TEST_DESCRIPTION, null, TEST_TAGS);
+        } catch (Exception e) {
+            fail(e.getMessage());
         }
 
+        // Test with null tags
         try {
-            testTags.add(null);
-            new Magic8Task(0, "", TEST_DATE, testTags);
-            fail(FAILURE_EXCEPTION_EXPECTED_FOR_NULL_TAGS);
-        } catch (IllegalArgumentException e) {
-            testTags.remove(null);
+            new Magic8Task(TEST_POSITIVE_ID, TEST_EMPTY_STRING, TEST_DATE, null);
+        } catch (Exception e) {
+            e.getMessage();
         }
 
+        // Test with tags containing null
         try {
-            testTags.add("");
-            new Magic8Task(0, "", TEST_DATE, testTags);
-            fail(FAILURE_EXCEPTION_EXPECTED_FOR_EMPTY_TAGS);
-        } catch (IllegalArgumentException e) {
-            testTags.remove("");
+            HashSet<String> tags = (HashSet<String>) TEST_TAGS.clone();
+            tags.add(null);
+
+            new Magic8Task(TEST_POSITIVE_ID, TEST_DESCRIPTION, TEST_DATE, tags);
+            fail(EXCEPTION_EXPECTED_EMPTY_TAG);
+        } catch (Exception e) {
         }
+
+        // Test with tags containing empty string
+        try {
+            HashSet<String> tags = (HashSet<String>) TEST_TAGS.clone();
+            tags.add(TEST_EMPTY_STRING);
+
+            new Magic8Task(TEST_POSITIVE_ID, TEST_DESCRIPTION, TEST_DATE, tags);
+            fail(EXCEPTION_EXPECTED_EMPTY_TAG);
+        } catch (Exception e) {
+        }
+
+        // Test with tags containing non-alphanumeric tag
+        try {
+            HashSet<String> tags = (HashSet<String>) TEST_TAGS.clone();
+            tags.add(TEST_NON_ALPHANUMERIC_TAG);
+
+            new Magic8Task(TEST_POSITIVE_ID, TEST_DESCRIPTION, TEST_DATE, tags);
+            fail(EXCEPTION_EXPECTED_NON_ALPHANUMERIC_TAG);
+        } catch (Exception e) {
+        }
+    }
+
+    public Magic8Task getTestTask() {
+        return new Magic8Task(TEST_POSITIVE_ID, TEST_DESCRIPTION, TEST_DATE,
+                TEST_TAGS);
     }
 
     @Test
     public void testSetId() {
-        HashSet<String> testTags = new HashSet<String>();
-        testTags.add("tag1");
-        testTags.add("tag2");
-        testTags.add("tag3");
-        Magic8Task testTask = new Magic8Task(0, TEST_TASK_DESCRIPTION,
-                TEST_DATE, testTags);
+        Magic8Task task = getTestTask();
 
+        // Test valid id
         try {
-            testTask.setId(TEST_POSITIVE_ID);
+            task.setId(TEST_POSITIVE_ID);
         } catch (Exception e) {
             fail(e.getMessage());
         }
 
+        // Test zero id
         try {
-            testTask.setId(0);
-            fail(FAILURE_EXCEPTION_EXPECTED_FOR_ID_ZERO);
-        } catch (Exception e) {
-
+            task.setId(TEST_ZERO_ID);
+            fail(EXCEPTION_EXPECTED_ZERO_ID);
+        } catch (IllegalArgumentException e) {
         }
 
+        // Test negative id
         try {
-            testTask.setId(TEST_NEGATIVE_ID);
-            fail(FAILURE_EXCEPTION_EXPCETED_FOR_NEGATIVE_ID_INPUT);
-        } catch (Exception e) {
+            task.setId(TEST_NEGATIVE_ID);
+            fail(EXCEPTION_EXPECTED_NEGATIVE_ID);
+        } catch (IllegalArgumentException e) {
         }
     }
 
     @Test
     public void testSetDesc() {
-        HashSet<String> testTags = new HashSet<String>();
-        testTags.add("tag1");
-        testTags.add("tag2");
-        testTags.add("tag3");
-        Magic8Task testTask = new Magic8Task(0, TEST_TASK_DESCRIPTION,
-                TEST_DATE, testTags);
+        Magic8Task task = getTestTask();
 
+        // Test valid description
         try {
-            testTask.setDesc(TEST_TASK_DESCRIPTION);
+            task.setDesc(TEST_DESCRIPTION);
         } catch (Exception e) {
             fail(e.getMessage());
         }
 
+        // Test null description
         try {
-            testTask.setDesc(null);
-            fail(FAILURE_EXCEPTION_EXPECTED_FOR_NULL_DESCRIPTION_INPUT);
-        } catch (Exception e) {
+            task.setDesc(null);
+            fail(EXCEPTION_EXPECTED_EMPTY_DESCRIPTION);
+        } catch (IllegalArgumentException e) {
         }
 
+        // Test empty string description
         try {
-            testTask.setDesc(null);
-            fail(FAILURE_EXCEPTION_EXPECTED_FOR_EMPTY_DESCRIPTION_INPUT);
-        } catch (Exception e) {
+            task.setDesc(TEST_EMPTY_STRING);
+            fail(EXCEPTION_EXPECTED_EMPTY_DESCRIPTION);
+        } catch (IllegalArgumentException e) {
         }
     }
 
     @Test
     public void testSetTags() {
-        HashSet<String> testTags = new HashSet<String>();
-        testTags.add("tag1");
-        testTags.add("tag2");
-        testTags.add("tag3");
-        Magic8Task testTask = new Magic8Task(0, TEST_TASK_DESCRIPTION,
-                TEST_DATE, testTags);
+        Magic8Task task = getTestTask();
+
+        // Test valid tags
         try {
-            testTask.setTags(testTags);
+            task.setTags(TEST_TAGS);
         } catch (Exception e) {
             fail(e.getMessage());
         }
 
+        // Test null tags
         try {
-            testTags.add("tag!");
-            testTask.setTags(testTags);
-            fail(FAILURE_EXCEPTION_EXPECTED_FOR_NON_ALPHANUMERIC_TAG_INPUT);
+            task.setTags(null);
         } catch (Exception e) {
-            testTask.removeTag("tag!");
+            fail(e.getMessage());
         }
 
+        // Test tags containing null
         try {
-            testTags.add(null);
-            testTask.setTags(testTags);
-            fail(FAILURE_EXCEPTION_EXPECTED_FOR_NULL_TAGS);
-        } catch (Exception e) {
-            testTask.removeTag(null);
+            HashSet<String> tags = (HashSet<String>) TEST_TAGS.clone();
+            tags.add(null);
+
+            task.setTags(tags);
+            fail(EXCEPTION_EXPECTED_EMPTY_TAG);
+        } catch (IllegalArgumentException e) {
         }
 
+        // Test tags containing empty string
         try {
-            testTags.add("");
-            testTask.setTags(testTags);
-            fail(FAILURE_EXCEPTION_EXPECTED_FOR_EMPTY_TAGS);
-        } catch (Exception e) {
-            testTask.removeTag("");
+            HashSet<String> tags = (HashSet<String>) TEST_TAGS.clone();
+            tags.add(null);
+
+            task.setTags(tags);
+            fail(EXCEPTION_EXPECTED_EMPTY_TAG);
+        } catch (IllegalArgumentException e) {
         }
 
+        // Test tags containing non-alphanumeric string
+        try {
+            HashSet<String> tags = (HashSet<String>) TEST_TAGS.clone();
+            tags.add(TEST_NON_ALPHANUMERIC_TAG);
+
+            task.setTags(tags);
+            fail(EXCEPTION_EXPECTED_NON_ALPHANUMERIC_TAG);
+        } catch (IllegalArgumentException e) {
+        }
     }
 
     @Test
     public void testAddTag() {
-        HashSet<String> testTags = new HashSet<String>();
-        testTags.add("tag1");
-        testTags.add("tag2");
-        testTags.add("tag3");
-        Magic8Task testTask = new Magic8Task(0, TEST_TASK_DESCRIPTION,
-                TEST_DATE, testTags);
+        Magic8Task task = getTestTask();
+
+        // Test valid tag
         try {
-            testTask.addTag("tag4");
+            task.addTag("tag4");
         } catch (Exception e) {
             fail(e.getMessage());
         }
 
+        // Test null tag
         try {
-            testTask.addTag("tag!");
-            fail(FAILURE_EXCEPTION_EXPECTED_FOR_NON_ALPHANUMERIC_TAG_INPUT);
-        } catch (Exception e) {
-            testTask.removeTag("tag!");
+            task.addTag(null);
+            fail(EXCEPTION_EXPECTED_EMPTY_TAG);
+        } catch (IllegalArgumentException e) {
         }
 
+        // Test empty tag
         try {
-            testTask.addTag(null);
-            fail(FAILURE_EXCEPTION_EXPECTED_FOR_NULL_TAGS);
-        } catch (Exception e) {
-            testTask.removeTag(null);
+            task.addTag("TEST_EMPTY_STRING");
+            fail(EXCEPTION_EXPECTED_EMPTY_TAG);
+        } catch (IllegalArgumentException e) {
         }
 
+        // Test non-alphanumeric tag
         try {
-            testTask.addTag("");
-            fail(FAILURE_EXCEPTION_EXPECTED_FOR_EMPTY_TAGS);
+            task.addTag(TEST_NON_ALPHANUMERIC_TAG);
+            fail(EXCEPTION_EXPECTED_NON_ALPHANUMERIC_TAG);
         } catch (Exception e) {
-            testTask.removeTag("");
         }
     }
-
+    
     /*@Test
     public void testToStringString() {
         fail("Not yet implemented"); // TODO
     }
-
+    
     @Test
     public void testParse() {
         fail("Not yet implemented"); // TODO
