@@ -9,8 +9,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 class Magic8Storage implements Magic8StorageInterface {
     private static final String DELIMITER = ",";
@@ -33,17 +36,12 @@ class Magic8Storage implements Magic8StorageInterface {
     }
 
     private void parseFile() throws IOException, ParseException {
-        String line;
-        Magic8Task task;
+        CSVReader csvr = new CSVReader(new BufferedReader(
+                new InputStreamReader(new FileInputStream(this.file))));
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(
-                new FileInputStream(this.file)));
-        this.id = Integer.parseInt(br.readLine());
-        while ((line = br.readLine()) != null) {
-            task = Magic8Task.parse(line, DELIMITER);
-            this.taskList.put(task.getId(), task);
-        }
-        br.close();
+        this.id = Integer.parseInt(csvr.readNext()[0]);
+        this.taskList = convertListToTreeMap(csvr.readAll());
+        csvr.close();
     }
 
     public void writeToFile(int id, Map<Integer, Magic8Task> taskList)
@@ -71,5 +69,15 @@ class Magic8Storage implements Magic8StorageInterface {
 
     public TreeMap<Integer, Magic8Task> getTaskList() {
         return this.taskList;
+    }
+
+    public TreeMap<Integer, Magic8Task> convertListToTreeMap(List<String[]> list)
+            throws IllegalArgumentException, ParseException {
+        TreeMap<Integer, Magic8Task> treeMap = new TreeMap<Integer, Magic8Task>();
+        for (String[] stringArray : list) {
+            treeMap.put(Integer.parseInt(stringArray[0]),
+                    Magic8Task.stringArrayToMagic8Task(stringArray));
+        }
+        return treeMap;
     }
 }
