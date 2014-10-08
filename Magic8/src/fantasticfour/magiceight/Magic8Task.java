@@ -143,7 +143,7 @@ class Magic8Task implements Magic8TaskInterface {
         return task;
     }
 
-    public String[] Magic8TaskToStringArray() {
+    public String[] magic8TaskToStringArray() {
         String[] stringArray = new String[4];
         stringArray[0] = Integer.toString(id);
         stringArray[1] = this.desc;
@@ -166,5 +166,38 @@ class Magic8Task implements Magic8TaskInterface {
         }
 
         return stringArray;
+    }
+
+    public static Magic8Task stringArrayToMagic8Task(String[] stringArray)
+            throws IllegalArgumentException, ParseException {
+        if (stringArray.length >= 4) {
+            int id = Integer.parseInt(stringArray[0]);
+            String desc = stringArray[1];
+            Date deadline;
+            HashSet<String> tags;
+
+            if (stringArray[2].equals("@null")) {
+                deadline = null;
+            } else {
+                deadline = df.parse(stringArray[2]);
+            }
+
+            if (stringArray[3].equals("@null")) {
+                tags = null;
+            } else if (stringArray[3].equals("@empty")) {
+                tags = new HashSet<String>();
+            } else {
+                tags = new HashSet<String>();
+                String[] tagStrings = stringArray[3].split("\\s+");
+                for (String tagString : tagStrings) {
+                    tags.add(tagString);
+                }
+            }
+
+            Magic8Task task = new Magic8Task(id, desc, deadline, tags);
+            return task;
+        } else {
+            throw new IllegalArgumentException("Error insufficient arguments");
+        }
     }
 }
