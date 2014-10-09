@@ -14,16 +14,14 @@ public class Magic8Parser {
         String taskDescription;
         ArrayList<String> tags;
         ArrayList<String> keywords;
-        int lineNumber;
-        int lineNumberTo;
+        ArrayList<Integer> ids;
         Date deadline;
 
         CommandObject() {
             function = null;
             taskDescription = null;
             tags = null;
-            lineNumber = -1;
-            lineNumberTo = -1;
+            ids = null;
             deadline = null;
         }
 
@@ -59,20 +57,12 @@ public class Magic8Parser {
             this.keywords = keywords;
         }
 
-        public int getLineNumber() {
-            return lineNumber;
+        public ArrayList<Integer> getIds() {
+            return ids;
         }
 
-        public void setLineNumber(int lineNumber) {
-            this.lineNumber = lineNumber;
-        }
-
-        public int getLineNumberTo() {
-            return lineNumberTo;
-        }
-
-        public void setLineNumberTo(int lineNumberTo) {
-            this.lineNumberTo = lineNumberTo;
+        public void setIds(ArrayList<Integer> ids) {
+            this.ids = ids;
         }
 
         public Date getDeadline() {
@@ -88,21 +78,20 @@ public class Magic8Parser {
         {
             add("add \\w+((\\s#\\w+)+)?( by \\w+)?");
             add("clear");
-            add("delete \\w+|\\d+( to \\d+)?|\\*");
+            add("delete (\\w+|\\d+( to \\d+|(,\\d+)+)?|\\*)");
             add("display");
             add("edit \\d+( \\w+)+");
             add("help");
             add("search \\w+");
-            add("undo \\d+?");
+            add("undo");
         }
     };
 
     public static CommandObject parseCommand(String command) throws IllegalArgumentException {
         CommandObject parsedCmdOutput = new CommandObject();
         if (isCommandValid(command)) {
-            int lineNum = -1;
-            int lineNumTo = -1;
             Date deadline = null;
+            ArrayList<Integer> ids = new ArrayList<Integer>();
             ArrayList<String> taskDesc = new ArrayList<String>();
             ArrayList<String> tags = new ArrayList<String>();
             ArrayList<String> keywords = new ArrayList<String>();
@@ -141,6 +130,7 @@ public class Magic8Parser {
 
                     break;
                 case "delete" :
+                    int id = 0;
                     boolean lineToFlag = false;
 
                     for (String commandParam : commandParams) {
@@ -150,19 +140,26 @@ public class Magic8Parser {
                             if (commandParam == "to") {
                                 continue;
                             }
-                            lineNumTo = Integer.parseInt(commandParam);
+                            for(int i = id+1; i <= Integer.parseInt(commandParam); i++) {
+                                ids.add(i);
+                            }
                         } else if (Pattern.matches("\\d+", commandParam)) {
                             lineToFlag = true;
-                            lineNum = Integer.parseInt(commandParam);
-                            lineNumTo = Integer.parseInt(commandParam);
-                        } else {
+                            id = Integer.parseInt(commandParam);
+                            ids.add(id);
+                        } else if (Pattern.matches("\\d+(,\\d+)+", commandParam)){
+                            String[] idList = commandParam.split(",");
+                            for(String sId : idList) {
+                                ids.add(Integer.parseInt(sId));
+                            }
+                        } else {                            
                             tags.add(commandParam);
                         }
                     }
 
                     break;
                 case "edit" :
-                    lineNum = Integer.parseInt(commandParams[0]);
+                    ids.add(Integer.parseInt(commandParams[0]));
 
                     for (int i = 1; i < commandParams.length; i++) {
                         taskDesc.add(commandParams[i]);
@@ -173,10 +170,6 @@ public class Magic8Parser {
                     for(String keyword : commandParams) {
                         keywords.add(keyword);
                     }
-                    
-                    break;
-                case "undo" :
-                    lineNum = Integer.parseInt(commandParams[0]);
                     
                     break;
             }
@@ -193,9 +186,11 @@ public class Magic8Parser {
                 parsedCmdOutput.setKeywords(keywords);
             }
             
+            if (ids.size() > 0) {
+                parsedCmdOutput.setIds(ids);
+            }
+            
             parsedCmdOutput.setDeadline(deadline);
-            parsedCmdOutput.setLineNumber(lineNum);
-            parsedCmdOutput.setLineNumberTo(lineNumTo);
         } else {
             throw new IllegalArgumentException("Invalid Command!");
         }

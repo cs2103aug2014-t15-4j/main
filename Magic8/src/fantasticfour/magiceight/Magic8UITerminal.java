@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.HashSet;
+import java.util.Map;
 
 import fantasticfour.magiceight.Magic8Task;
 import fantasticfour.magiceight.Magic8Parser;
@@ -37,22 +38,44 @@ public class Magic8UITerminal {
                         					  tags);
                         taskListManager.addTask(task);
                         System.out.println("Task is added succesfully");
+                        
                         break;
                     case "clear":
                         System.out.println("Calling out clear method");
+                        
                         break;
                     case "delete":
-                    	if(cmdObj.getLineNumber() == -1 && cmdObj.getTags().size() == 0) {
+                    	if(cmdObj.getIds().size() > 0 && cmdObj.getTags().size() == 0) {
                     		taskListManager.clearTasks();
                     	} else if(cmdObj.getTags().size() == 0) {
-                    		taskListManager.getAllTasks().get(cmdObj.getLineNumber());
+                    		for(int id : cmdObj.getIds()) {
+                    		    if(taskListManager.getAllTasks().containsKey(id)) {
+                    		        task = taskListManager.getAllTasks().get(id);
+                    		        taskListManager.removeTask(task);
+                    		    }
+                    		}
+                    	} else {
+                    	    
                     	}
+                        System.out.println("Task is deleted succesfully");
+                    	
                         break;
                     case "display":
-                        System.out.println("Calling out display method");
+                        for(Map.Entry<Integer, Magic8Task> taskMap : taskListManager.getAllTasks().entrySet()) {
+                            task = taskMap.getValue();
+                            System.out.println(task.getDesc());
+                        }
+                        
                         break;
                     case "edit":
-                        System.out.println("Calling out edit method");
+                        int id = cmdObj.getIds().get(0);
+                        if(taskListManager.getAllTasks().containsKey(id)) {
+                            task = taskListManager.getAllTasks().get(id);
+                            task.setDesc(cmdObj.getTaskDescription());
+                            taskListManager.updateTask(task);
+                        }
+                        System.out.println("Task is edited succesfully");
+                        
                         break;
                     case "help":
                         System.out.println("Calling out help method");
