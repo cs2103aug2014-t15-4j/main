@@ -88,7 +88,7 @@ public class Magic8Parser {
         {
             add("add \\w+((\\s#\\w+)+)?( by \\w+)?");
             add("clear");
-            add("delete (\\w+|\\d+ to \\d+|\\*");
+            add("delete \\w+|\\d+( to \\d+)?|\\*");
             add("display");
             add("edit \\d+( \\w+)+");
             add("help");
@@ -97,7 +97,7 @@ public class Magic8Parser {
         }
     };
 
-    public static CommandObject parseCommand(String command) {
+    public static CommandObject parseCommand(String command) throws IllegalArgumentException {
         CommandObject parsedCmdOutput = new CommandObject();
         if (isCommandValid(command)) {
             int lineNum = -1;
@@ -106,17 +106,16 @@ public class Magic8Parser {
             ArrayList<String> taskDesc = new ArrayList<String>();
             ArrayList<String> tags = new ArrayList<String>();
             ArrayList<String> keywords = new ArrayList<String>();
-
+            
             String[] commandElems = command.split("\\s+");
             String function = commandElems[0];
-            String[] commandParams = Arrays.copyOfRange(commandElems, 1,
-                    commandElems.length - 1);
+            String[] commandParams = null;
+            
+            if(commandElems.length > 1) {
+                commandParams = Arrays.copyOfRange(commandElems, 1, commandElems.length - 1);
+            }
 
             parsedCmdOutput.setFunction(function);
-
-            if (commandElems.length == 1) {
-                return parsedCmdOutput;
-            }
 
             switch (function) {
                 case "add" :
@@ -129,8 +128,7 @@ public class Magic8Parser {
                         }
                         if (deadlineFlag) {
                             try {
-                                deadline = new SimpleDateFormat("MMMM d, yyyy",
-                                        Locale.ENGLISH).parse(commandParam);
+                                deadline = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH).parse(commandParam);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -180,8 +178,6 @@ public class Magic8Parser {
                     lineNum = Integer.parseInt(commandParams[0]);
                     
                     break;
-                default:
-                    System.out.println("New functions not implemented!");
             }
 
             if (taskDesc.size() > 0) {
@@ -199,6 +195,8 @@ public class Magic8Parser {
             parsedCmdOutput.setDeadline(deadline);
             parsedCmdOutput.setLineNumber(lineNum);
             parsedCmdOutput.setLineNumberTo(lineNumTo);
+        } else {
+            throw new IllegalArgumentException("Invalid Command!");
         }
         return parsedCmdOutput;
     }
