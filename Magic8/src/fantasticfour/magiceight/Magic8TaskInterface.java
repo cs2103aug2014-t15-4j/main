@@ -1,9 +1,9 @@
 package fantasticfour.magiceight;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 
-public interface Magic8TaskInterface {
+interface Magic8TaskInterface {
     public int getId();
 
     public void setId(int id);
@@ -16,11 +16,15 @@ public interface Magic8TaskInterface {
 
     public void setDeadline(Date deadline);
 
-    public ArrayList<Integer> getTagIds();
+    public HashSet<String> getTags();
 
-    public void setTagIds(ArrayList<Integer> tagIds);
+    public void setTags(HashSet<String> tags);
 
-    public void addTagId(int id);
+    public void addTag(String tag);
 
-    public void removeTagId(int id);
+    public void removeTag(String tag);
+
+    public void replaceTag(String newTag, String oldTag);
+
+    public String[] magic8TaskToStringArray();
 }
