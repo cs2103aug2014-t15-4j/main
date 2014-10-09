@@ -154,6 +154,7 @@ public class Magic8Parser {
                         } else if (Pattern.matches("\\d+", commandParam)) {
                             lineToFlag = true;
                             lineNum = Integer.parseInt(commandParam);
+                            lineNumTo = Integer.parseInt(commandParam);
                         } else {
                             tags.add(commandParam);
                         }
