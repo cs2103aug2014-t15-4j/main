@@ -38,7 +38,7 @@ class Magic8Storage implements Magic8StorageInterface {
     private void parseFile() throws IOException, ParseException {
         CSVReader csvr = new CSVReader(new BufferedReader(
                 new InputStreamReader(new FileInputStream(this.file))));
-
+        // need to check that if file is empty
         this.id = Integer.parseInt(csvr.readNext()[0]);
         this.taskList = convertListToTreeMap(csvr.readAll());
         csvr.close();

@@ -1,11 +1,11 @@
 package fantasticfour.magiceight;
 
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
-import javax.swing.JTextPane;
+//import javax.swing.JTextPane;
+//import java.awt.EventQueue;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.TextArea;
@@ -81,5 +81,12 @@ public class Magic8UI implements Runnable{
         TextArea textArea_1 = new TextArea();
         frame.getContentPane().add(textArea_1, BorderLayout.CENTER);
     }
+
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
