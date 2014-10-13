@@ -72,6 +72,11 @@ public class Magic8Parser {
         public void setDeadline(Date deadline) {
             this.deadline = deadline;
         }
+
+		public int getLineNumber() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
     }
 
     private static ArrayList<String> commandRegexList = new ArrayList<String>() {
