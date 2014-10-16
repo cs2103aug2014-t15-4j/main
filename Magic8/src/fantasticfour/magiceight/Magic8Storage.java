@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,11 +31,23 @@ class Magic8Storage implements Magic8StorageInterface {
         if (!this.file.exists()) {
             this.file.createNewFile();
             this.id = 1;
+        } else if (fileIsEmpty()){
+            this.id = 1;
         } else {
             this.parseFile();
         }
     }
-
+    
+    private boolean fileIsEmpty() throws IOException {
+        boolean empty = false;
+        BufferedReader br = new BufferedReader(new FileReader(fileName));     
+        if (br.readLine() == null) {
+            empty = true;
+        }
+        br.close();
+        return empty;
+    }
+    
     private void parseFile() throws IOException, ParseException {
         CSVReader csvr = new CSVReader(new BufferedReader(
                 new InputStreamReader(new FileInputStream(this.file))));
