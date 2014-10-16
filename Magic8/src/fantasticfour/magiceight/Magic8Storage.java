@@ -34,7 +34,7 @@ class Magic8Storage implements Magic8StorageInterface {
         } else if (fileIsEmpty()){
             this.id = 1;
         } else {
-            this.parseFile();
+            this.readFromFile();
         }
     }
     
@@ -48,7 +48,7 @@ class Magic8Storage implements Magic8StorageInterface {
         return empty;
     }
     
-    private void parseFile() throws IOException, ParseException {
+    private void readFromFile() throws IOException, ParseException {
         CSVReader csvr = new CSVReader(new BufferedReader(
                 new InputStreamReader(new FileInputStream(this.file))));
 
