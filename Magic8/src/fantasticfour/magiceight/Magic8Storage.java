@@ -77,7 +77,7 @@ class Magic8Storage implements Magic8StorageInterface {
         return this.taskList;
     }
 
-    public TreeMap<Integer, Magic8Task> convertListToTreeMap(List<String[]> list)
+    private TreeMap<Integer, Magic8Task> convertListToTreeMap(List<String[]> list)
             throws IllegalArgumentException, ParseException {
         TreeMap<Integer, Magic8Task> treeMap = new TreeMap<Integer, Magic8Task>();
         for (String[] stringArray : list) {
@@ -87,7 +87,7 @@ class Magic8Storage implements Magic8StorageInterface {
         return treeMap;
     }
 
-    public ArrayList<String[]> convertMapToArrayList(
+    private ArrayList<String[]> convertMapToArrayList(
             Map<Integer, Magic8Task> map) {
         ArrayList<String[]> list = new ArrayList<String[]>();
         for (Map.Entry<Integer, Magic8Task> entry : map.entrySet()) {
