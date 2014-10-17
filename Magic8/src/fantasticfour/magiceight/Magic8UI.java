@@ -6,13 +6,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -26,14 +29,13 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
+
 import javax.swing.JSplitPane;
 import javax.swing.border.EmptyBorder;
+
 import java.awt.Color;
 
-public class Magic8UI extends JPanel implements Runnable{
-    /**
-	 * 
-	 */
+public class Magic8UI extends JPanel implements Runnable {
 	private static final long serialVersionUID = 1L;
 	private JFrame mainFrame;
     private JPanel mainFramePanel;
@@ -41,6 +43,13 @@ public class Magic8UI extends JPanel implements Runnable{
 	private JButton exitButton;
 //	private JComponent ch;
 	
+	 //Create the application
+    public Magic8UI() {
+    	//Initialize variables
+    	run();
+//    	addComponentsToPane();
+    }
+    
     //Launch the application.
     public static void main(String[] args) {
     /*	EventQueue.invokeLater(new Runnable() {
@@ -71,12 +80,6 @@ public class Magic8UI extends JPanel implements Runnable{
         MoveMouseListener mml = new MoveMouseListener(ch);
         ch.addMouseListener(mml);
         ch.addMouseMotionListener(mml);
-    }
-    
-    //Create the application
-    public Magic8UI() {
-    	run();
-//    	addComponentsToPane();
     }
     
 	protected void exit() {
@@ -117,9 +120,9 @@ public class Magic8UI extends JPanel implements Runnable{
 	    
 	        JSplitPane splitPane = new JSplitPane();
 	        mainFrame.getContentPane().add(splitPane, BorderLayout.NORTH);
-	        TextArea textArea = new TextArea();
+	        JTextArea textArea = new JTextArea();
 	        splitPane.setLeftComponent(textArea);
-	        TextArea textArea_1 = new TextArea();
+	        JTextArea textArea_1 = new JTextArea();
 	        mainFrame.getContentPane().add(textArea_1, BorderLayout.CENTER);
 	 }
 	 private static class MoveMouseListener implements MouseListener, MouseMotionListener {
