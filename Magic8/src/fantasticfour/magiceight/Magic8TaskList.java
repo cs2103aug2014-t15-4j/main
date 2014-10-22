@@ -27,6 +27,8 @@ class Magic8TaskList implements Magic8TaskListInterface {
     }
 
     public Magic8Task addTask(Magic8Task task) throws IOException {
+        assert (task != null);
+
         int taskId = id++;
         task.setId(taskId);
         taskList.put(taskId, task);
@@ -36,6 +38,8 @@ class Magic8TaskList implements Magic8TaskListInterface {
     }
 
     public Magic8Task removeTask(Magic8Task task) throws IOException {
+        assert (task != null);
+
         int taskId = task.getId();
         Magic8Task storedTask = taskList.remove(taskId);
 
@@ -47,6 +51,8 @@ class Magic8TaskList implements Magic8TaskListInterface {
     }
 
     public boolean updateTask(Magic8Task task) throws IOException {
+        assert (task != null);
+
         boolean result = false;
 
         Magic8Task storedTask = removeTask(task);
@@ -70,6 +76,8 @@ class Magic8TaskList implements Magic8TaskListInterface {
     }
 
     private boolean indexTask(Magic8Task task) {
+        assert (task != null);
+
         boolean result = false;
 
         unindexTask(task);
@@ -86,6 +94,8 @@ class Magic8TaskList implements Magic8TaskListInterface {
     }
 
     private boolean unindexTask(Magic8Task task) {
+        assert (task != null);
+
         boolean result = false;
 
         int taskId = task.getId();
