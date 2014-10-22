@@ -80,9 +80,11 @@ class Magic8TaskList implements Magic8TaskListInterface {
 
         if (!taskList.isEmpty()) {
             taskList.clear();
+            writeToFile();
+
             result = true;
         }
-        writeToFile();
+
         return result;
     }
 
