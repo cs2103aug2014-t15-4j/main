@@ -124,8 +124,7 @@ class Magic8TaskList implements Magic8TaskListInterface {
     public TreeMap<Integer, Magic8Task> getTasksWithTag(String tag) {
         bufferedTaskList.clear();
 
-        HashSet<Integer> taskIdsWithTag = tagToTaskIds.get(tag);
-        for (Integer taskId : taskIdsWithTag) {
+        for (Integer taskId : tagToTaskIds.get(tag)) {
             bufferedTaskList.put(taskId, taskList.get(taskId));
         }
 
