@@ -88,22 +88,15 @@ class Magic8TaskList implements Magic8TaskListInterface {
         return result;
     }
 
-    private boolean indexTask(Magic8Task task) {
+    private void indexTask(Magic8Task task) {
         assert (task != null);
 
-        boolean result = false;
-
-        unindexTask(task);
-
         int taskId = task.getId();
+
         for (String tag : task.getTags()) {
             HashSet<Integer> taskIdsWithTag = tagToTaskIds.get(tag);
             taskIdsWithTag.add(taskId);
         }
-
-        result = true;
-
-        return result;
     }
 
     private void unindexTask(Magic8Task task) {
