@@ -33,7 +33,7 @@ class Magic8TaskList implements Magic8TaskListInterface {
         task.setId(taskId);
         taskList.put(taskId, task);
         indexTask(task);
-        storage.writeToFile(taskId, taskList);
+        storage.writeToFile(id, taskList);
         return task;
     }
 
@@ -46,7 +46,7 @@ class Magic8TaskList implements Magic8TaskListInterface {
         if (storedTask != null) {
             unindexTask(task);
         }
-        storage.writeToFile(taskId, taskList);
+        storage.writeToFile(id, taskList);
         return storedTask;
     }
 
