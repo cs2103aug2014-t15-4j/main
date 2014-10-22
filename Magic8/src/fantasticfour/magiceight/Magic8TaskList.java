@@ -29,11 +29,14 @@ class Magic8TaskList implements Magic8TaskListInterface {
     public Magic8Task addTask(Magic8Task task) throws IOException {
         assert (task != null);
 
+        // Assign task id
         int taskId = id++;
         task.setId(taskId);
+
         taskList.put(taskId, task);
         indexTask(task);
         writeToFile();
+
         return task;
     }
 
