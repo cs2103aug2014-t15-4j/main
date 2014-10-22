@@ -33,7 +33,7 @@ class Magic8TaskList implements Magic8TaskListInterface {
         task.setId(taskId);
         taskList.put(taskId, task);
         indexTask(task);
-        storage.writeToFile(id, taskList);
+        writeToFile();
         return task;
     }
 
@@ -46,7 +46,7 @@ class Magic8TaskList implements Magic8TaskListInterface {
         if (storedTask != null) {
             unindexTask(task);
         }
-        storage.writeToFile(id, taskList);
+        writeToFile();
         return storedTask;
     }
 
@@ -71,7 +71,7 @@ class Magic8TaskList implements Magic8TaskListInterface {
             taskList.clear();
             result = true;
         }
-        storage.writeToFile(id, taskList);
+        writeToFile();
         return result;
     }
 
@@ -111,6 +111,10 @@ class Magic8TaskList implements Magic8TaskListInterface {
         }
 
         return result;
+    }
+
+    private void writeToFile() throws IOException {
+        storage.writeToFile(id, taskList);
     }
 
     public TreeMap<Integer, Magic8Task> getAllTasks() {
