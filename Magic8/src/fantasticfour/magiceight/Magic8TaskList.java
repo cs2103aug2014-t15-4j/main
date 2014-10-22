@@ -59,9 +59,16 @@ class Magic8TaskList implements Magic8TaskListInterface {
 
         boolean result = false;
 
-        Magic8Task storedTask = removeTask(task);
+        int taskId = task.getId();
+
+        Magic8Task storedTask = taskList.remove(taskId);
         if (storedTask != null) {
-            addTask(task);
+            unindexTask(storedTask);
+
+            taskList.put(taskId, task);
+            indexTask(task);
+            writeToFile();
+
             result = true;
         }
 
