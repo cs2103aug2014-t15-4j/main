@@ -12,14 +12,14 @@ class Magic8TaskList implements Magic8TaskListInterface {
     private int id;
     private TreeMap<Integer, Magic8Task> taskList;
     private TreeMap<Integer, Magic8Task> bufferedTaskList;
-    private HashMap<String, HashSet<Integer>> tagToTaskIdsMap;
+    private HashMap<String, HashSet<Integer>> tagToTaskIds;
 
     public Magic8TaskList(String fileName) throws IOException, ParseException {
         storage = new Magic8Storage(fileName);
         id = storage.getId();
         taskList = storage.getTaskList();
         bufferedTaskList = new TreeMap<Integer, Magic8Task>();
-        tagToTaskIdsMap = new HashMap<String, HashSet<Integer>>();
+        tagToTaskIds = new HashMap<String, HashSet<Integer>>();
 
         for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
             indexTask(entry.getValue());
@@ -76,7 +76,7 @@ class Magic8TaskList implements Magic8TaskListInterface {
 
         int taskId = task.getId();
         for (String tag : task.getTags()) {
-            HashSet<Integer> taskIdsWithTag = tagToTaskIdsMap.get(tag);
+            HashSet<Integer> taskIdsWithTag = tagToTaskIds.get(tag);
             taskIdsWithTag.add(taskId);
         }
 
@@ -93,7 +93,7 @@ class Magic8TaskList implements Magic8TaskListInterface {
 
         if (storedTask != null) {
             for (String tag : storedTask.getTags()) {
-                HashSet<Integer> taskIdsWithTag = tagToTaskIdsMap.get(tag);
+                HashSet<Integer> taskIdsWithTag = tagToTaskIds.get(tag);
                 taskIdsWithTag.remove(taskId);
             }
 
@@ -113,7 +113,7 @@ class Magic8TaskList implements Magic8TaskListInterface {
     public TreeMap<Integer, Magic8Task> getTasksWithTag(String tag) {
         bufferedTaskList.clear();
 
-        HashSet<Integer> taskIdsWithTag = tagToTaskIdsMap.get(tag);
+        HashSet<Integer> taskIdsWithTag = tagToTaskIds.get(tag);
         for (Integer taskId : taskIdsWithTag) {
             bufferedTaskList.put(taskId, taskList.get(taskId));
         }
