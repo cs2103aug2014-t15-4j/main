@@ -8,16 +8,19 @@ import java.util.Map;
 import java.util.TreeMap;
 
 class Magic8TaskList implements Magic8TaskListInterface {
+    private Magic8Storage storage;
+    private int id;
     private TreeMap<Integer, Magic8Task> taskList;
     private TreeMap<Integer, Magic8Task> bufferedTaskList;
-    private int id;
     private HashMap<String, HashSet<Integer>> tagToTaskIdsMap;
-    private Magic8Storage storage;
 
-    public Magic8TaskList(String fileName) throws ParseException, IOException {
+    public Magic8TaskList(String fileName) throws IOException, ParseException {
         storage = new Magic8Storage(fileName);
-        taskList = storage.getTaskList();
         id = storage.getId();
+        taskList = storage.getTaskList();
+        bufferedTaskList = new TreeMap<Integer, Magic8Task>();
+        tagToTaskIdsMap = new HashMap<String, HashSet<Integer>>();
+
         for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
             indexTask(entry.getValue());
         }
