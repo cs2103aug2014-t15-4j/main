@@ -28,7 +28,6 @@ public class Magic8TaskTest {
     private static final String TEST_NON_ALPHANUMERIC_TAG = "tag4!";
 
     private static DateFormat df = DateFormat.getDateInstance();
-    private static final String TEST_DATE_STRING = df.format(TEST_DATE);
 
     @Test
     public void testMagic8Task() {
@@ -260,14 +259,4 @@ public class Magic8TaskTest {
         } catch (Exception e) {
         }
     }
-    
-    /*@Test
-    public void testToStringString() {
-        fail("Not yet implemented"); // TODO
-    }
-    
-    @Test
-    public void testParse() {
-        fail("Not yet implemented"); // TODO
-    }*/
 }

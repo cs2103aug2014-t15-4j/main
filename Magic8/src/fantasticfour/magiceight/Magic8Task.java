@@ -200,4 +200,26 @@ class Magic8Task implements Magic8TaskInterface {
             throw new IllegalArgumentException("Error insufficient arguments");
         }
     }
+    
+    public boolean equals(Object obj) {
+        if(obj instanceof Magic8Task) {
+            Magic8Task magic8Task = (Magic8Task) obj;
+            boolean result = true;
+            result = result && magic8Task.getId() == id;
+            result = result && magic8Task.getDesc().equals(desc);
+            result = result && (magic8Task.getDeadline() == null && deadline == null || magic8Task.getDeadline().equals(deadline));
+            result = result && magic8Task.getTags().size() == tags.size();
+            for(String tag : tags) {
+                if (!magic8Task.getTags().contains(tag)) {
+                    result = false;
+                    break;
+                }
+            }
+            return result;
+        }
+        else {
+            return false;
+        }
+        
+    }
 }
