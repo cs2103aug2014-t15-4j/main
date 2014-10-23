@@ -15,9 +15,4 @@ interface Magic8StorageInterface {
 
     public TreeMap<Integer, Magic8Task> getTaskList();
 
-    public TreeMap<Integer, Magic8Task> convertListToTreeMap(List<String[]> list)
-            throws IllegalArgumentException, ParseException;
-
-    public ArrayList<String[]> convertMapToArrayList(
-            Map<Integer, Magic8Task> map);
 }
