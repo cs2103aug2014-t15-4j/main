@@ -72,11 +72,6 @@ public class Magic8Parser {
         public void setDeadline(Date deadline) {
             this.deadline = deadline;
         }
-
-		public int getLineNumber() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
     }
 
     private static ArrayList<String> commandRegexList = new ArrayList<String>() {
@@ -122,7 +117,6 @@ public class Magic8Parser {
             if(commandElems.length > 1) {
                 commandParams = Arrays.copyOfRange(commandElems, 1, commandElems.length);
             }
-            parsedCmdOutput.setFunction(function);
 
             switch (function) {
                 case "add" :
@@ -145,8 +139,8 @@ public class Magic8Parser {
                             taskDesc.add(commandParam);
                         }
                     }
-
                     break;
+                    
                 case "delete" :
                     int id = 0;
                     boolean lineToFlag = false;
@@ -173,23 +167,26 @@ public class Magic8Parser {
                         } else {                            
                             tags.add(commandParam.substring(1));
                         }
-                    }
-                    
+                    }                    
                     break;
+                    
+                case "display":                    
+                    break;
+                    
                 case "edit" :
                     ids.add(Integer.parseInt(commandParams[0]));
 
                     for (int i = 1; i < commandParams.length; i++) {
                         taskDesc.add(commandParams[i]);
-                    }
-                    
+                    }                    
                     break;
+                    
                 case "search" :
                     for(String keyword : commandParams) {
                         keywords.add(keyword);
-                    }
-                    
+                    }                    
                     break;
+                    
             }
 
             if (taskDesc.size() > 0) {
@@ -206,7 +203,8 @@ public class Magic8Parser {
             if (ids.size() > 0) {
                 parsedCmdOutput.setIds(ids);
             }
-            
+
+            parsedCmdOutput.setFunction(function);
             parsedCmdOutput.setDeadline(deadline);
         } else {
             throw new IllegalArgumentException("Invalid Command!");
