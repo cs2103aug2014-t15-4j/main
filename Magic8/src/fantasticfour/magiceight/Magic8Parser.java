@@ -81,16 +81,30 @@ public class Magic8Parser {
 
     private static ArrayList<String> commandRegexList = new ArrayList<String>() {
         {
-            add("add \\w+((\\s#\\w+)+)?( by \\w+)?");
+            add("add \\w+(\\s\\w+)+?((\\s#\\w+)+)?( by \\d{1,2}/\\d{1,2}/\\d{2,4})?");
             add("clear");
-            add("delete (\\w+|\\d+( to \\d+|(,\\d+)+)?|\\*)");
-            add("display");
+            add("delete(\\sall|\\s\\d+( to \\d+|(,\\d+)+)?|\\s\\*|\\s#\\w+((\\s#\\w+)+)?)");
+            add("display((\\s#\\w+)+)?");
             add("edit \\d+( \\w+)+");
+            add("exit");
             add("help");
             add("search \\w+");
             add("undo");
         }
     };
+    
+    private static String listToString(ArrayList<String> list) {
+        String output = "";
+        for(String str : list) {
+            output += str;
+            output += " ";
+        }
+        if(list.size() == 0) {
+            return output;
+        } else {
+            return output.substring(0, output.length() - 1);
+        }
+    }
 
     public static CommandObject parseCommand(String command) throws IllegalArgumentException {
         CommandObject parsedCmdOutput = new CommandObject();
@@ -106,9 +120,8 @@ public class Magic8Parser {
             String[] commandParams = null;
             
             if(commandElems.length > 1) {
-                commandParams = Arrays.copyOfRange(commandElems, 1, commandElems.length - 1);
+                commandParams = Arrays.copyOfRange(commandElems, 1, commandElems.length);
             }
-
             parsedCmdOutput.setFunction(function);
 
             switch (function) {
@@ -116,7 +129,7 @@ public class Magic8Parser {
                     boolean deadlineFlag = false;
 
                     for (String commandParam : commandParams) {
-                        if (commandParam == "by") {
+                        if (commandParam.equals("by")) {
                             deadlineFlag = true;
                             continue;
                         }
@@ -137,12 +150,12 @@ public class Magic8Parser {
                 case "delete" :
                     int id = 0;
                     boolean lineToFlag = false;
-
+                    
                     for (String commandParam : commandParams) {
-                        if (commandParam == "*" || commandParam == "all") {
+                        if (commandParam.equals("*") || commandParam.equals("all")) {
                             break;
                         } else if (lineToFlag) {
-                            if (commandParam == "to") {
+                            if (commandParam.equals("to")) {
                                 continue;
                             }
                             for(int i = id+1; i <= Integer.parseInt(commandParam); i++) {
@@ -152,16 +165,16 @@ public class Magic8Parser {
                             lineToFlag = true;
                             id = Integer.parseInt(commandParam);
                             ids.add(id);
-                        } else if (Pattern.matches("\\d+(,\\d+)+", commandParam)){
+                        } else if (Pattern.matches("\\d+(,\\d+)+?", commandParam)){
                             String[] idList = commandParam.split(",");
                             for(String sId : idList) {
                                 ids.add(Integer.parseInt(sId));
                             }
                         } else {                            
-                            tags.add(commandParam);
+                            tags.add(commandParam.substring(1));
                         }
                     }
-
+                    
                     break;
                 case "edit" :
                     ids.add(Integer.parseInt(commandParams[0]));
@@ -180,7 +193,7 @@ public class Magic8Parser {
             }
 
             if (taskDesc.size() > 0) {
-                parsedCmdOutput.setTaskDescription(taskDesc.toString());
+                parsedCmdOutput.setTaskDescription(listToString(taskDesc));
             }
 
             if (tags.size() > 0) {
@@ -190,7 +203,6 @@ public class Magic8Parser {
             if (keywords.size() > 0) {
                 parsedCmdOutput.setKeywords(keywords);
             }
-            
             if (ids.size() > 0) {
                 parsedCmdOutput.setIds(ids);
             }
