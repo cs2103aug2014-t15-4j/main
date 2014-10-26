@@ -9,71 +9,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class Magic8Parser {
-    static class CommandObject {
-        String function;
-        String taskDescription;
-        ArrayList<String> tags;
-        ArrayList<String> keywords;
-        ArrayList<Integer> ids;
-        Date deadline;
-
-        CommandObject() {
-            function = null;
-            taskDescription = null;
-            tags = null;
-            ids = null;
-            deadline = null;
-        }
-
-        public String getFunction() {
-            return function;
-        }
-
-        public void setFunction(String function) {
-            this.function = function;
-        }
-
-        public String getTaskDescription() {
-            return taskDescription;
-        }
-
-        public void setTaskDescription(String taskDescription) {
-            this.taskDescription = taskDescription;
-        }
-
-        public ArrayList<String> getTags() {
-            return tags;
-        }
-
-        public void setTags(ArrayList<String> tags) {
-            this.tags = tags;
-        }
-
-        public ArrayList<String> getKeywords() {
-            return keywords;
-        }
-
-        public void setKeywords(ArrayList<String> keywords) {
-            this.keywords = keywords;
-        }
-
-        public ArrayList<Integer> getIds() {
-            return ids;
-        }
-
-        public void setIds(ArrayList<Integer> ids) {
-            this.ids = ids;
-        }
-
-        public Date getDeadline() {
-            return deadline;
-        }
-
-        public void setDeadline(Date deadline) {
-            this.deadline = deadline;
-        }
-    }
-
+    
     private static ArrayList<String> commandRegexList = new ArrayList<String>() {
         {
             add("add \\w+(\\s\\w+)+?((\\s#\\w+)+)?( by \\d{1,2}/\\d{1,2}/\\d{2,4})?");
@@ -101,8 +37,8 @@ public class Magic8Parser {
         }
     }
 
-    public static CommandObject parseCommand(String command) throws IllegalArgumentException {
-        CommandObject parsedCmdOutput = new CommandObject();
+    public static Magic8CommandObject parseCommand(String command) throws IllegalArgumentException {
+        Magic8CommandObject parsedCmdOutput = new Magic8CommandObject();
         if (isCommandValid(command)) {
             Date deadline = null;
             ArrayList<Integer> ids = new ArrayList<Integer>();
