@@ -24,7 +24,5 @@ interface Magic8TaskInterface {
 
     public void removeTag(String tag);
 
-    public void replaceTag(String newTag, String oldTag);
-
     public String[] magic8TaskToStringArray();
 }
