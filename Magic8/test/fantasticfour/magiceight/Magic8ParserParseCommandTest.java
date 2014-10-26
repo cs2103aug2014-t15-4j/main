@@ -20,7 +20,7 @@ public class Magic8ParserParseCommandTest {
     private static ArrayList<String> tagsInputTest;
     private static ArrayList<String> keywordsInputTest;
     private static ArrayList<Integer> idsInputTest;
-    private static Magic8Parser.CommandObject testCommandObj;
+    private static Magic8CommandObject testCommandObj;
     
     private <T> boolean generalComparator(T var1, T var2) {
         if(var1 == null) {
@@ -51,7 +51,7 @@ public class Magic8ParserParseCommandTest {
         return true;
     }
     
-    private boolean parseComparator(Magic8Parser.CommandObject obj1, Magic8Parser.CommandObject obj2) {
+    private boolean parseComparator(Magic8CommandObject obj1, Magic8CommandObject obj2) {
         if(!generalComparator(obj1.getFunction(), obj2.getFunction())) {
             message = FUNCTION_MISMATCH;
             return false;
@@ -84,7 +84,7 @@ public class Magic8ParserParseCommandTest {
         tagsInputTest = new ArrayList<String>();
         keywordsInputTest = new ArrayList<String>();
         idsInputTest = new ArrayList<Integer>();
-        testCommandObj = new Magic8Parser.CommandObject();
+        testCommandObj = new Magic8CommandObject();
     }
     
     @Test
