@@ -48,6 +48,7 @@ public class Magic8ParserIsValidCommandTest {
 
     @Before
     public void addTestInsertion() {
+        POSITIVE_ADD_TESTING.add("add homework");
         POSITIVE_ADD_TESTING.add("add buy an egg");
         POSITIVE_ADD_TESTING.add("add buy an egg by 20/14/2014");
         POSITIVE_ADD_TESTING.add("add buy an egg #grocery #chores");
