@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 
-class Magic8Task implements Magic8TaskInterface {
+public class Magic8Task implements Magic8TaskInterface {
     private static final String ERROR_NEGATIVE_ID = "id cannot be negative";
     private static final String ERROR_ZERO_ID = "id cannot be zero";
     private static final String ERROR_EMPTY_DESCRIPTION = "description must be non-empty string";

@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 
-class Magic8TaskList implements Magic8TaskListInterface {
+public class Magic8TaskList implements Magic8TaskListInterface {
     private Magic8Storage storage;
     private int id;
     private TreeMap<Integer, Magic8Task> taskList;
