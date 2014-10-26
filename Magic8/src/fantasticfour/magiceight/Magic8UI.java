@@ -31,9 +31,16 @@ public void run() {
     
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     
-    commandLine.setFont(new Font("Verdana", Font.BOLD, 14));
-    commandLine.setLocation(500, 350);
-    mainFrame.add(commandLine);
+//    commandLine.setFont(new Font("Verdana", Font.BOLD, 14));
+//    commandLine.setLocation(100, 100);
+//    mainFrame.add(commandLine);
+    
+    JSplitPane splitPane = new JSplitPane();
+    mainFrame.getContentPane().add(splitPane, BorderLayout.NORTH);
+    splitPane.setLeftComponent(commandLine);
+
+    JTextArea textArea_1 = new JTextArea();
+    mainFrame.getContentPane().add(textArea_1, BorderLayout.CENTER);
     
     pack();
     setVisible(true);
@@ -46,6 +53,5 @@ public void run() {
               frame.setVisible(true);
           }
 	  });
-	  
   }
 }
