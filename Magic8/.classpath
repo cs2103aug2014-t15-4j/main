@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="lib/org.eclipse.ui.forms_3.6.100.v20140422-1825.jar"/>
 	<classpathentry kind="var" path="builder"/>
 	<classpathentry kind="var" path="builder_debug"/>
+	<classpathentry kind="lib" path="C:/Users/malavika94/git/main/Magic8/lib/org.eclipse.jface-3.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
