@@ -10,6 +10,7 @@ public class Magic8Task implements Magic8TaskInterface {
     private static final String MSG_ZERO_ID = "id cannot be zero";
     private static final String MSG_NULL_DESCRIPTION = "description cannot be null";
     private static final String MSG_EMPTY_DESCRIPTION = "description cannot be empty";
+    private static final String MSG_NULL_TAG = "tag cannot be null";
     private static final String MSG_EMPTY_TAG = "tag cannot be empty";
     private static final String MSG_NON_ALPHANUMERIC_TAG = "tag must be alphanumeric";
 
@@ -97,7 +98,10 @@ public class Magic8Task implements Magic8TaskInterface {
         if (tags == null) {
             tags = new HashSet<String>();
         } else {
-            if (tags.contains(null) || tags.contains(EMPTY_STRING)) {
+            if (tags.contains(null)) {
+                throw new IllegalArgumentException(MSG_NULL_TAG);
+            }
+            if (tags.contains(EMPTY_STRING)) {
                 throw new IllegalArgumentException(MSG_EMPTY_TAG);
             }
 
@@ -196,7 +200,7 @@ public class Magic8Task implements Magic8TaskInterface {
             result = result && magic8Task.getDesc().equals(desc);
             result = result
                     && (magic8Task.getDeadline() == null && deadline == null || magic8Task
-                    .getDeadline().equals(deadline));
+                            .getDeadline().equals(deadline));
             result = result && magic8Task.getTags().size() == tags.size();
             for (String tag : tags) {
                 if (!magic8Task.getTags().contains(tag)) {
