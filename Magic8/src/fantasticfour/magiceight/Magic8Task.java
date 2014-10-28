@@ -77,6 +77,10 @@ public class Magic8Task implements Magic8TaskInterface {
 
     @Override
     public Date getDeadline() {
+        if (deadline == null) {
+            return deadline;
+        }
+
         return new Date(deadline.getTime());
     }
 
