@@ -125,7 +125,10 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     @Override
     public TreeMap<Integer, Magic8Task> getAllTasks() {
         bufferedTaskList.clear();
-        bufferedTaskList.putAll(taskList);
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            Magic8Task task = new Magic8Task(entry.getValue());
+            bufferedTaskList.put(task.getId(), task);
+        }
 
         return bufferedTaskList;
     }
@@ -135,7 +138,8 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         bufferedTaskList.clear();
 
         for (Integer taskId : tagToTaskIds.get(tag)) {
-            bufferedTaskList.put(taskId, taskList.get(taskId));
+            Magic8Task task = new Magic8Task(taskList.get(taskId));
+            bufferedTaskList.put(task.getId(), task);
         }
 
         return bufferedTaskList;
