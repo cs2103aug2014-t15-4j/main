@@ -14,8 +14,6 @@ public class Magic8Task implements Magic8TaskInterface {
     private static final String MSG_EMPTY_TAG = "tag cannot be empty";
     private static final String MSG_NON_ALPHANUMERIC_TAG = "tag must be alphanumeric";
 
-    private static final String EMPTY_STRING = "";
-
     private int id;
     private String desc;
     private Date deadline;
@@ -186,7 +184,7 @@ public class Magic8Task implements Magic8TaskInterface {
             result = result && magic8Task.getDesc().equals(desc);
             result = result
                     && (magic8Task.getDeadline() == null && deadline == null || magic8Task
-                            .getDeadline().equals(deadline));
+                    .getDeadline().equals(deadline));
             result = result && magic8Task.getTags().size() == tags.size();
             for (String tag : tags) {
                 if (!magic8Task.getTags().contains(tag)) {
