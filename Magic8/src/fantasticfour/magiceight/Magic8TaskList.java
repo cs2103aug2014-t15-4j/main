@@ -124,6 +124,8 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         taskList = taskLists.get(opIdx);
         writeToFile();
 
+        indexTaskList();
+
         return true;
     }
 
@@ -137,6 +139,8 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         id = ids.get(opIdx);
         taskList = taskLists.get(opIdx);
         writeToFile();
+
+        indexTaskList();
 
         return true;
     }
