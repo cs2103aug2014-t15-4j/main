@@ -52,7 +52,6 @@ public class Magic8Task implements Magic8TaskInterface {
         if (id < 0) {
             throw new IllegalArgumentException(MSG_NEGATIVE_ID);
         }
-
         if (id == 0) {
             throw new IllegalArgumentException(MSG_ZERO_ID);
         }
