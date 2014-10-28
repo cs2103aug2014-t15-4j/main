@@ -91,7 +91,7 @@ class Magic8Storage implements Magic8StorageInterface {
             Map<Integer, Magic8Task> map) {
         ArrayList<String[]> list = new ArrayList<String[]>();
         for (Map.Entry<Integer, Magic8Task> entry : map.entrySet()) {
-            list.add(entry.getValue().magic8TaskToStringArray());
+            list.add(entry.getValue().toStringArray());
         }
         return list;
     }

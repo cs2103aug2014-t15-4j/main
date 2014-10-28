@@ -117,7 +117,7 @@ public class Magic8Task implements Magic8TaskInterface {
     }
 
     @Override
-    public String[] magic8TaskToStringArray() {
+    public String[] toStringArray() {
         String[] stringArray = new String[4];
         stringArray[0] = Integer.toString(id);
         stringArray[1] = desc;
