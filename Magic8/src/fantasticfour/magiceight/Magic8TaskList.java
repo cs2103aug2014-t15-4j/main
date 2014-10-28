@@ -118,6 +118,16 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         }
     }
 
+    private TreeMap<Integer, Magic8Task> copyTaskList() {
+        TreeMap<Integer, Magic8Task> tl = new TreeMap<Integer, Magic8Task>();
+
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            tl.put(entry.getKey(), new Magic8Task(entry.getValue()));
+        }
+
+        return tl;
+    }
+
     private void writeToFile() throws IOException {
         storage.writeToFile(id, taskList);
     }
@@ -126,10 +136,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     public TreeMap<Integer, Magic8Task> getAllTasks() {
         bufferedTaskList.clear();
 
-        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
-            bufferedTaskList.put(entry.getKey(),
-                    new Magic8Task(entry.getValue()));
-        }
+        bufferedTaskList = copyTaskList();
 
         return bufferedTaskList;
     }
