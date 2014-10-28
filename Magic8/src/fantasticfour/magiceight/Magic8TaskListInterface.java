@@ -44,6 +44,17 @@ interface Magic8TaskListInterface {
     public boolean clearTasks() throws IOException;
 
     /**
+     * Removes all tasks with the specified tag from the task list.
+     *
+     * @param tag
+     *            Tag to remove tasks with.
+     * @return true if tasks were removed. false if there are no tasks with the
+     *         specified tag.
+     * @throws IOException
+     */
+    public boolean removeTasksWithTag(String tag) throws IOException;
+
+    /**
      * Undoes the last operation.
      *
      * @return true if undo succeeds. false if there was no operation to undo.

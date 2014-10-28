@@ -217,4 +217,17 @@ public class Magic8TaskList implements Magic8TaskListInterface {
 
         return bufferedTaskList;
     }
+
+    @Override
+    public boolean removeTasksWithTag(String tag) throws IOException {
+        if (tagToTaskIds.containsKey(tag)) {
+            for (Integer taskId : tagToTaskIds.get(tag)) {
+                removeTask(taskList.get(taskId));
+            }
+
+            return true;
+        }
+
+        return false;
+    }
 }
