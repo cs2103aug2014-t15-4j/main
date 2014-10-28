@@ -8,7 +8,8 @@ import java.util.HashSet;
 public class Magic8Task implements Magic8TaskInterface {
     private static final String MSG_NEGATIVE_ID = "id cannot be negative";
     private static final String MSG_ZERO_ID = "id cannot be zero";
-    private static final String MSG_EMPTY_DESCRIPTION = "description must be non-empty string";
+    private static final String MSG_NULL_DESCRIPTION = "description cannot be null";
+    private static final String MSG_EMPTY_DESCRIPTION = "description cannot be empty";
     private static final String MSG_EMPTY_TAG = "tag cannot be empty";
     private static final String MSG_NON_ALPHANUMERIC_TAG = "tag must be alphanumeric";
 
@@ -66,7 +67,10 @@ public class Magic8Task implements Magic8TaskInterface {
 
     @Override
     public void setDesc(String desc) throws IllegalArgumentException {
-        if (desc == null || desc.isEmpty()) {
+        if (desc == null) {
+            throw new IllegalArgumentException(MSG_NULL_DESCRIPTION);
+        }
+        if (desc.isEmpty()) {
             throw new IllegalArgumentException(MSG_EMPTY_DESCRIPTION);
         }
 
