@@ -214,4 +214,16 @@ public class Magic8Task implements Magic8TaskInterface {
         }
 
     }
+
+    private static void validateTag(String tag) {
+        if (tag == null) {
+            throw new IllegalArgumentException(MSG_NULL_TAG);
+        }
+        if (tag.isEmpty()) {
+            throw new IllegalArgumentException(MSG_EMPTY_TAG);
+        }
+        if (!tag.matches("[A-Za-z0-9]+")) {
+            throw new IllegalArgumentException(MSG_NON_ALPHANUMERIC_TAG);
+        }
+    }
 }
