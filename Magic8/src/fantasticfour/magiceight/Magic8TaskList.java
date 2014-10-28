@@ -219,6 +219,20 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     }
 
     @Override
+    public TreeMap<Integer, Magic8Task> getTasksWithWord(String word) {
+        bufferedTaskList.clear();
+
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            Magic8Task task = entry.getValue();
+            if (task.getDesc().contains(word)) {
+                bufferedTaskList.put(task.getId(), new Magic8Task(task));
+            }
+        }
+
+        return bufferedTaskList;
+    }
+
+    @Override
     public boolean removeTasksWithTag(String tag) throws IOException {
         if (tagToTaskIds.containsKey(tag)) {
             for (Integer taskId : tagToTaskIds.get(tag)) {

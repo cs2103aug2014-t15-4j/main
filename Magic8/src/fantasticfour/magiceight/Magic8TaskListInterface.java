@@ -87,4 +87,15 @@ interface Magic8TaskListInterface {
      *         id.
      */
     public TreeMap<Integer, Magic8Task> getTasksWithTag(String tag);
+
+    /**
+     * Returns all tasks in the task list with the specified word, ordered by
+     * the task id.
+     *
+     * @param tag
+     *            Tag to retrieve tasks with.
+     * @return all tasks in the task list with the specified tag, ordered task
+     *         id.
+     */
+    public TreeMap<Integer, Magic8Task> getTasksWithWord(String word);
 }
