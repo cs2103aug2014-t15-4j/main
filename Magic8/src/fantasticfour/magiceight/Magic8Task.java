@@ -89,7 +89,7 @@ public class Magic8Task implements Magic8TaskInterface {
 
     @Override
     public HashSet<String> getTags() {
-        return tags;
+        return new HashSet<String>(tags);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class Magic8Task implements Magic8TaskInterface {
                 throw new IllegalArgumentException(MSG_NON_ALPHANUMERIC_TAG);
             }
         }
-        this.tags = tags;
+        this.tags = new HashSet<String>(tags);
     }
 
     @Override
