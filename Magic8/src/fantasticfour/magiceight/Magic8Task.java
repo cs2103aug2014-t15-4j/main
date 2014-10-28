@@ -42,10 +42,12 @@ public class Magic8Task implements Magic8TaskInterface {
                 .getTime()), new HashSet<String>(task.getTags()));
     }
 
+    @Override
     public int getId() {
         return id;
     }
 
+    @Override
     public void setId(int id) throws IllegalArgumentException {
         if (id < 0) {
             throw new IllegalArgumentException(ERROR_NEGATIVE_ID);
@@ -58,10 +60,12 @@ public class Magic8Task implements Magic8TaskInterface {
         this.id = id;
     }
 
+    @Override
     public String getDesc() {
         return desc;
     }
 
+    @Override
     public void setDesc(String desc) throws IllegalArgumentException {
         if (desc == null || desc.isEmpty()) {
             throw new IllegalArgumentException(ERROR_EMPTY_DESCRIPTION);
@@ -70,18 +74,22 @@ public class Magic8Task implements Magic8TaskInterface {
         this.desc = desc;
     }
 
+    @Override
     public Date getDeadline() {
         return deadline;
     }
 
+    @Override
     public void setDeadline(Date deadline) {
         this.deadline = deadline;
     }
 
+    @Override
     public HashSet<String> getTags() {
-        return this.tags;
+        return tags;
     }
 
+    @Override
     public void setTags(HashSet<String> tags) throws IllegalArgumentException {
         if (tags == null) {
             tags = new HashSet<String>();
@@ -99,6 +107,7 @@ public class Magic8Task implements Magic8TaskInterface {
         this.tags = tags;
     }
 
+    @Override
     public void addTag(String tag) throws IllegalArgumentException {
         if (tag == null || tag.equals(EMPTY_STRING)) {
             throw new IllegalArgumentException(ERROR_EMPTY_TAG);
@@ -108,31 +117,33 @@ public class Magic8Task implements Magic8TaskInterface {
             throw new IllegalArgumentException(ERROR_NON_ALPHANUMERIC_TAG);
         }
 
-        this.tags.add(tag);
+        tags.add(tag);
     }
 
+    @Override
     public void removeTag(String tag) {
-        this.tags.remove(tag);
+        tags.remove(tag);
     }
 
+    @Override
     public String[] magic8TaskToStringArray() {
         String[] stringArray = new String[4];
         stringArray[0] = Integer.toString(id);
-        stringArray[1] = this.desc;
+        stringArray[1] = desc;
 
-        if (this.deadline == null) {
+        if (deadline == null) {
             stringArray[2] = "@null";
         } else {
             stringArray[2] = deadline.toString();
         }
 
-        if (this.tags == null) {
+        if (tags == null) {
             stringArray[3] = "@null";
-        } else if (this.tags.size() == 0) {
+        } else if (tags.size() == 0) {
             stringArray[3] = "@empty";
         } else {
             stringArray[3] = "";
-            for (String tag : this.tags) {
+            for (String tag : tags) {
                 stringArray[3] += " " + tag;
             }
         }
@@ -173,6 +184,7 @@ public class Magic8Task implements Magic8TaskInterface {
         }
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (obj instanceof Magic8Task) {
             Magic8Task magic8Task = (Magic8Task) obj;
@@ -181,7 +193,7 @@ public class Magic8Task implements Magic8TaskInterface {
             result = result && magic8Task.getDesc().equals(desc);
             result = result
                     && (magic8Task.getDeadline() == null && deadline == null || magic8Task
-                            .getDeadline().equals(deadline));
+                    .getDeadline().equals(deadline));
             result = result && magic8Task.getTags().size() == tags.size();
             for (String tag : tags) {
                 if (!magic8Task.getTags().contains(tag)) {
