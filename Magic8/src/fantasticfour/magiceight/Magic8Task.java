@@ -96,18 +96,18 @@ public class Magic8Task implements Magic8TaskInterface {
     public void setTags(HashSet<String> tags) throws IllegalArgumentException {
         if (tags == null) {
             tags = new HashSet<String>();
-        }
-
-        if (tags.contains(null) || tags.contains(EMPTY_STRING)) {
-            throw new IllegalArgumentException(MSG_EMPTY_TAG);
-        }
-
-        for (String tag : tags) {
-            if (!tag.matches("[A-Za-z0-9]+")) {
-                throw new IllegalArgumentException(MSG_NON_ALPHANUMERIC_TAG);
+        } else {
+            if (tags.contains(null) || tags.contains(EMPTY_STRING)) {
+                throw new IllegalArgumentException(MSG_EMPTY_TAG);
             }
+
+            for (String tag : tags) {
+                if (!tag.matches("[A-Za-z0-9]+")) {
+                    throw new IllegalArgumentException(MSG_NON_ALPHANUMERIC_TAG);
+                }
+            }
+            this.tags = new HashSet<String>(tags);
         }
-        this.tags = new HashSet<String>(tags);
     }
 
     @Override
