@@ -26,8 +26,9 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         }
     }
 
+    @Override
     public Magic8Task addTask(Magic8Task task) throws IOException {
-        assert (task != null);
+        assert task != null;
 
         // Assign task id
         int taskId = id++;
@@ -40,8 +41,9 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         return task;
     }
 
+    @Override
     public Magic8Task removeTask(Magic8Task task) throws IOException {
-        assert (task != null);
+        assert task != null;
 
         int taskId = task.getId();
 
@@ -54,8 +56,9 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         return storedTask;
     }
 
+    @Override
     public boolean updateTask(Magic8Task task) throws IOException {
-        assert (task != null);
+        assert task != null;
 
         boolean result = false;
 
@@ -75,6 +78,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         return result;
     }
 
+    @Override
     public boolean clearTasks() throws IOException {
         boolean result = false;
 
@@ -89,7 +93,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     }
 
     private void indexTask(Magic8Task task) {
-        assert (task != null);
+        assert task != null;
 
         int taskId = task.getId();
 
@@ -104,7 +108,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     }
 
     private void unindexTask(Magic8Task task) {
-        assert (task != null);
+        assert task != null;
 
         int taskId = task.getId();
 
@@ -118,6 +122,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         storage.writeToFile(id, taskList);
     }
 
+    @Override
     public TreeMap<Integer, Magic8Task> getAllTasks() {
         bufferedTaskList.clear();
         bufferedTaskList.putAll(taskList);
@@ -125,6 +130,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         return bufferedTaskList;
     }
 
+    @Override
     public TreeMap<Integer, Magic8Task> getTasksWithTag(String tag) {
         bufferedTaskList.clear();
 
