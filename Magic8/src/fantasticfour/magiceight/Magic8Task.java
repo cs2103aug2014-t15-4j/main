@@ -93,7 +93,7 @@ public class Magic8Task implements Magic8TaskInterface {
     @Override
     public void setTags(HashSet<String> tags) throws IllegalArgumentException {
         if (tags == null) {
-            tags = new HashSet<String>();
+            this.tags = new HashSet<String>();
         } else {
             for (String tag : tags) {
                 validateTag(tag);
@@ -183,7 +183,7 @@ public class Magic8Task implements Magic8TaskInterface {
             result = result && magic8Task.getDesc().equals(desc);
             result = result
                     && (magic8Task.getDeadline() == null && deadline == null || magic8Task
-                            .getDeadline().equals(deadline));
+                    .getDeadline().equals(deadline));
             result = result && magic8Task.getTags().size() == tags.size();
             for (String tag : tags) {
                 if (!magic8Task.getTags().contains(tag)) {
