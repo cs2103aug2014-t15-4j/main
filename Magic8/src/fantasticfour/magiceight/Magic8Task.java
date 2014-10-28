@@ -184,26 +184,49 @@ public class Magic8Task implements Magic8TaskInterface {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Magic8Task) {
-            Magic8Task magic8Task = (Magic8Task) obj;
-            boolean result = true;
-            result = result && magic8Task.getId() == id;
-            result = result && magic8Task.getDesc().equals(desc);
-            result = result
-                    && (magic8Task.getDeadline() == null && deadline == null || magic8Task
-                            .getDeadline().equals(deadline));
-            result = result && magic8Task.getTags().size() == tags.size();
-            for (String tag : tags) {
-                if (!magic8Task.getTags().contains(tag)) {
-                    result = false;
-                    break;
+        if (!(obj instanceof Magic8Task)) {
+            return false;
+        } else {
+            Magic8Task other = (Magic8Task) obj;
+
+            // Check id
+            if (getId() != other.getId()) {
+                return false;
+            }
+            // Check description
+            if (!getDesc().equals(other.getDesc())) {
+                return false;
+            }
+            // Check deadline
+            Date d1 = getDeadline();
+            Date d2 = other.getDeadline();
+
+            if (d1 == null && d2 != null) {
+                return false;
+            }
+            if (d1 != null && d2 == null) {
+                return false;
+            }
+            if (d1 != null && d2 != null && !d1.equals(d2)) {
+                return false;
+            }
+
+            // Check tags
+            HashSet<String> t1 = getTags();
+            HashSet<String> t2 = getTags();
+
+            if (getTags().size() != other.getTags().size()) {
+                return false;
+            }
+
+            for (String tag : t1) {
+                if (!t2.contains(tag)) {
+                    return false;
                 }
             }
-            return result;
-        } else {
-            return false;
-        }
 
+            return true;
+        }
     }
 
     private static void validateTag(String tag) {
