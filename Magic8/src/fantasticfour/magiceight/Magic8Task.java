@@ -98,16 +98,8 @@ public class Magic8Task implements Magic8TaskInterface {
         if (tags == null) {
             tags = new HashSet<String>();
         } else {
-            if (tags.contains(null)) {
-                throw new IllegalArgumentException(MSG_NULL_TAG);
-            }
-            if (tags.contains(EMPTY_STRING)) {
-                throw new IllegalArgumentException(MSG_EMPTY_TAG);
-            }
             for (String tag : tags) {
-                if (!tag.matches("[A-Za-z0-9]+")) {
-                    throw new IllegalArgumentException(MSG_NON_ALPHANUMERIC_TAG);
-                }
+                validateTag(tag);
             }
 
             this.tags = new HashSet<String>(tags);
@@ -116,13 +108,7 @@ public class Magic8Task implements Magic8TaskInterface {
 
     @Override
     public void addTag(String tag) throws IllegalArgumentException {
-        if (tag == null || tag.equals(EMPTY_STRING)) {
-            throw new IllegalArgumentException(MSG_EMPTY_TAG);
-        }
-
-        if (!tag.matches("[A-Za-z0-9]+")) {
-            throw new IllegalArgumentException(MSG_NON_ALPHANUMERIC_TAG);
-        }
+        validateTag(tag);
 
         tags.add(tag);
     }
@@ -200,7 +186,7 @@ public class Magic8Task implements Magic8TaskInterface {
             result = result && magic8Task.getDesc().equals(desc);
             result = result
                     && (magic8Task.getDeadline() == null && deadline == null || magic8Task
-                    .getDeadline().equals(deadline));
+                            .getDeadline().equals(deadline));
             result = result && magic8Task.getTags().size() == tags.size();
             for (String tag : tags) {
                 if (!magic8Task.getTags().contains(tag)) {
