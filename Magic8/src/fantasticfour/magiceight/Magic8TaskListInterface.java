@@ -83,7 +83,7 @@ interface Magic8TaskListInterface {
      *
      * @param tag
      *            Tag to retrieve tasks with.
-     * @return all tasks in the task list with the specified tag, ordereFd task
+     * @return all tasks in the task list with the specified tag, ordered task
      *         id.
      */
     public TreeMap<Integer, Magic8Task> getTasksWithTag(String tag);
