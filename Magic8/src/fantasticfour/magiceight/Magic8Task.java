@@ -18,7 +18,6 @@ public class Magic8Task implements Magic8TaskInterface {
     private String desc;
     private Date deadline;
     private HashSet<String> tags;
-    private static DateFormat df = DateFormat.getDateInstance();
 
     public Magic8Task(int id, String desc, Date deadline, HashSet<String> tags)
             throws IllegalArgumentException {
@@ -153,7 +152,7 @@ public class Magic8Task implements Magic8TaskInterface {
             if (stringArray[2].equals("@null")) {
                 deadline = null;
             } else {
-                deadline = df.parse(stringArray[2]);
+                deadline = DateFormat.getDateInstance().parse(stringArray[2]);
             }
 
             if (stringArray[3].equals("@null")) {
@@ -184,7 +183,7 @@ public class Magic8Task implements Magic8TaskInterface {
             result = result && magic8Task.getDesc().equals(desc);
             result = result
                     && (magic8Task.getDeadline() == null && deadline == null || magic8Task
-                    .getDeadline().equals(deadline));
+                            .getDeadline().equals(deadline));
             result = result && magic8Task.getTags().size() == tags.size();
             for (String tag : tags) {
                 if (!magic8Task.getTags().contains(tag)) {
