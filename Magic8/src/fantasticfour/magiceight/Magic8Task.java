@@ -2,29 +2,27 @@ package fantasticfour.magiceight;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 
 public class Magic8Task implements Magic8TaskInterface {
-    private static final String ERROR_NEGATIVE_ID = "id cannot be negative";
-    private static final String ERROR_ZERO_ID = "id cannot be zero";
-    private static final String ERROR_EMPTY_DESCRIPTION = "description must be non-empty string";
-    private static final String ERROR_EMPTY_TAG = "tag cannot be empty";
-    private static final String ERROR_NON_ALPHANUMERIC_TAG = "tag must be alphanumeric";
-
-    private static final String EMPTY_STRING = "";
+    private static final String MSG_NEGATIVE_ID = "id cannot be negative";
+    private static final String MSG_ZERO_ID = "id cannot be zero";
+    private static final String MSG_NULL_DESCRIPTION = "description cannot be null";
+    private static final String MSG_EMPTY_DESCRIPTION = "description cannot be empty";
+    private static final String MSG_NULL_TAG = "tag cannot be null";
+    private static final String MSG_EMPTY_TAG = "tag cannot be empty";
+    private static final String MSG_NON_ALPHANUMERIC_TAG = "tag must be alphanumeric";
 
     private int id;
     private String desc;
     private Date deadline;
     private HashSet<String> tags;
-    private static DateFormat df = DateFormat.getDateInstance();
 
     public Magic8Task(int id, String desc, Date deadline, HashSet<String> tags)
             throws IllegalArgumentException {
         if (id < 0) {
-            throw new IllegalArgumentException(ERROR_NEGATIVE_ID);
+            throw new IllegalArgumentException(MSG_NEGATIVE_ID);
         }
 
         this.id = id;
@@ -38,129 +36,112 @@ public class Magic8Task implements Magic8TaskInterface {
         this(0, desc, deadline, tags);
     }
 
+    public Magic8Task(Magic8Task task) {
+        this(task.getId(), task.getDesc(), new Date(task.getDeadline()
+                .getTime()), new HashSet<String>(task.getTags()));
+    }
+
+    @Override
     public int getId() {
         return id;
     }
 
+    @Override
     public void setId(int id) throws IllegalArgumentException {
         if (id < 0) {
-            throw new IllegalArgumentException(ERROR_NEGATIVE_ID);
+            throw new IllegalArgumentException(MSG_NEGATIVE_ID);
         }
-
         if (id == 0) {
-            throw new IllegalArgumentException(ERROR_ZERO_ID);
+            throw new IllegalArgumentException(MSG_ZERO_ID);
         }
 
         this.id = id;
     }
 
+    @Override
     public String getDesc() {
         return desc;
     }
 
+    @Override
     public void setDesc(String desc) throws IllegalArgumentException {
-        if (desc == null || desc.isEmpty()) {
-            throw new IllegalArgumentException(ERROR_EMPTY_DESCRIPTION);
+        if (desc == null) {
+            throw new IllegalArgumentException(MSG_NULL_DESCRIPTION);
+        }
+        if (desc.isEmpty()) {
+            throw new IllegalArgumentException(MSG_EMPTY_DESCRIPTION);
         }
 
         this.desc = desc;
     }
 
+    @Override
     public Date getDeadline() {
-        return deadline;
+        if (deadline == null) {
+            return deadline;
+        }
+
+        return new Date(deadline.getTime());
     }
 
+    @Override
     public void setDeadline(Date deadline) {
-        this.deadline = deadline;
+        if (deadline == null) {
+            this.deadline = deadline;
+        } else {
+            this.deadline = new Date(deadline.getTime());
+        }
     }
 
+    @Override
     public HashSet<String> getTags() {
-        return this.tags;
+        return new HashSet<String>(tags);
     }
 
+    @Override
     public void setTags(HashSet<String> tags) throws IllegalArgumentException {
         if (tags == null) {
-            tags = new HashSet<String>();
-        }
-
-        if (tags.contains(null) || tags.contains(EMPTY_STRING)) {
-            throw new IllegalArgumentException(ERROR_EMPTY_TAG);
-        }
-
-        for (String tag : tags) {
-            if (!tag.matches("[A-Za-z0-9]+")) {
-                throw new IllegalArgumentException(ERROR_NON_ALPHANUMERIC_TAG);
+            this.tags = new HashSet<String>();
+        } else {
+            for (String tag : tags) {
+                validateTag(tag);
             }
+
+            this.tags = new HashSet<String>(tags);
         }
-        this.tags = tags;
     }
 
+    @Override
     public void addTag(String tag) throws IllegalArgumentException {
-        if (tag == null || tag.equals(EMPTY_STRING)) {
-            throw new IllegalArgumentException(ERROR_EMPTY_TAG);
-        }
+        validateTag(tag);
 
-        if (!tag.matches("[A-Za-z0-9]+")) {
-            throw new IllegalArgumentException(ERROR_NON_ALPHANUMERIC_TAG);
-        }
-
-        this.tags.add(tag);
+        tags.add(tag);
     }
 
+    @Override
     public void removeTag(String tag) {
-        this.tags.remove(tag);
+        tags.remove(tag);
     }
 
-    public void replaceTag(String newTag, String oldTag)
-            throws IllegalArgumentException {
-        removeTag(oldTag);
-        addTag(newTag);
-    }
-
-    public String toString(String delimiter) {
-        String taskId = Integer.toString(this.id);
-        String desc = this.desc.replace(delimiter, "\\" + delimiter);
-        String deadline = df.format(this.deadline);
-        String tags = "";
-        for (String tag : this.tags) {
-            tags += " " + tag;
-        }
-        return taskId + delimiter + desc + delimiter + deadline + delimiter
-                + tags;
-    }
-
-    public static Magic8Task parse(String s, String delimiter)
-            throws ParseException {
-        String regex = "(?<!\\\\)" + delimiter;
-        String[] tokens = s.split(regex);
-
-        int taskId = Integer.parseInt(tokens[0]);
-        String desc = tokens[1];
-        Date deadline = df.parse(tokens[2]);
-        HashSet<String> tags = new HashSet<String>(Arrays.asList(tokens[3]
-                .split(" ")));
-        Magic8Task task = new Magic8Task(taskId, desc, deadline, tags);
-        return task;
-    }
-
-    public String[] magic8TaskToStringArray() {
+    @Override
+    public String[] toStringArray() {
         String[] stringArray = new String[4];
         stringArray[0] = Integer.toString(id);
-        stringArray[1] = this.desc;
+        stringArray[1] = desc;
 
-        if (this.deadline == null) {
+        if (deadline == null) {
             stringArray[2] = "@null";
         } else {
             stringArray[2] = deadline.toString();
         }
 
-        if (this.tags == null) {
+        if (tags == null) {
             stringArray[3] = "@null";
-        } else if (this.tags.size() == 0) {
+        } else if (tags.size() == 0) {
             stringArray[3] = "@empty";
         } else {
             stringArray[3] = "";
-            for (String tag : this.tags) {
+            for (String tag : tags) {
                 stringArray[3] += " " + tag;
             }
         }
@@ -179,7 +160,7 @@ public class Magic8Task implements Magic8TaskInterface {
             if (stringArray[2].equals("@null")) {
                 deadline = null;
             } else {
-                deadline = df.parse(stringArray[2]);
+                deadline = DateFormat.getDateInstance().parse(stringArray[2]);
             }
 
             if (stringArray[3].equals("@null")) {
@@ -200,26 +181,63 @@ public class Magic8Task implements Magic8TaskInterface {
             throw new IllegalArgumentException("Error insufficient arguments");
         }
     }
-    
+
+    @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Magic8Task) {
-            Magic8Task magic8Task = (Magic8Task) obj;
-            boolean result = true;
-            result = result && magic8Task.getId() == id;
-            result = result && magic8Task.getDesc().equals(desc);
-            result = result && (magic8Task.getDeadline() == null && deadline == null || magic8Task.getDeadline().equals(deadline));
-            result = result && magic8Task.getTags().size() == tags.size();
-            for(String tag : tags) {
-                if (!magic8Task.getTags().contains(tag)) {
-                    result = false;
-                    break;
+        if (!(obj instanceof Magic8Task)) {
+            return false;
+        } else {
+            Magic8Task other = (Magic8Task) obj;
+
+            // Check id
+            if (getId() != other.getId()) {
+                return false;
+            }
+            // Check description
+            if (!getDesc().equals(other.getDesc())) {
+                return false;
+            }
+            // Check deadline
+            Date d1 = getDeadline();
+            Date d2 = other.getDeadline();
+
+            if (d1 == null && d2 != null) {
+                return false;
+            }
+            if (d1 != null && d2 == null) {
+                return false;
+            }
+            if (d1 != null && d2 != null && !d1.equals(d2)) {
+                return false;
+            }
+
+            // Check tags
+            HashSet<String> t1 = getTags();
+            HashSet<String> t2 = getTags();
+
+            if (getTags().size() != other.getTags().size()) {
+                return false;
+            }
+
+            for (String tag : t1) {
+                if (!t2.contains(tag)) {
+                    return false;
                 }
             }
-            return result;
+
+            return true;
         }
-        else {
-            return false;
+    }
+
+    private static void validateTag(String tag) {
+        if (tag == null) {
+            throw new IllegalArgumentException(MSG_NULL_TAG);
         }
-        
+        if (tag.isEmpty()) {
+            throw new IllegalArgumentException(MSG_EMPTY_TAG);
+        }
+        if (!tag.matches("[A-Za-z0-9]+")) {
+            throw new IllegalArgumentException(MSG_NON_ALPHANUMERIC_TAG);
+        }
     }
 }
