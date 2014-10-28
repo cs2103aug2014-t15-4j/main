@@ -21,9 +21,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         bufferedTaskList = new TreeMap<Integer, Magic8Task>();
         tagToTaskIds = new HashMap<String, HashSet<Integer>>();
 
-        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
-            indexTask(entry.getValue());
-        }
+        indexTaskList();
     }
 
     @Override
@@ -126,6 +124,12 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         }
 
         return tl;
+    }
+
+    private void indexTaskList() {
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            indexTask(entry.getValue());
+        }
     }
 
     private void writeToFile() throws IOException {
