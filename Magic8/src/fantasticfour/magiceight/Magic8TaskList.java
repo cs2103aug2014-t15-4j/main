@@ -7,48 +7,68 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 
-class Magic8TaskList implements Magic8TaskListInterface {
+public class Magic8TaskList implements Magic8TaskListInterface {
+    private Magic8Storage storage;
+    private int id;
     private TreeMap<Integer, Magic8Task> taskList;
     private TreeMap<Integer, Magic8Task> bufferedTaskList;
-    private int id;
-    private HashMap<String, HashSet<Integer>> tagToTaskIdsMap;
-    private Magic8Storage storage;
+    private HashMap<String, HashSet<Integer>> tagToTaskIds;
 
-    public Magic8TaskList(String fileName) throws ParseException, IOException {
+    public Magic8TaskList(String fileName) throws IOException, ParseException {
         storage = new Magic8Storage(fileName);
-        taskList = storage.getTaskList();
         id = storage.getId();
+        taskList = storage.getTaskList();
+        bufferedTaskList = new TreeMap<Integer, Magic8Task>();
+        tagToTaskIds = new HashMap<String, HashSet<Integer>>();
+
         for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
             indexTask(entry.getValue());
         }
     }
 
     public Magic8Task addTask(Magic8Task task) throws IOException {
-        int taskId = this.id++;
+        assert (task != null);
+
+        // Assign task id
+        int taskId = id++;
         task.setId(taskId);
-        this.taskList.put(taskId, task);
+
+        taskList.put(taskId, task);
         indexTask(task);
-        storage.writeToFile(taskId, taskList);
+        writeToFile();
+
         return task;
     }
 
     public Magic8Task removeTask(Magic8Task task) throws IOException {
-        int taskId = task.getId();
-        Magic8Task storedTask = this.taskList.remove(taskId);
+        assert (task != null);
 
+        int taskId = task.getId();
+
+        Magic8Task storedTask = taskList.remove(taskId);
         if (storedTask != null) {
             unindexTask(task);
         }
-        storage.writeToFile(taskId, taskList);
+        writeToFile();
+
         return storedTask;
     }
 
     public boolean updateTask(Magic8Task task) throws IOException {
+        assert (task != null);
+
         boolean result = false;
 
-        Magic8Task storedTask = removeTask(task);
+        int taskId = task.getId();
+
+        Magic8Task storedTask = taskList.remove(taskId);
         if (storedTask != null) {
-            addTask(task);
+            unindexTask(storedTask);
+
+            taskList.put(taskId, task);
+            indexTask(task);
+            writeToFile();
+
             result = true;
         }
 
@@ -58,63 +78,60 @@ class Magic8TaskList implements Magic8TaskListInterface {
     public boolean clearTasks() throws IOException {
         boolean result = false;
 
-        if (!this.taskList.isEmpty()) {
-            this.taskList.clear();
+        if (!taskList.isEmpty()) {
+            taskList.clear();
+            writeToFile();
+
             result = true;
         }
-        storage.writeToFile(id, taskList);
+
         return result;
     }
 
-    private boolean indexTask(Magic8Task task) {
-        boolean result = false;
-
-        unindexTask(task);
+    private void indexTask(Magic8Task task) {
+        assert (task != null);
 
         int taskId = task.getId();
+
         for (String tag : task.getTags()) {
-            HashSet<Integer> taskIdsWithTag = tagToTaskIdsMap.get(tag);
+            HashSet<Integer> taskIdsWithTag = tagToTaskIds.get(tag);
+            if (taskIdsWithTag == null) {
+                taskIdsWithTag = new HashSet<Integer>();
+                tagToTaskIds.put(tag, taskIdsWithTag);
+            }
             taskIdsWithTag.add(taskId);
         }
-
-        result = true;
-
-        return result;
     }
 
-    private boolean unindexTask(Magic8Task task) {
-        boolean result = false;
+    private void unindexTask(Magic8Task task) {
+        assert (task != null);
 
         int taskId = task.getId();
-        Magic8Task storedTask = taskList.get(taskId);
 
-        if (storedTask != null) {
-            for (String tag : storedTask.getTags()) {
-                HashSet<Integer> taskIdsWithTag = tagToTaskIdsMap.get(tag);
-                taskIdsWithTag.remove(taskId);
-            }
-
-            result = true;
+        for (String tag : task.getTags()) {
+            HashSet<Integer> taskIdsWithTag = tagToTaskIds.get(tag);
+            taskIdsWithTag.remove(taskId);
         }
+    }
 
-        return result;
+    private void writeToFile() throws IOException {
+        storage.writeToFile(id, taskList);
     }
 
     public TreeMap<Integer, Magic8Task> getAllTasks() {
-        this.bufferedTaskList.clear();
-        this.bufferedTaskList.putAll(taskList);
+        bufferedTaskList.clear();
+        bufferedTaskList.putAll(taskList);
 
-        return this.bufferedTaskList;
+        return bufferedTaskList;
     }
 
     public TreeMap<Integer, Magic8Task> getTasksWithTag(String tag) {
-        this.bufferedTaskList.clear();
+        bufferedTaskList.clear();
 
-        HashSet<Integer> taskIdsWithTag = tagToTaskIdsMap.get(tag);
-        for (Integer taskId : taskIdsWithTag) {
+        for (Integer taskId : tagToTaskIds.get(tag)) {
             bufferedTaskList.put(taskId, taskList.get(taskId));
         }
 
-        return this.bufferedTaskList;
+        return bufferedTaskList;
     }
 }

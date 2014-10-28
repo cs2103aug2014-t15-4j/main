@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,15 +31,27 @@ class Magic8Storage implements Magic8StorageInterface {
         if (!this.file.exists()) {
             this.file.createNewFile();
             this.id = 1;
+        } else if (fileIsEmpty()){
+            this.id = 1;
         } else {
-            this.parseFile();
+            this.readFromFile();
         }
     }
-
-    private void parseFile() throws IOException, ParseException {
+    
+    private boolean fileIsEmpty() throws IOException {
+        boolean empty = false;
+        BufferedReader br = new BufferedReader(new FileReader(fileName));     
+        if (br.readLine() == null) {
+            empty = true;
+        }
+        br.close();
+        return empty;
+    }
+    
+    private void readFromFile() throws IOException, ParseException {
         CSVReader csvr = new CSVReader(new BufferedReader(
                 new InputStreamReader(new FileInputStream(this.file))));
-        // need to check that if file is empty
+
         this.id = Integer.parseInt(csvr.readNext()[0]);
         this.taskList = convertListToTreeMap(csvr.readAll());
         csvr.close();
@@ -64,7 +77,7 @@ class Magic8Storage implements Magic8StorageInterface {
         return this.taskList;
     }
 
-    public TreeMap<Integer, Magic8Task> convertListToTreeMap(List<String[]> list)
+    private TreeMap<Integer, Magic8Task> convertListToTreeMap(List<String[]> list)
             throws IllegalArgumentException, ParseException {
         TreeMap<Integer, Magic8Task> treeMap = new TreeMap<Integer, Magic8Task>();
         for (String[] stringArray : list) {
@@ -74,7 +87,7 @@ class Magic8Storage implements Magic8StorageInterface {
         return treeMap;
     }
 
-    public ArrayList<String[]> convertMapToArrayList(
+    private ArrayList<String[]> convertMapToArrayList(
             Map<Integer, Magic8Task> map) {
         ArrayList<String[]> list = new ArrayList<String[]>();
         for (Map.Entry<Integer, Magic8Task> entry : map.entrySet()) {

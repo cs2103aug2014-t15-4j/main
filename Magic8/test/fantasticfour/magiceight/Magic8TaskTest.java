@@ -2,7 +2,6 @@ package fantasticfour.magiceight;
 
 import static org.junit.Assert.fail;
 
-import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
@@ -12,61 +11,67 @@ import org.junit.Test;
 public class Magic8TaskTest {
     private static final String EXCEPTION_EXPECTED_NEGATIVE_ID = "Exception expected for negative id";
     private static final String EXCEPTION_EXPECTED_ZERO_ID = "Exception expected for zero id";
-    private static final String EXCEPTION_EXPECTED_EMPTY_DESCRIPTION = "Exception expected for empty description";
-    private static final String EXCEPTION_EXPECTED_EMPTY_TAG = "Exception expected for empty tag";
+    private static final String EXCEPTION_EXPECTED_NULL_DESCRIPTION = "Exception expected for null string description";
+    private static final String EXCEPTION_EXPECTED_EMPTY_DESCRIPTION = "Exception expected for empty string description";
+    private static final String EXCEPTION_EXPECTED_NULL_TAG = "Exception expected for null string tag";
+    private static final String EXCEPTION_EXPECTED_EMPTY_TAG = "Exception expected for empty string tag";
     private static final String EXCEPTION_EXPECTED_NON_ALPHANUMERIC_TAG = "Exception expected for non-alphanumeric tag";
 
     private static final int TEST_NEGATIVE_ID = -1;
     private static final int TEST_ZERO_ID = 0;
     private static final int TEST_POSITIVE_ID = 1;
-    private static final String TEST_DESCRIPTION = "Task description";
+    private static final String TEST_EMPTY_STRING = "";
+    private static final String TEST_NON_ALPHANUMERIC_STRING = "string!";
+    private static final String TEST_ALPHANUMERIC_STRING = "tag4";
     private static final Date TEST_DATE = new Date(0);
     private static final HashSet<String> TEST_TAGS = new HashSet<String>(
             Arrays.asList("tag1", "tag2", "tag3"));
-
-    private static final String TEST_EMPTY_STRING = "";
-    private static final String TEST_NON_ALPHANUMERIC_TAG = "tag4!";
-
-    private static DateFormat df = DateFormat.getDateInstance();
-    private static final String TEST_DATE_STRING = df.format(TEST_DATE);
+    private static final Magic8Task TEST_TASK = new Magic8Task(
+            TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING, TEST_DATE,
+            TEST_TAGS);
 
     @Test
     public void testMagic8Task() {
         // Test with valid parameters
         try {
-            new Magic8Task(TEST_POSITIVE_ID, TEST_DESCRIPTION, TEST_DATE,
-                    TEST_TAGS);
+            new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
+                    TEST_DATE, TEST_TAGS);
         } catch (Exception e) {
-            fail(e.getMessage());
+            fail(e.toString());
         }
 
         // Test without id parameter
         try {
-            new Magic8Task(TEST_DESCRIPTION, TEST_DATE, TEST_TAGS);
+            new Magic8Task(TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_TAGS);
         } catch (Exception e) {
-            fail(e.getMessage());
+            fail(e.toString());
         }
 
         // Test with zero id
         try {
-            new Magic8Task(TEST_ZERO_ID, TEST_DESCRIPTION, TEST_DATE, TEST_TAGS);
+            new Magic8Task(0, TEST_NON_ALPHANUMERIC_STRING, TEST_DATE,
+                    TEST_TAGS);
         } catch (Exception e) {
-            fail(e.getMessage());
+            fail(e.toString());
         }
 
         // Test with negative id
         try {
-            new Magic8Task(TEST_NEGATIVE_ID, TEST_DESCRIPTION, TEST_DATE,
-                    TEST_TAGS);
+            new Magic8Task(TEST_NEGATIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
+                    TEST_DATE, TEST_TAGS);
             fail(EXCEPTION_EXPECTED_NEGATIVE_ID);
+        } catch (IllegalArgumentException e) {
         } catch (Exception e) {
+            fail(e.toString());
         }
 
         // Test with null description
         try {
             new Magic8Task(TEST_POSITIVE_ID, null, TEST_DATE, TEST_TAGS);
-            fail(EXCEPTION_EXPECTED_EMPTY_DESCRIPTION);
+            fail(EXCEPTION_EXPECTED_NULL_DESCRIPTION);
+        } catch (IllegalArgumentException e) {
         } catch (Exception e) {
+            fail(e.toString());
         }
 
         // Test with empty string description
@@ -74,200 +79,417 @@ public class Magic8TaskTest {
             new Magic8Task(TEST_POSITIVE_ID, TEST_EMPTY_STRING, TEST_DATE,
                     TEST_TAGS);
             fail(EXCEPTION_EXPECTED_EMPTY_DESCRIPTION);
+        } catch (IllegalArgumentException e) {
         } catch (Exception e) {
+            fail(e.toString());
         }
 
         // Test without date parameter
         try {
-            new Magic8Task(TEST_POSITIVE_ID, TEST_DESCRIPTION, null, TEST_TAGS);
+            new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
+                    null, TEST_TAGS);
         } catch (Exception e) {
-            fail(e.getMessage());
+            fail(e.toString());
         }
 
         // Test with null tags
         try {
-            new Magic8Task(TEST_POSITIVE_ID, TEST_EMPTY_STRING, TEST_DATE, null);
+            new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
+                    TEST_DATE, null);
         } catch (Exception e) {
-            e.getMessage();
+            fail(e.toString());
         }
 
-        // Test with tags containing null
+        // Test with tags containing null string tag
         try {
-            HashSet<String> tags = (HashSet<String>) TEST_TAGS.clone();
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
             tags.add(null);
 
-            new Magic8Task(TEST_POSITIVE_ID, TEST_DESCRIPTION, TEST_DATE, tags);
-            fail(EXCEPTION_EXPECTED_EMPTY_TAG);
+            new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
+                    TEST_DATE, tags);
+            fail(EXCEPTION_EXPECTED_NULL_TAG);
+        } catch (IllegalArgumentException e) {
         } catch (Exception e) {
+            fail(e.toString());
         }
 
-        // Test with tags containing empty string
+        // Test with tags containing empty string tag
         try {
-            HashSet<String> tags = (HashSet<String>) TEST_TAGS.clone();
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
             tags.add(TEST_EMPTY_STRING);
 
-            new Magic8Task(TEST_POSITIVE_ID, TEST_DESCRIPTION, TEST_DATE, tags);
+            new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
+                    TEST_DATE, tags);
             fail(EXCEPTION_EXPECTED_EMPTY_TAG);
+        } catch (IllegalArgumentException e) {
         } catch (Exception e) {
+            fail(e.toString());
         }
 
         // Test with tags containing non-alphanumeric tag
         try {
-            HashSet<String> tags = (HashSet<String>) TEST_TAGS.clone();
-            tags.add(TEST_NON_ALPHANUMERIC_TAG);
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
+            tags.add(TEST_NON_ALPHANUMERIC_STRING);
 
-            new Magic8Task(TEST_POSITIVE_ID, TEST_DESCRIPTION, TEST_DATE, tags);
+            new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
+                    TEST_DATE, tags);
             fail(EXCEPTION_EXPECTED_NON_ALPHANUMERIC_TAG);
+        } catch (IllegalArgumentException e) {
         } catch (Exception e) {
+            fail(e.toString());
         }
     }
 
-    public Magic8Task getTestTask() {
-        return new Magic8Task(TEST_POSITIVE_ID, TEST_DESCRIPTION, TEST_DATE,
-                TEST_TAGS);
+    @Test
+    public void testEquals() {
+        // Test reflexivity
+        try {
+            assert (TEST_TASK.equals(TEST_TASK));
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test symmetry
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+
+            assert (task.equals(TEST_TASK));
+            assert (TEST_TASK.equals(task));
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test transitivity
+        try {
+            Magic8Task task1 = new Magic8Task(TEST_TASK);
+            Magic8Task task2 = new Magic8Task(task1);
+
+            assert (TEST_TASK.equals(task1));
+            assert (task1.equals(task2));
+            assert (TEST_TASK.equals(task2));
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test consistency
+        try {
+            assert (TEST_TASK.equals(TEST_TASK));
+            assert (TEST_TASK.equals(TEST_TASK));
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with null
+        try {
+            assert (!TEST_TASK.equals(null));
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with different id
+        try {
+            Magic8Task task = new Magic8Task(TEST_NON_ALPHANUMERIC_STRING,
+                    TEST_DATE, TEST_TAGS);
+
+            assert (!task.equals(TEST_TASK));
+            assert (!TEST_TASK.equals(task));
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with different description
+        try {
+            Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
+                    "different description", TEST_DATE, TEST_TAGS);
+
+            assert (!task.equals(TEST_TASK));
+            assert (!TEST_TASK.equals(task));
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with null deadline
+        try {
+            Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, null, TEST_TAGS);
+
+            assert (!task.equals(TEST_TASK));
+            assert (!TEST_TASK.equals(task));
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with different deadline
+        try {
+            Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, new Date(), TEST_TAGS);
+
+            assert (!task.equals(TEST_TASK));
+            assert (!TEST_TASK.equals(task));
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with null tags
+        try {
+            Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, null);
+
+            assert (!task.equals(TEST_TASK));
+            assert (!TEST_TASK.equals(task));
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with different tags
+        try {
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
+            tags.add(TEST_ALPHANUMERIC_STRING);
+            Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, tags);
+
+            assert (!task.equals(TEST_TASK));
+            assert (!TEST_TASK.equals(task));
+        } catch (Exception e) {
+            fail(e.toString());
+        }
     }
 
     @Test
     public void testSetId() {
-        Magic8Task task = getTestTask();
-
         // Test valid id
         try {
-            task.setId(TEST_POSITIVE_ID);
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            int id = Integer.MAX_VALUE;
+            task.setId(id);
+
+            Magic8Task expectedTask = new Magic8Task(id,
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_TAGS);
+
+            assert (task.equals(expectedTask));
         } catch (Exception e) {
-            fail(e.getMessage());
+            fail(e.toString());
         }
 
         // Test zero id
         try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
             task.setId(TEST_ZERO_ID);
+
             fail(EXCEPTION_EXPECTED_ZERO_ID);
         } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
         }
 
         // Test negative id
         try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
             task.setId(TEST_NEGATIVE_ID);
+
             fail(EXCEPTION_EXPECTED_NEGATIVE_ID);
         } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
         }
     }
 
     @Test
     public void testSetDesc() {
-        Magic8Task task = getTestTask();
-
         // Test valid description
         try {
-            task.setDesc(TEST_DESCRIPTION);
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            String desc = "Original cheez doodles the CHEEZIER snack";
+            task.setDesc(desc);
+
+            Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID, desc,
+                    TEST_DATE, TEST_TAGS);
+
+            assert (task.equals(expectedTask));
         } catch (Exception e) {
-            fail(e.getMessage());
+            fail(e.toString());
         }
 
-        // Test null description
+        // Test null string description
         try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
             task.setDesc(null);
-            fail(EXCEPTION_EXPECTED_EMPTY_DESCRIPTION);
+
+            fail(EXCEPTION_EXPECTED_NULL_DESCRIPTION);
         } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
         }
 
         // Test empty string description
         try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
             task.setDesc(TEST_EMPTY_STRING);
+
             fail(EXCEPTION_EXPECTED_EMPTY_DESCRIPTION);
         } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+    }
+
+    @Test
+    public void testSetDeadline() {
+        // Test valid date
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            Date date = new Date();
+            task.setDeadline(new Date(date.getTime()));
+
+            Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, date, TEST_TAGS);
+
+            assert (task.equals(expectedTask));
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
         }
     }
 
     @Test
     public void testSetTags() {
-        Magic8Task task = getTestTask();
-
         // Test valid tags
         try {
-            task.setTags(TEST_TAGS);
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            HashSet<String> tags = new HashSet<String>(Arrays.asList("sugar",
+                    "spice"));
+            task.setTags(tags);
+
+            Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, tags);
+
+            assert (task.equals(expectedTask));
         } catch (Exception e) {
-            fail(e.getMessage());
+            fail(e.toString());
         }
 
         // Test null tags
         try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
             task.setTags(null);
+
+            Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, null);
+
+            assert (task.equals(expectedTask));
         } catch (Exception e) {
-            fail(e.getMessage());
+            fail(e.toString());
         }
 
-        // Test tags containing null
+        // Test tags containing null string tag
         try {
-            HashSet<String> tags = (HashSet<String>) TEST_TAGS.clone();
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
             tags.add(null);
-
             task.setTags(tags);
+
+            fail(EXCEPTION_EXPECTED_NULL_TAG);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test tags containing empty string tag
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
+            tags.add(TEST_EMPTY_STRING);
+            task.setTags(tags);
+
             fail(EXCEPTION_EXPECTED_EMPTY_TAG);
         } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
         }
 
-        // Test tags containing empty string
+        // Test tags containing non-alphanumeric string tag
         try {
-            HashSet<String> tags = (HashSet<String>) TEST_TAGS.clone();
-            tags.add(null);
-
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
+            tags.add(TEST_NON_ALPHANUMERIC_STRING);
             task.setTags(tags);
-            fail(EXCEPTION_EXPECTED_EMPTY_TAG);
-        } catch (IllegalArgumentException e) {
-        }
 
-        // Test tags containing non-alphanumeric string
-        try {
-            HashSet<String> tags = (HashSet<String>) TEST_TAGS.clone();
-            tags.add(TEST_NON_ALPHANUMERIC_TAG);
-
-            task.setTags(tags);
             fail(EXCEPTION_EXPECTED_NON_ALPHANUMERIC_TAG);
         } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
         }
     }
 
     @Test
     public void testAddTag() {
-        Magic8Task task = getTestTask();
-
         // Test valid tag
         try {
-            task.addTag("tag4");
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            String tag = "snack";
+            task.addTag(tag);
+
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
+            tags.add(tag);
+            Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, tags);
+
+            assert (task.equals(expectedTask));
         } catch (Exception e) {
-            fail(e.getMessage());
+            fail(e.toString());
         }
 
-        // Test null tag
+        // Test null string tag
         try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
             task.addTag(null);
-            fail(EXCEPTION_EXPECTED_EMPTY_TAG);
-        } catch (IllegalArgumentException e) {
-        }
 
-        // Test empty tag
-        try {
-            task.addTag("TEST_EMPTY_STRING");
-            fail(EXCEPTION_EXPECTED_EMPTY_TAG);
+            fail(EXCEPTION_EXPECTED_NULL_TAG);
         } catch (IllegalArgumentException e) {
-        }
-
-        // Test non-alphanumeric tag
-        try {
-            task.addTag(TEST_NON_ALPHANUMERIC_TAG);
-            fail(EXCEPTION_EXPECTED_NON_ALPHANUMERIC_TAG);
         } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test empty string tag
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            task.addTag(TEST_EMPTY_STRING);
+
+            fail(EXCEPTION_EXPECTED_EMPTY_TAG);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test non-alphanumeric string tag
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            task.addTag(EXCEPTION_EXPECTED_NON_ALPHANUMERIC_TAG);
+
+            fail(EXCEPTION_EXPECTED_NON_ALPHANUMERIC_TAG);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
         }
     }
-    
-    /*@Test
-    public void testToStringString() {
-        fail("Not yet implemented"); // TODO
-    }
-    
+
     @Test
-    public void testParse() {
-        fail("Not yet implemented"); // TODO
-    }*/
+    public void testRemoveTag() {
+        // Test valid tag
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            String tag = "tag1";
+            task.removeTag(tag);
+
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
+            tags.remove(tag);
+
+            Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, tags);
+
+            assert (task.equals(expectedTask));
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+    }
 }

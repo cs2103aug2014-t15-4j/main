@@ -2,11 +2,10 @@ package fantasticfour.magiceight;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 
-class Magic8Task implements Magic8TaskInterface {
+public class Magic8Task implements Magic8TaskInterface {
     private static final String ERROR_NEGATIVE_ID = "id cannot be negative";
     private static final String ERROR_ZERO_ID = "id cannot be zero";
     private static final String ERROR_EMPTY_DESCRIPTION = "description must be non-empty string";
@@ -36,6 +35,11 @@ class Magic8Task implements Magic8TaskInterface {
     public Magic8Task(String desc, Date deadline, HashSet<String> tags)
             throws IllegalArgumentException {
         this(0, desc, deadline, tags);
+    }
+
+    public Magic8Task(Magic8Task task) {
+        this(task.getId(), task.getDesc(), new Date(task.getDeadline()
+                .getTime()), new HashSet<String>(task.getTags()));
     }
 
     public int getId() {
@@ -111,38 +115,6 @@ class Magic8Task implements Magic8TaskInterface {
         this.tags.remove(tag);
     }
 
-    public void replaceTag(String newTag, String oldTag)
-            throws IllegalArgumentException {
-        removeTag(oldTag);
-        addTag(newTag);
-    }
-
-    public String toString(String delimiter) {
-        String taskId = Integer.toString(this.id);
-        String desc = this.desc.replace(delimiter, "\\" + delimiter);
-        String deadline = df.format(this.deadline);
-        String tags = "";
-        for (String tag : this.tags) {
-            tags += " " + tag;
-        }
-        return taskId + delimiter + desc + delimiter + deadline + delimiter
-                + tags;
-    }
-
-    public static Magic8Task parse(String s, String delimiter)
-            throws ParseException {
-        String regex = "(?<!\\\\)" + delimiter;
-        String[] tokens = s.split(regex);
-
-        int taskId = Integer.parseInt(tokens[0]);
-        String desc = tokens[1];
-        Date deadline = df.parse(tokens[2]);
-        HashSet<String> tags = new HashSet<String>(Arrays.asList(tokens[3]
-                .split(" ")));
-        Magic8Task task = new Magic8Task(taskId, desc, deadline, tags);
-        return task;
-    }
-
     public String[] magic8TaskToStringArray() {
         String[] stringArray = new String[4];
         stringArray[0] = Integer.toString(id);
@@ -199,5 +171,28 @@ class Magic8Task implements Magic8TaskInterface {
         } else {
             throw new IllegalArgumentException("Error insufficient arguments");
         }
+    }
+
+    public boolean equals(Object obj) {
+        if (obj instanceof Magic8Task) {
+            Magic8Task magic8Task = (Magic8Task) obj;
+            boolean result = true;
+            result = result && magic8Task.getId() == id;
+            result = result && magic8Task.getDesc().equals(desc);
+            result = result
+                    && (magic8Task.getDeadline() == null && deadline == null || magic8Task
+                            .getDeadline().equals(deadline));
+            result = result && magic8Task.getTags().size() == tags.size();
+            for (String tag : tags) {
+                if (!magic8Task.getTags().contains(tag)) {
+                    result = false;
+                    break;
+                }
+            }
+            return result;
+        } else {
+            return false;
+        }
+
     }
 }
