@@ -113,6 +113,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         return result;
     }
 
+    @Override
     public boolean undo() throws IOException {
         if (opIdx == 0) {
             return false;
@@ -126,6 +127,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         return true;
     }
 
+    @Override
     public boolean redo() throws IOException {
         if (opIdx == ids.size() - 1) {
             return false;
