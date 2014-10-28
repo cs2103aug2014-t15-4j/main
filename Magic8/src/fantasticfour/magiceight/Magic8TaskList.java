@@ -2,6 +2,7 @@ package fantasticfour.magiceight;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -14,12 +15,22 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     private TreeMap<Integer, Magic8Task> bufferedTaskList;
     private HashMap<String, HashSet<Integer>> tagToTaskIds;
 
+    private int opIdx;
+    private ArrayList<Integer> ids;
+    private ArrayList<TreeMap<Integer, Magic8Task>> taskLists;
+
     public Magic8TaskList(String fileName) throws IOException, ParseException {
         storage = new Magic8Storage(fileName);
         id = storage.getId();
         taskList = storage.getTaskList();
         bufferedTaskList = new TreeMap<Integer, Magic8Task>();
         tagToTaskIds = new HashMap<String, HashSet<Integer>>();
+
+        opIdx = 0;
+        ids = new ArrayList<Integer>();
+        ids.add(id);
+        taskLists = new ArrayList<TreeMap<Integer, Magic8Task>>();
+        taskLists.add(copyTaskList());
 
         indexTaskList();
     }
@@ -32,9 +43,12 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         int taskId = id++;
         task.setId(taskId);
 
+        // Add task to task list
         taskList.put(taskId, task);
         indexTask(task);
         writeToFile();
+
+        backupTaskList();
 
         return task;
     }
@@ -43,13 +57,15 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     public Magic8Task removeTask(Magic8Task task) throws IOException {
         assert task != null;
 
+        // Remove task from task list
         int taskId = task.getId();
-
         Magic8Task storedTask = taskList.remove(taskId);
         if (storedTask != null) {
             unindexTask(task);
         }
         writeToFile();
+
+        backupTaskList();
 
         return storedTask;
     }
@@ -62,13 +78,17 @@ public class Magic8TaskList implements Magic8TaskListInterface {
 
         int taskId = task.getId();
 
+        // Remove task from task list
         Magic8Task storedTask = taskList.remove(taskId);
         if (storedTask != null) {
             unindexTask(storedTask);
 
+            // Add task to task list
             taskList.put(taskId, task);
             indexTask(task);
             writeToFile();
+
+            backupTaskList();
 
             result = true;
         }
@@ -81,13 +101,42 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         boolean result = false;
 
         if (!taskList.isEmpty()) {
+            // Remove all tasks from task list
             taskList.clear();
             writeToFile();
+
+            backupTaskList();
 
             result = true;
         }
 
         return result;
+    }
+
+    public boolean undo() throws IOException {
+        if (opIdx == 0) {
+            return false;
+        }
+
+        opIdx--;
+        id = ids.get(opIdx);
+        taskList = taskLists.get(opIdx);
+        writeToFile();
+
+        return true;
+    }
+
+    public boolean redo() throws IOException {
+        if (opIdx == ids.size() - 1) {
+            return false;
+        }
+
+        opIdx++;
+        id = ids.get(opIdx);
+        taskList = taskLists.get(opIdx);
+        writeToFile();
+
+        return true;
     }
 
     private void indexTask(Magic8Task task) {
@@ -130,6 +179,12 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
             indexTask(entry.getValue());
         }
+    }
+
+    private void backupTaskList() {
+        opIdx++;
+        ids.add(id);
+        taskLists.add(copyTaskList());
     }
 
     private void writeToFile() throws IOException {

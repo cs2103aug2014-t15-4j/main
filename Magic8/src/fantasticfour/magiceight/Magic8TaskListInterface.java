@@ -44,6 +44,22 @@ interface Magic8TaskListInterface {
     public boolean clearTasks() throws IOException;
 
     /**
+     * Undoes the last operation.
+     *
+     * @return true if undo succeeds. false if there was no operation to undo.
+     * @throws IOException
+     */
+    public boolean undo() throws IOException;
+
+    /**
+     * Redoes the last operation.
+     *
+     * @return true if redo succeeds. false if there was no operation to redo.
+     * @throws IOException
+     */
+    public boolean redo() throws IOException;
+
+    /**
      * Returns all tasks in the task list ordered by the task id.
      *
      * @return all tasks in the task list ordered by the task id.
