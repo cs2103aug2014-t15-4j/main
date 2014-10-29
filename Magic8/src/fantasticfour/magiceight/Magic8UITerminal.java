@@ -26,12 +26,18 @@ public class Magic8UITerminal {
         taskListManager = new Magic8TaskList(filename);
     }
     
-    private static void magic8UIRun() throws IOException {
+    private static void magic8UIRun(){
         while(cmdObj.getFunction() != "quit") {
-            System.out.print("Command > ");
-            cmd = br.readLine();
-            cmdObj = Magic8Parser.parseCommand(cmd);
-            invoke();
+            try {
+                System.out.print("Command > ");
+                cmd = br.readLine();
+                cmdObj = Magic8Parser.parseCommand(cmd);
+                invoke();
+            } catch (IOException e) {
+                System.out.println(e.toString());
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.toString());
+            }
         }
     }
  
@@ -40,16 +46,12 @@ public class Magic8UITerminal {
             magic8UIInit();
         } catch (IOException e) {
             System.out.println(e.toString());
+            System.exit(0);
         } catch (ParseException e) {
             System.out.println(e.toString());
+            System.exit(0);
         }
         
-        try {
-            magic8UIRun();
-        } catch (IOException e) {
-            System.out.println(e.toString());
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.toString());
-        }
+        magic8UIRun();
     }
 }
