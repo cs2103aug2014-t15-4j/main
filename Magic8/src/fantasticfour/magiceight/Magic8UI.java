@@ -2,13 +2,12 @@ package fantasticfour.magiceight;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -49,10 +48,6 @@ public class Magic8UI {
 		commandLine.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg){
-				/*
-				 * Below is just an example of what will happen when user presses enter after 
-				 * typing something in the user input text field at the bottom of the GUI.
-				 */
 				String inputStr = commandLine.getText(); //this is to get the user input text
 				String displayStr = listOfTasks.getText();
 				if(displayStr.equals("Welcome to Magic 8!\nFor a quick guide, "
@@ -65,7 +60,7 @@ public class Magic8UI {
 				//this clears the input field
 				commandLine.setText("");
 
-				if (inputStr.startsWith("help")){
+				/*if (inputStr.startsWith("help")){
 					try {
 						Magic8UITerminal.displayHelp(inputStr);
 					} catch (IOException e) {
@@ -73,21 +68,22 @@ public class Magic8UI {
 					}
 				}else {
 					Magic8UITerminal.display(inputStr);
-				}
+				}*/
 			}
 		});
 	}
 	private void initialize() {
 		frameMagic8UI = new JFrame();
 		frameMagic8UI.setResizable(false);
-		frameMagic8UI.setFont(new Font("Trebuchet MS", Font.PLAIN, 12));
+		frameMagic8UI.setFont(new Font("Arial", Font.PLAIN, 12));
 		frameMagic8UI.setForeground(new Color(0, 0, 0));
 		frameMagic8UI.setBackground(new Color(255, 255, 255));
 		frameMagic8UI.setTitle(NAME_TITLE);
 	    
 	    frameMagic8UI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    
-	    commandLine.setFont(new Font("Trebuchet MS", Font.PLAIN, 14));
+	    System.out.println(commandLine);
+	    commandLine.setFont(new Font("Arial", Font.PLAIN, 14));
 	    commandLine.setLocation(500, 350);
 	    frameMagic8UI.add(commandLine);
 	    frameMagic8UI.setResizable(false);
@@ -149,8 +145,12 @@ public class Magic8UI {
 		tabbedPane.setFont(new Font("Levenim MT", Font.PLAIN, 13));
 		displayPanel.add(tabbedPane);
 		
-	    launch();
+		launch();
 	    frameMagic8UI.pack();
 	    frameMagic8UI.setVisible(true); 
+	}
+	
+	public static void main(String[] args){
+		Magic8UI test = new Magic8UI();
 	}
 }
