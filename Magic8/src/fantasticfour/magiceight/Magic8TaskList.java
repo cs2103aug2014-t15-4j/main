@@ -39,6 +39,8 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     public Magic8Task addTask(Magic8Task task) throws IOException {
         assert task != null;
 
+        task = new Magic8Task(task);
+
         // Assign task id
         int taskId = id++;
         task.setId(taskId);
@@ -67,12 +69,14 @@ public class Magic8TaskList implements Magic8TaskListInterface {
 
         backupTaskList();
 
-        return storedTask;
+        return new Magic8Task(storedTask);
     }
 
     @Override
     public boolean updateTask(Magic8Task task) throws IOException {
         assert task != null;
+
+        task = new Magic8Task(task);
 
         boolean result = false;
 
@@ -189,6 +193,11 @@ public class Magic8TaskList implements Magic8TaskListInterface {
 
     private void backupTaskList() {
         opIdx++;
+
+        int size = ids.size();
+        ids.subList(opIdx, size).clear();
+        taskLists.subList(opIdx, size).clear();
+
         ids.add(id);
         taskLists.add(copyTaskList());
     }
