@@ -144,6 +144,7 @@ public class Magic8Task implements Magic8TaskInterface {
             for (String tag : tags) {
                 stringArray[3] += " " + tag;
             }
+            stringArray[3] = stringArray[3].trim();
         }
 
         return stringArray;
