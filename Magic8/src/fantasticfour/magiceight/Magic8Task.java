@@ -37,8 +37,7 @@ public class Magic8Task implements Magic8TaskInterface {
     }
 
     public Magic8Task(Magic8Task task) {
-        this(task.getId(), task.getDesc(), new Date(task.getDeadline()
-                .getTime()), new HashSet<String>(task.getTags()));
+        this(task.getId(), task.getDesc(), task.getDeadline(), new HashSet<String>(task.getTags()));
     }
 
     @Override
