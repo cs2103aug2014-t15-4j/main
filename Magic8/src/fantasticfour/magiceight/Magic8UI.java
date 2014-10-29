@@ -7,6 +7,9 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
@@ -17,6 +20,10 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+
+import fantasticfour.magiceight.command.Command;
+import fantasticfour.magiceight.command.CommandInvoker;
+import fantasticfour.magiceight.command.HelpCommand;
 
 public class Magic8UI {
 	
@@ -48,7 +55,7 @@ public class Magic8UI {
 		commandLine.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg){
-				String inputStr = commandLine.getText(); //this is to get the user input text
+				String inputStr = commandLine.getText(); 
 				String displayStr = listOfTasks.getText();
 				if(displayStr.equals("Welcome to Magic 8!\nFor a quick guide, "
 						+ "	type '-h' or 'help' and press ENTER.")){
@@ -60,22 +67,27 @@ public class Magic8UI {
 				//this clears the input field
 				commandLine.setText("");
 
-				/*if (inputStr.startsWith("help")){
+				if (("help".equalsIgnoreCase((inputStr))||
+						("-h".equalsIgnoreCase(inputStr)))){
 					try {
-						Magic8UITerminal.displayHelp(inputStr);
+						CommandInvoker(Magic8Parser.parseCommand(inputStr), );
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-				}else {
-					Magic8UITerminal.display(inputStr);
+				}/*else if(){
+					Magic8UITerminal.Magic8UIInit(inputStr);
 				}*/
+				
+				if ("exit".equalsIgnoreCase(inputStr)) {
+					System.exit(0);
+				}
 			}
 		});
 	}
 	private void initialize() {
 		frameMagic8UI = new JFrame();
 		frameMagic8UI.setResizable(false);
-		frameMagic8UI.setFont(new Font("Arial", Font.PLAIN, 12));
+		frameMagic8UI.setFont(new Font("Verdana", Font.PLAIN, 12));
 		frameMagic8UI.setForeground(new Color(0, 0, 0));
 		frameMagic8UI.setBackground(new Color(255, 255, 255));
 		frameMagic8UI.setTitle(NAME_TITLE);
@@ -83,7 +95,7 @@ public class Magic8UI {
 	    frameMagic8UI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    
 	    System.out.println(commandLine);
-	    commandLine.setFont(new Font("Arial", Font.PLAIN, 14));
+	    commandLine.setFont(new Font("Verdana", Font.PLAIN, 14));
 	    commandLine.setLocation(500, 350);
 	    frameMagic8UI.add(commandLine);
 	    frameMagic8UI.setResizable(false);
@@ -142,15 +154,15 @@ public class Magic8UI {
 		tabbedPane = new JTabbedPane(JTabbedPane.BOTTOM);
 		tabbedPane.setBackground(new Color(245, 245, 245));
 		tabbedPane.setBorder(null);
-		tabbedPane.setFont(new Font("Levenim MT", Font.PLAIN, 13));
+		tabbedPane.setFont(new Font("Calibri", Font.PLAIN, 13));
 		displayPanel.add(tabbedPane);
 		
-		launch();
 	    frameMagic8UI.pack();
 	    frameMagic8UI.setVisible(true); 
 	}
 	
 	public static void main(String[] args){
 		Magic8UI test = new Magic8UI();
+		test.launch();
 	}
 }
