@@ -193,6 +193,11 @@ public class Magic8TaskList implements Magic8TaskListInterface {
 
     private void backupTaskList() {
         opIdx++;
+
+        int size = ids.size();
+        ids.subList(opIdx, size).clear();
+        taskLists.subList(opIdx, size).clear();
+
         ids.add(id);
         taskLists.add(copyTaskList());
     }
