@@ -10,6 +10,7 @@ import fantasticfour.magiceight.command.EditCommand;
 import fantasticfour.magiceight.command.ExitCommand;
 import fantasticfour.magiceight.command.HelpCommand;
 import fantasticfour.magiceight.command.ICommand;
+import fantasticfour.magiceight.command.RedoCommand;
 import fantasticfour.magiceight.command.SearchCommand;
 import fantasticfour.magiceight.command.UndoCommand;
 
@@ -22,6 +23,7 @@ public class Magic8Controller {
     private static final String EDIT_FUNCTION = "edit";
     private static final String EXIT_FUNCTION = "exit";
     private static final String HELP_FUNCTION = "help";
+    private static final String REDO_FUNCTION = "redo";
     private static final String SEARCH_FUNCTION = "search";
     private static final String UNDO_FUNCTION = "undo";
     
@@ -48,6 +50,9 @@ public class Magic8Controller {
                 break;
             case HELP_FUNCTION:
                 command = new HelpCommand(obj, tm);
+                break;
+            case REDO_FUNCTION:
+                command = new RedoCommand(obj, tm);
                 break;
             case SEARCH_FUNCTION:
                 command = new SearchCommand(obj, tm);

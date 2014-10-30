@@ -20,6 +20,7 @@ public class Magic8Parser {
             add("help");
             add("search \\w+");
             add("undo");
+            add("redo");
         }
     };
     
