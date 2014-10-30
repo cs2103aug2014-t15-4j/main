@@ -17,9 +17,14 @@ public class DisplayCommand extends Command {
     private void display(Magic8Task task) {
         System.out.println(Integer.toString(task.getId()) + ": " + task.getDesc() + " ");
         if(task.getTags() != null) {
-            System.out.print("tags:");
+            System.out.print("tags: ");
+            int i = 0;
             for(String tag : task.getTags()) {
-                System.out.print(tag + ", ");
+                System.out.print(tag);
+                if (i != task.getTags().size()-1){
+                	System.out.print(", ");
+                }
+                i++;
             }
             System.out.println();
         }
