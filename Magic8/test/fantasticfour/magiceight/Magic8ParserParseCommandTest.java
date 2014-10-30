@@ -196,6 +196,7 @@ public class Magic8ParserParseCommandTest {
         inputTest = "display #grocery #abcd";
         tagsInputTest.clear();
         tagsInputTest.add("grocery");
+        tagsInputTest.add("abcd");
         testCommandObj.setFunction("display");
         testCommandObj.setTaskDescription(null);
         testCommandObj.setTags(tagsInputTest);

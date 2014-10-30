@@ -5,14 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class Magic8Parser {
     
     private static ArrayList<String> commandRegexList = new ArrayList<String>() {
         {
-            add("add \\w+((\\s\\w+)+)?((\\s#\\w+)+)?( by \\d{1,2}/\\d{1,2}/\\d{2,4})?");
+            add("add [\\w\\p{Punct}]+((\\s[\\w\\p{Punct}]+)+)?((\\s#\\w+)+)?( by \\d{1,2}/\\d{1,2}/\\d{4})?");
             add("clear");
             add("delete(\\sall|\\s\\d+( to \\d+|(,\\d+)+)?|\\s\\*|\\s#\\w+((\\s#\\w+)+)?)");
             add("display((\\s#\\w+)+)?");
@@ -21,6 +20,7 @@ public class Magic8Parser {
             add("help");
             add("search \\w+");
             add("undo");
+            add("redo");
         }
     };
     
@@ -65,7 +65,7 @@ public class Magic8Parser {
                         }
                         if (deadlineFlag) {
                             try {
-                                deadline = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH).parse(commandParam);
+                                deadline = new SimpleDateFormat("dd/mm/yyyy").parse(commandParam);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -106,7 +106,14 @@ public class Magic8Parser {
                     }                    
                     break;
                     
-                case "display":                    
+                case "display":
+                    if(commandParams != null) {
+                        for(String commandParam : commandParams) {
+                            if (commandParam.startsWith("#")) {
+                                tags.add(commandParam.substring(1));
+                            }
+                        }
+                    }
                     break;
                     
                 case "edit" :
