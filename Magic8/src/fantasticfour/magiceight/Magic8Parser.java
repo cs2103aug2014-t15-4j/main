@@ -65,7 +65,7 @@ public class Magic8Parser {
                         }
                         if (deadlineFlag) {
                             try {
-                                deadline = new SimpleDateFormat("dd/mm/yyyy").parse(commandParam);
+                                deadline = new SimpleDateFormat("dd/MM/yyyy").parse(commandParam);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }

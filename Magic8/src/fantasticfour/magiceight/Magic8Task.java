@@ -2,6 +2,7 @@ package fantasticfour.magiceight;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -127,11 +128,12 @@ public class Magic8Task implements Magic8TaskInterface {
         String[] stringArray = new String[4];
         stringArray[0] = Integer.toString(id);
         stringArray[1] = desc;
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
         if (deadline == null) {
             stringArray[2] = "@null";
         } else {
-            stringArray[2] = deadline.toString();
+            stringArray[2] = df.format(deadline);
         }
 
         if (tags == null) {
@@ -151,6 +153,8 @@ public class Magic8Task implements Magic8TaskInterface {
 
     public static Magic8Task stringArrayToMagic8Task(String[] stringArray)
             throws IllegalArgumentException, ParseException {
+    	
+    		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         if (stringArray.length >= 4) {
             int id = Integer.parseInt(stringArray[0]);
             String desc = stringArray[1];
@@ -160,7 +164,7 @@ public class Magic8Task implements Magic8TaskInterface {
             if (stringArray[2].equals("@null")) {
                 deadline = null;
             } else {
-                deadline = DateFormat.getDateInstance().parse(stringArray[2]);
+                deadline = df.parse(stringArray[2]);
             }
 
             if (stringArray[3].equals("@null")) {
