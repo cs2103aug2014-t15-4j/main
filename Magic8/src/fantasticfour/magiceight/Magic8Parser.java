@@ -11,7 +11,7 @@ public class Magic8Parser {
     
     private static ArrayList<String> commandRegexList = new ArrayList<String>() {
         {
-            add("add \\w+((\\s\\w+)+)?((\\s#\\w+)+)?( by \\d{1,2}/\\d{1,2}/\\d{4})?");
+            add("add [\\w\\p{Punct}]+((\\s[\\w\\p{Punct}]+)+)?((\\s#\\w+)+)?( by \\d{1,2}/\\d{1,2}/\\d{4})?");
             add("clear");
             add("delete(\\sall|\\s\\d+( to \\d+|(,\\d+)+)?|\\s\\*|\\s#\\w+((\\s#\\w+)+)?)");
             add("display((\\s#\\w+)+)?");
