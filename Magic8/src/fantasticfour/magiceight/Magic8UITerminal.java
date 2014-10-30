@@ -6,18 +6,15 @@ import java.io.InputStreamReader;
 import java.text.ParseException;
 
 import fantasticfour.magiceight.Magic8Parser;
-import fantasticfour.magiceight.command.CommandInvoker;
 
 public class Magic8UITerminal {
     
     private static String cmd, filename;
     private static Magic8TaskList taskListManager = null;
-    private static Magic8CommandObject cmdObj = new Magic8CommandObject();    
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    private static CommandInvoker invoker;
     
     private static void invoke() throws IOException {
-        invoker = new CommandInvoker(cmdObj, taskListManager);
+        new Magic8Controller(cmd, taskListManager);
     }
     
     private static void magic8UIInit() throws IOException, ParseException {        
@@ -27,11 +24,10 @@ public class Magic8UITerminal {
     }
     
     private static void magic8UIRun(){
-        while(cmdObj.getFunction() != "quit") {
+        while(true) {
             try {
                 System.out.print("Command > ");
                 cmd = br.readLine();
-                cmdObj = Magic8Parser.parseCommand(cmd);
                 invoke();
             } catch (IOException e) {
                 System.out.println(e.toString());
