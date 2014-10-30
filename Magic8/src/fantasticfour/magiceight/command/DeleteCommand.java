@@ -16,22 +16,33 @@ public class DeleteCommand extends Command {
     
     public void execute() throws IOException {
         Magic8Task task = null;
+        int count = 0;
         if(super.getIds() == null && super.getTags() == null) {
             super.getTaskManager().clearTasks();
         } else if(super.getTags() == null) {
             for(Integer id : super.getIds()) {
                 task = super.getTaskManager().getAllTasks().get(id);
-                super.getTaskManager().removeTask(task);
+                if(task != null) {
+                    super.getTaskManager().removeTask(task);
+                    count++;
+                }
             }
         } else {
             for(String tag : super.getTags()) {
                 TreeMap<Integer, Magic8Task> tasks = super.getTaskManager().getTasksWithTag(tag);
                 for(Map.Entry<Integer, Magic8Task> entry : tasks.entrySet()) {
                     task = entry.getValue();
-                    super.getTaskManager().removeTask(task);
+                    if(task != null) {
+                        super.getTaskManager().removeTask(task);
+                        count++;
+                    }
                 }
             }
         }
-        System.out.println("Task is removed succesfully");
+        
+        if(count > 1)
+            System.out.println(Integer.toString(count) + " tasks are removed");
+        else
+            System.out.println(Integer.toString(count) + " task is removed");
     }
 }
