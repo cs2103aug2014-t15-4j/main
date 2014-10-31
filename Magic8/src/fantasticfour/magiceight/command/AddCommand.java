@@ -23,6 +23,6 @@ public class AddCommand extends Command {
                               super.getDeadline(), 
                               tags);        
         super.getTaskManager().addTask(task);
-        System.out.println("Task is added succesfully");
+        System.out.println("Task is added successfully");
     }
 }
