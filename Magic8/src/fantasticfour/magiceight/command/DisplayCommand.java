@@ -1,6 +1,8 @@
 package fantasticfour.magiceight.command;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -32,8 +34,11 @@ public class DisplayCommand extends Command {
         if(task.getDeadline() == null) {
             System.out. println("not specified");
         } else {
-            System.out.println(task.getDeadline().toString());
+        	DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            System.out.println(df.format(task.getDeadline()));
         }
+        
+        System.out.println();
     }
     
     public void execute() throws IOException {
