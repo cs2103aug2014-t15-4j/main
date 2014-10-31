@@ -25,7 +25,6 @@ import javax.swing.border.MatteBorder;
 public class Magic8UI {
 
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	
 	private static Magic8TaskList taskManager = null;
 	private static String command, filename;
 	private static JTextField commandLine; 
@@ -85,6 +84,19 @@ public class Magic8UI {
 				if (!inputStr.equalsIgnoreCase("help")||
 						!inputStr.equalsIgnoreCase("-h")){
 					writeln("");
+				} else if (inputStr.equalsIgnoreCase("exit")) {
+					System.exit(0);
+				} else {
+				  while(true) {
+			            try {
+			                command = br.readLine();
+			                invoke();
+			            } catch (IOException e) {
+			                System.out.println(e.toString());
+			            } catch (IllegalArgumentException e) {
+			                System.out.println(e.toString());
+			            }
+			        }
 				}
 		        
 				//this prints the input text on the display
@@ -96,19 +108,6 @@ public class Magic8UI {
 		});
 		
 	}
-	
-	private static void magic8UIRun(){
-        while(true) {
-            try {
-                command = br.readLine();
-                invoke();
-            } catch (IOException e) {
-                System.out.println(e.toString());
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.toString());
-            }
-        }
-    }
 	
 	private void initialize() {
 		constructWindow();
@@ -160,8 +159,8 @@ public class Magic8UI {
 		scrollPane = new JScrollPane();
 		scrollPane.setViewportView(taskListView);
 		writeln("Welcome to Magic 8!\nFor assisstance, "
-				+ "type help  or -h and press ENTER. Else "
-				+ "enter the specified file name.");
+				+ "type 'help'  or '-h' and press ENTER.\n\nPlease "
+				+ "enter the specified file name to continue.");
 		taskListView.setBorder(new MatteBorder(marginInsets, Color.ORANGE));
 		displayPanel.add(taskListView);
 
@@ -250,7 +249,6 @@ public class Magic8UI {
 	
     public static void main(String[] args) {   
     	Magic8UI test = new Magic8UI();
-    	test.launch();
     	try {
             magic8UIInit();
         } catch (IOException e) {
@@ -260,7 +258,6 @@ public class Magic8UI {
             System.out.println(e.toString());
             System.exit(0);
         }
-        
-        magic8UIRun();
+    	test.launch();
     }
 }
