@@ -18,7 +18,7 @@ public class Magic8Parser {
             add("edit \\d+( \\w+)+");
             add("exit");
             add("help");
-            add("search \\w+");
+            add("search \\w+(\\s+\\w+)?");
             add("undo");
             add("redo");
         }
