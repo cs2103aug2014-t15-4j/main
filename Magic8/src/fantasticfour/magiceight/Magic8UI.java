@@ -286,7 +286,7 @@ public class Magic8UI {
 
 	void setFrameIcon(){
 
-		frameMagic8UI.setIconImage(Toolkit.getDefaultToolkit().getImage("Magic8Logo.png"));	
+		frameMagic8UI.setIconImage(Toolkit.getDefaultToolkit().getImage("lib/Magic8Logo.png"));	
 	}
 
 	boolean checkSystemTraySupport(){
@@ -305,7 +305,7 @@ public class Magic8UI {
 	void initSystemTray(){
 
 		//Set image when program is in system tray
-		Image image = Toolkit.getDefaultToolkit().getImage("media/logo.png");
+		Image image = Toolkit.getDefaultToolkit().getImage("lib/Magic8Logo.png");
 
 		//Action Listener to exit the programme ONLY when in system tray
 		ActionListener exitListener = new ActionListener() {
@@ -313,7 +313,7 @@ public class Magic8UI {
 			//If clicked on the exit option
 			public void actionPerformed(ActionEvent e) {
 
-				System.out.println("Exiting Remembra....");
+				System.out.println("Exiting Magic 8....");
 				System.exit(0);
 
 			}
