@@ -56,23 +56,6 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     }
 
     @Override
-    public Magic8Task removeTask(Magic8Task task) throws IOException {
-        assert task != null;
-
-        // Remove task from task list
-        int taskId = task.getId();
-        Magic8Task storedTask = taskList.remove(taskId);
-        if (storedTask != null) {
-            unindexTask(task);
-        }
-        writeToFile();
-
-        backupTaskList();
-
-        return new Magic8Task(storedTask);
-    }
-
-    @Override
     public boolean updateTask(Magic8Task task) throws IOException {
         assert task != null;
 
@@ -98,6 +81,42 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         }
 
         return result;
+    }
+
+    @Override
+    public Magic8Task removeTask(Magic8Task task) throws IOException {
+        assert task != null;
+
+        // Remove task from task list
+        int taskId = task.getId();
+        Magic8Task storedTask = taskList.remove(taskId);
+        if (storedTask != null) {
+            unindexTask(task);
+        }
+        writeToFile();
+
+        backupTaskList();
+
+        return new Magic8Task(storedTask);
+    }
+
+    @Override
+    public boolean removeTasksWithTag(String tag) throws IOException {
+        if (tagToTaskIds.containsKey(tag)) {
+            for (Integer taskId : tagToTaskIds.get(tag)) {
+                Magic8Task task = taskList.remove(taskId);
+                if (task != null) {
+                    unindexTask(task);
+                }
+            }
+            writeToFile();
+
+            backupTaskList();
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -243,24 +262,5 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         }
 
         return bufferedTaskList;
-    }
-
-    @Override
-    public boolean removeTasksWithTag(String tag) throws IOException {
-        if (tagToTaskIds.containsKey(tag)) {
-            for (Integer taskId : tagToTaskIds.get(tag)) {
-                Magic8Task task = taskList.remove(taskId);
-                if (task != null) {
-                    unindexTask(task);
-                }
-            }
-            writeToFile();
-
-            backupTaskList();
-
-            return true;
-        }
-
-        return false;
     }
 }

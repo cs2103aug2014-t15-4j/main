@@ -15,6 +15,16 @@ interface Magic8TaskListInterface {
     public Magic8Task addTask(Magic8Task task) throws IOException;
 
     /**
+     * Replaces the stored task with the same task id with the specified task
+     *
+     * @param task
+     *            Task to replace the stored task with.
+     * @return true if stored task was updated. false otherwise.
+     * @throws IOException
+     */
+    public boolean updateTask(Magic8Task task) throws IOException;
+
+    /**
      * Removes the task with the same task id of the specified task from the
      * task list, and returns it.
      *
@@ -26,24 +36,6 @@ interface Magic8TaskListInterface {
     public Magic8Task removeTask(Magic8Task task) throws IOException;
 
     /**
-     * Replaces the stored task with the same task id with the specified task
-     *
-     * @param task
-     *            Task to replace the stored task with.
-     * @return true if stored task was updated. false otherwise.
-     * @throws IOException
-     */
-    public boolean updateTask(Magic8Task task) throws IOException;
-
-    /**
-     * Removes all tasks from the task list.
-     *
-     * @return true if tasks were removed. false if task list was empty.
-     * @throws IOException
-     */
-    public boolean clearTasks() throws IOException;
-
-    /**
      * Removes all tasks with the specified tag from the task list.
      *
      * @param tag
@@ -53,6 +45,14 @@ interface Magic8TaskListInterface {
      * @throws IOException
      */
     public boolean removeTasksWithTag(String tag) throws IOException;
+
+    /**
+     * Removes all tasks from the task list.
+     *
+     * @return true if tasks were removed. false if task list was empty.
+     * @throws IOException
+     */
+    public boolean clearTasks() throws IOException;
 
     /**
      * Undoes the last operation.
