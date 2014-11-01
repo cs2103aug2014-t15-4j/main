@@ -217,7 +217,7 @@ public class Magic8TaskListStorageIntegrationTest {
             task.setId(3);
             task.setDesc("Updated task description");
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            task.setDeadline(df.parse("29/10/2014 11:11:11"));
+            task.setEndTime(df.parse("29/10/2014 11:11:11"));
             HashSet<String> tags = new HashSet<String>(Arrays.asList("tag4",
                     "tag5"));
             task.setTags(tags);
@@ -484,7 +484,7 @@ public class Magic8TaskListStorageIntegrationTest {
             task.setId(1);
             task.setDesc("Updated task description");
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            task.setDeadline(df.parse("29/10/2014 11:11:11"));
+            task.setEndTime(df.parse("29/10/2014 11:11:11"));
             HashSet<String> tags = new HashSet<String>(Arrays.asList("tag4",
                     "tag5"));
             task.setTags(tags);
@@ -587,7 +587,7 @@ public class Magic8TaskListStorageIntegrationTest {
             task.setId(3);
             task.setDesc("Updated task description");
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            task.setDeadline(df.parse("29/10/2014 11:11:11"));
+            task.setEndTime(df.parse("29/10/2014 11:11:11"));
             HashSet<String> tags = new HashSet<String>(Arrays.asList("tag4",
                     "tag5"));
             task.setTags(tags);
@@ -899,7 +899,7 @@ public class Magic8TaskListStorageIntegrationTest {
             task.setId(1);
             task.setDesc("Updated task description");
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            task.setDeadline(df.parse("29/10/2014 11:11:11"));
+            task.setEndTime(df.parse("29/10/2014 11:11:11"));
             HashSet<String> tags = new HashSet<String>(Arrays.asList("tag4",
                     "tag5"));
             task.setTags(tags);

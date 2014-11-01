@@ -24,10 +24,10 @@ public class SearchCommand extends Command {
             System.out.println();
         }
         System.out.print("deadline: ");
-        if(task.getDeadline() == null) {
+        if(task.getEndTime() == null) {
             System.out. println("not specified");
         } else {
-            System.out.println(task.getDeadline().toString());
+            System.out.println(task.getEndTime().toString());
         }
     }
     

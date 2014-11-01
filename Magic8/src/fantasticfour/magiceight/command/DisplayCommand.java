@@ -31,11 +31,11 @@ public class DisplayCommand extends Command {
             System.out.println();
         }
         System.out.print("deadline: ");
-        if(task.getDeadline() == null) {
+        if(task.getEndTime() == null) {
             System.out. println("not specified");
         } else {
         	DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-            System.out.println(df.format(task.getDeadline()));
+            System.out.println(df.format(task.getEndTime()));
         }
         
         System.out.println();

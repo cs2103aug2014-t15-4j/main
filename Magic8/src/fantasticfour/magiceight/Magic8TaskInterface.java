@@ -12,9 +12,9 @@ interface Magic8TaskInterface {
 
     public void setDesc(String desc);
 
-    public Date getDeadline();
+    public Date getEndTime();
 
-    public void setDeadline(Date deadline);
+    public void setEndTime(Date endTime);
 
     public HashSet<String> getTags();
 

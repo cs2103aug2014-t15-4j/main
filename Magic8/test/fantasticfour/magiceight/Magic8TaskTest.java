@@ -208,7 +208,7 @@ public class Magic8TaskTest {
             fail(e.toString());
         }
 
-        // Test with null deadline
+        // Test with null end time
         try {
             Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
                     TEST_NON_ALPHANUMERIC_STRING, null, TEST_TAGS);
@@ -219,7 +219,7 @@ public class Magic8TaskTest {
             fail(e.toString());
         }
 
-        // Test with different deadline
+        // Test with different end time
         try {
             Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
                     TEST_NON_ALPHANUMERIC_STRING, new Date(), TEST_TAGS);
@@ -334,12 +334,12 @@ public class Magic8TaskTest {
     }
 
     @Test
-    public void testSetDeadline() {
+    public void testSetEndTime() {
         // Test valid date
         try {
             Magic8Task task = new Magic8Task(TEST_TASK);
             Date date = new Date();
-            task.setDeadline(new Date(date.getTime()));
+            task.setEndTime(new Date(date.getTime()));
 
             Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
                     TEST_NON_ALPHANUMERIC_STRING, date, TEST_TAGS);

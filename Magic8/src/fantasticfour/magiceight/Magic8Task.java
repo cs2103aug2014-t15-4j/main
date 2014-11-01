@@ -17,10 +17,10 @@ public class Magic8Task implements Magic8TaskInterface {
 
     private int id;
     private String desc;
-    private Date deadline;
+    private Date endTime;
     private HashSet<String> tags;
 
-    public Magic8Task(int id, String desc, Date deadline, HashSet<String> tags)
+    public Magic8Task(int id, String desc, Date endTime, HashSet<String> tags)
             throws IllegalArgumentException {
         if (id < 0) {
             throw new IllegalArgumentException(MSG_NEGATIVE_ID);
@@ -28,17 +28,18 @@ public class Magic8Task implements Magic8TaskInterface {
 
         this.id = id;
         setDesc(desc);
-        setDeadline(deadline);
+        setEndTime(endTime);
         setTags(tags);
     }
 
-    public Magic8Task(String desc, Date deadline, HashSet<String> tags)
+    public Magic8Task(String desc, Date endTime, HashSet<String> tags)
             throws IllegalArgumentException {
-        this(0, desc, deadline, tags);
+        this(0, desc, endTime, tags);
     }
 
     public Magic8Task(Magic8Task task) {
-        this(task.getId(), task.getDesc(), task.getDeadline(), new HashSet<String>(task.getTags()));
+        this(task.getId(), task.getDesc(), task.getEndTime(),
+                new HashSet<String>(task.getTags()));
     }
 
     @Override
@@ -76,20 +77,20 @@ public class Magic8Task implements Magic8TaskInterface {
     }
 
     @Override
-    public Date getDeadline() {
-        if (deadline == null) {
-            return deadline;
+    public Date getEndTime() {
+        if (endTime == null) {
+            return endTime;
         }
 
-        return new Date(deadline.getTime());
+        return new Date(endTime.getTime());
     }
 
     @Override
-    public void setDeadline(Date deadline) {
-        if (deadline == null) {
-            this.deadline = deadline;
+    public void setEndTime(Date endTime) {
+        if (endTime == null) {
+            this.endTime = endTime;
         } else {
-            this.deadline = new Date(deadline.getTime());
+            this.endTime = new Date(endTime.getTime());
         }
     }
 
@@ -130,10 +131,10 @@ public class Magic8Task implements Magic8TaskInterface {
         stringArray[1] = desc;
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-        if (deadline == null) {
+        if (endTime == null) {
             stringArray[2] = "@null";
         } else {
-            stringArray[2] = df.format(deadline);
+            stringArray[2] = df.format(endTime);
         }
 
         if (tags == null) {
@@ -153,18 +154,18 @@ public class Magic8Task implements Magic8TaskInterface {
 
     public static Magic8Task stringArrayToMagic8Task(String[] stringArray)
             throws IllegalArgumentException, ParseException {
-    	
-    		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         if (stringArray.length >= 4) {
             int id = Integer.parseInt(stringArray[0]);
             String desc = stringArray[1];
-            Date deadline;
+            Date endTime;
             HashSet<String> tags;
 
             if (stringArray[2].equals("@null")) {
-                deadline = null;
+                endTime = null;
             } else {
-                deadline = df.parse(stringArray[2]);
+                endTime = df.parse(stringArray[2]);
             }
 
             if (stringArray[3].equals("@null")) {
@@ -179,7 +180,7 @@ public class Magic8Task implements Magic8TaskInterface {
                 }
             }
 
-            Magic8Task task = new Magic8Task(id, desc, deadline, tags);
+            Magic8Task task = new Magic8Task(id, desc, endTime, tags);
             return task;
         } else {
             throw new IllegalArgumentException("Error insufficient arguments");
@@ -201,9 +202,9 @@ public class Magic8Task implements Magic8TaskInterface {
             if (!getDesc().equals(other.getDesc())) {
                 return false;
             }
-            // Check deadline
-            Date d1 = getDeadline();
-            Date d2 = other.getDeadline();
+            // Check end time
+            Date d1 = getEndTime();
+            Date d2 = other.getEndTime();
 
             if (d1 == null && d2 != null) {
                 return false;
