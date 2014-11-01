@@ -1,5 +1,6 @@
 package fantasticfour.magiceight;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -12,13 +13,18 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.Date;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.Timer;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.MatteBorder;
 
@@ -128,6 +134,38 @@ public class Magic8UI {
         filename = br.readLine();        
         taskManager = new Magic8TaskList(filename);
     }
+	
+	 public class ClockPane extends JPanel {
+	        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+			private JLabel clock;
+
+	        public ClockPane() {
+	            setLayout(new BorderLayout());
+	            clock = new JLabel();
+	            clock.setHorizontalAlignment(JLabel.CENTER);
+	            clock.setFont(UIManager.getFont("Label.font").deriveFont(Font.BOLD, 48f));
+	            tickTock();
+	            add(clock);
+
+	            Timer timer = new Timer(500, new ActionListener() {
+	                @Override
+	                public void actionPerformed(ActionEvent e) {
+	                    tickTock();
+	                }
+	            });
+	            timer.setRepeats(true);
+	            timer.setCoalesce(true);
+	            timer.setInitialDelay(0);
+	            timer.start();
+	        }
+
+	        public void tickTock() {
+	            clock.setText(DateFormat.getDateTimeInstance().format(new Date()));
+	        }
+	    }
    
 	private void constructWindow() {
 		frameMagic8UI = new JFrame(NAME_TITLE);
@@ -151,7 +189,7 @@ public class Magic8UI {
 		taskListView.setWrapStyleWord(true);
 		taskListView.setColumns(40);
 		taskListView.setRows(25);
-		taskListView.setBounds(30, 30, 10, 10);
+//		taskListView.setBounds(30, 30, 10, 10);
 		taskListView.setForeground(Color.DARK_GRAY);
 		taskListView.setBackground(Color.WHITE);
 		taskListView.setFont(new Font("Trebuchet MS", Font.PLAIN, 12));
@@ -212,6 +250,16 @@ public class Magic8UI {
 		inputPanel.add(commandLine);
 		commandLine.setColumns(48);
 		commandLine.setBorder(new MatteBorder(marginInsets, Color.orange));
+		
+		JPanel clockPanel = new JPanel();
+		clockPanel.setBounds(30, 450, 640, 50);
+		frameMagic8UI.getContentPane().add(clockPanel);
+		clockPanel.setBackground(Color.ORANGE);
+		
+		frameMagic8UI.setLayout(new BorderLayout());
+		frameMagic8UI.add(new ClockPane());
+		frameMagic8UI.setLocationRelativeTo(null);
+		frameMagic8UI.setVisible(true);
 		
 		colorPanel1 = new JPanel();
 		colorPanel1.setBackground(new Color(255, 151, 4));
