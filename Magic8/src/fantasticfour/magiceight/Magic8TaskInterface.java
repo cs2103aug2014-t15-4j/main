@@ -1,6 +1,6 @@
 package fantasticfour.magiceight;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashSet;
 
 interface Magic8TaskInterface {
@@ -12,13 +12,13 @@ interface Magic8TaskInterface {
 
     public void setDesc(String desc);
 
-    public Date getStartTime();
+    public Calendar getStartTime();
 
-    public void setStartTime(Date startTime);
+    public void setStartTime(Calendar startTime);
 
-    public Date getEndTime();
+    public Calendar getEndTime();
 
-    public void setEndTime(Date endTime);
+    public void setEndTime(Calendar endTime);
 
     public HashSet<String> getTags();
 

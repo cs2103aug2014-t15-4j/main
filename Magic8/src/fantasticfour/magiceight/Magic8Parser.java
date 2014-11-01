@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.regex.Pattern;
 
 public class Magic8Parser {
@@ -40,7 +40,7 @@ public class Magic8Parser {
     public static Magic8CommandObject parseCommand(String command) throws IllegalArgumentException {
         Magic8CommandObject parsedCmdOutput = new Magic8CommandObject();
         if (isCommandValid(command)) {
-            Date deadline = null;
+            Calendar deadline = null;
             ArrayList<Integer> ids = new ArrayList<Integer>();
             ArrayList<String> taskDesc = new ArrayList<String>();
             ArrayList<String> tags = new ArrayList<String>();
