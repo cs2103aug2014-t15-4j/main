@@ -74,25 +74,7 @@ public class Magic8UI {
 				
 				System.out.println("" + inputStr);
 				
-				if(taskManager == null) {
-					try {
-						taskManager = new Magic8TaskList(inputStr);
-					} catch (IOException | ParseException e) {
-						e.printStackTrace();
-					}
-				} else {
-					try {
-						new Magic8Controller(inputStr, taskManager);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				if (!inputStr.equalsIgnoreCase("help")||
-						!inputStr.equalsIgnoreCase("-h")){
-					writeln("");
-				} else if (inputStr.equalsIgnoreCase("exit")) {
-					System.exit(0);
-				} else {
+			/*	if (inputStr != true){
 				  while(true) {
 			            try {
 			                command = br.readLine();
@@ -103,6 +85,24 @@ public class Magic8UI {
 			                System.out.println(e.toString());
 			            }
 			        }
+				}*/
+				if((taskManager == null)&&(!inputStr.equalsIgnoreCase("exit")||
+						!inputStr.equalsIgnoreCase("help")|| !inputStr.equalsIgnoreCase("-h"))) {
+						writeln("");
+						try {
+							taskManager = new Magic8TaskList(inputStr);
+						} catch (IOException | ParseException e) {
+							e.printStackTrace();
+						}
+				} else if ((taskManager == null)&&(inputStr.equalsIgnoreCase("exit"))&&
+						(!inputStr.equalsIgnoreCase("help")|| !inputStr.equalsIgnoreCase("-h"))) {
+					System.exit(0);
+				} else {
+					try {
+						new Magic8Controller(inputStr, taskManager);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 		        
 				//this prints the input text on the display
@@ -112,7 +112,6 @@ public class Magic8UI {
 				commandLine.setText("");
 			}
 		});
-		
 	}
 	
 	private void initialize() {
@@ -135,7 +134,7 @@ public class Magic8UI {
         taskManager = new Magic8TaskList(filename);
     }
 	
-	 public class ClockPane extends JPanel {
+	public class ClockPane extends JPanel {
 	        /**
 		 * 
 		 */
@@ -146,7 +145,7 @@ public class Magic8UI {
 	            setLayout(new BorderLayout());
 	            clock = new JLabel();
 	            clock.setHorizontalAlignment(JLabel.CENTER);
-	            clock.setFont(UIManager.getFont("Label.font").deriveFont(Font.BOLD, 48f));
+	            clock.setFont(UIManager.getFont("Label.font").deriveFont(Font.PLAIN, 22));
 	            tickTock();
 	            add(clock);
 
@@ -189,7 +188,7 @@ public class Magic8UI {
 		taskListView.setWrapStyleWord(true);
 		taskListView.setColumns(40);
 		taskListView.setRows(25);
-//		taskListView.setBounds(30, 30, 10, 10);
+		taskListView.setBounds(30, 30, 10, 10);
 		taskListView.setForeground(Color.DARK_GRAY);
 		taskListView.setBackground(Color.WHITE);
 		taskListView.setFont(new Font("Trebuchet MS", Font.PLAIN, 12));
@@ -202,11 +201,11 @@ public class Magic8UI {
 		taskListView.setBorder(new MatteBorder(marginInsets, Color.ORANGE));
 		displayPanel.add(taskListView);
 
-		JPanel confirmDialogpanel = new JPanel();
-		confirmDialogpanel.setBounds(430, 30, 240, 400);
-		frameMagic8UI.getContentPane().add(confirmDialogpanel);
-		confirmDialogpanel.setBackground(Color.BLACK);
-		confirmDialogpanel.setLayout(null);
+		JPanel confirmDialogPanel = new JPanel();
+		confirmDialogPanel.setBounds(430, 100, 240, 330);
+		frameMagic8UI.getContentPane().add(confirmDialogPanel);
+		confirmDialogPanel.setBackground(Color.BLACK);
+		confirmDialogPanel.setLayout(null);
 
 		confirmDialog = new JTextArea();
 		confirmDialog.setTabSize(5);
@@ -219,10 +218,11 @@ public class Magic8UI {
 		confirmDialog.setBackground(Color.WHITE);
 		confirmDialog.setFont(new Font("Arial", Font.BOLD, 12));
 		confirmDialog.setBorder(new MatteBorder(marginInsets, Color.orange));
+		confirmDialogPanel.add(confirmDialog);
 		
 		scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(12, 0, 615, 116);
-		confirmDialogpanel.add(scrollPane_1);
+		confirmDialogPanel.add(scrollPane_1);
 		scrollPane_1.setBackground(new Color(220, 220, 220));
 		scrollPane_1.setViewportView(confirmDialog);
 
@@ -247,20 +247,19 @@ public class Magic8UI {
 		commandLine.setFont(new Font("Trebuchet MS", Font.PLAIN, 14));
 		commandLine.setForeground(new Color(0, 0, 0));
 		commandLine.setBackground(new Color(255, 255, 255));
-		inputPanel.add(commandLine);
 		commandLine.setColumns(48);
 		commandLine.setBorder(new MatteBorder(marginInsets, Color.orange));
-		
+		inputPanel.add(commandLine);
+
 		JPanel clockPanel = new JPanel();
-		clockPanel.setBounds(30, 450, 640, 50);
+		clockPanel.setBounds(430, 30, 240, 50);
 		frameMagic8UI.getContentPane().add(clockPanel);
-		clockPanel.setBackground(Color.ORANGE);
+		clockPanel.setBackground(Color.YELLOW);
 		
-		frameMagic8UI.setLayout(new BorderLayout());
 		frameMagic8UI.add(new ClockPane());
 		frameMagic8UI.setLocationRelativeTo(null);
-		frameMagic8UI.setVisible(true);
-		
+		clockPanel.add(new ClockPane());
+
 		colorPanel1 = new JPanel();
 		colorPanel1.setBackground(new Color(255, 151, 4));
 		colorPanel1.setBounds(0, 444, 715, 85);
