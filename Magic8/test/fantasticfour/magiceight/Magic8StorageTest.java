@@ -100,7 +100,7 @@ public class Magic8StorageTest {
             testTags.add("Homework");
             testTags.add("CS2103T");
             Magic8Task testMagic8Task = new Magic8Task(1,
-                    "Do Software Engineering homework", null, testTags);
+                    "Do Software Engineering homework", null, null, testTags);
 
             assertTrue(testTaskList.get(1).equals(testMagic8Task));
 
@@ -109,7 +109,7 @@ public class Magic8StorageTest {
             testTags.add("Homework");
             testTags.add("CS2010");
             testMagic8Task = new Magic8Task(2,
-                    "Do Data Structures and Algorithms homework", null,
+                    "Do Data Structures and Algorithms homework", null, null,
                     testTags);
 
             assertTrue(testTaskList.get(2).equals(testMagic8Task));
@@ -118,7 +118,7 @@ public class Magic8StorageTest {
             testTags.add("NUS");
             testTags.add("Homework");
             testTags.add("LSM1302");
-            testMagic8Task = new Magic8Task(3, "Do Biology homework", null,
+            testMagic8Task = new Magic8Task(3, "Do Biology homework", null, null,
                     testTags);
 
             assertTrue(testTaskList.get(3).equals(testMagic8Task));
@@ -154,7 +154,7 @@ public class Magic8StorageTest {
             testTags.add("Homework");
             testTags.add("CS2103T");
             Magic8Task testMagic8Task = new Magic8Task(1,
-                    "Do Software Engineering homework", null, testTags);
+                    "Do Software Engineering homework", null, null, testTags);
 
             testTaskList.put(1, testMagic8Task);
 
@@ -163,7 +163,7 @@ public class Magic8StorageTest {
             testTags.add("Homework");
             testTags.add("CS2010");
             testMagic8Task = new Magic8Task(2,
-                    "Do Data Structures and Algorithms homework", null,
+                    "Do Data Structures and Algorithms homework", null, null,
                     testTags);
 
             testTaskList.put(2, testMagic8Task);
@@ -172,7 +172,7 @@ public class Magic8StorageTest {
             testTags.add("NUS");
             testTags.add("Homework");
             testTags.add("LSM1302");
-            testMagic8Task = new Magic8Task(3, "Do Biology homework", null,
+            testMagic8Task = new Magic8Task(3, "Do Biology homework", null, null,
                     testTags);
 
             testTaskList.put(3, testMagic8Task);
@@ -251,7 +251,7 @@ public class Magic8StorageTest {
             testTags.add("Homework");
             testTags.add("CS2103T");
             Magic8Task testMagic8Task = new Magic8Task(1,
-                    "Do Software Engineering homework", null, testTags);
+                    "Do Software Engineering homework", null, null, testTags);
 
             testTaskList.put(1, testMagic8Task);
 
@@ -260,7 +260,7 @@ public class Magic8StorageTest {
             testTags.add("Homework");
             testTags.add("CS2010");
             testMagic8Task = new Magic8Task(2,
-                    "Do Data Structures and Algorithms homework", null,
+                    "Do Data Structures and Algorithms homework", null, null,
                     testTags);
 
             testTaskList.put(2, testMagic8Task);
@@ -269,7 +269,7 @@ public class Magic8StorageTest {
             testTags.add("NUS");
             testTags.add("Homework");
             testTags.add("LSM1302");
-            testMagic8Task = new Magic8Task(3, "Do Biology homework", null,
+            testMagic8Task = new Magic8Task(3, "Do Biology homework", null, null,
                     testTags);
 
             testTaskList.put(3, testMagic8Task);
@@ -372,7 +372,7 @@ public class Magic8StorageTest {
             testTags.add("Homework");
             testTags.add("CS2105");
             Magic8Task testMagic8Task = new Magic8Task(1,
-                    "Do Computer Networks homework", null, testTags);
+                    "Do Computer Networks homework", null, null, testTags);
 
             testTaskList.put(4, testMagic8Task);
 
@@ -381,7 +381,7 @@ public class Magic8StorageTest {
             testTags.add("Homework");
             testTags.add("CS2101");
             testMagic8Task = new Magic8Task(2,
-                    "Do Effective Communication homework", null, testTags);
+                    "Do Effective Communication homework", null, null, testTags);
 
             testTaskList.put(5, testMagic8Task);
 
