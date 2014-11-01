@@ -52,7 +52,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
 
         backupTaskList();
 
-        return task;
+        return new Magic8Task(task);
     }
 
     @Override
