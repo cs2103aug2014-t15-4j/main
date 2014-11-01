@@ -78,24 +78,15 @@ interface Magic8TaskListInterface {
     public ArrayList<Magic8Task> getAllTasks();
 
     /**
-     * Returns all tasks in the task list with the specified tag, ordered by the
-     * task id.
+     * Returns all tasks in the task list with the specified word or tag,
+     * ordered by the task id.
      *
-     * @param tag
-     *            Tag to retrieve tasks with.
+     * @param word
+     *            Word or tag to retrieve tasks with.
+     * @param isTag
+     *            true if word is a tag.
      * @return all tasks in the task list with the specified tag, ordered task
      *         id.
      */
-    public ArrayList<Magic8Task> getTasksWithTag(String tag);
-
-    /**
-     * Returns all tasks in the task list with the specified word, ordered by
-     * the task id.
-     *
-     * @param tag
-     *            Tag to retrieve tasks with.
-     * @return all tasks in the task list with the specified tag, ordered task
-     *         id.
-     */
-    public ArrayList<Magic8Task> getTasksWithWord(String word);
+    public ArrayList<Magic8Task> getTasksWithWord(String word, boolean isTag);
 }

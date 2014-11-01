@@ -239,25 +239,20 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     }
 
     @Override
-    public ArrayList<Magic8Task> getTasksWithTag(String tag) {
+    public ArrayList<Magic8Task> getTasksWithWord(String word, boolean isTag) {
         bufferedTaskList.clear();
 
-        for (Integer taskId : tagToTaskIds.get(tag)) {
-            Magic8Task task = new Magic8Task(taskList.get(taskId));
-            bufferedTaskList.add(task);
-        }
-
-        return bufferedTaskList;
-    }
-
-    @Override
-    public ArrayList<Magic8Task> getTasksWithWord(String word) {
-        bufferedTaskList.clear();
-
-        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
-            Magic8Task task = new Magic8Task(entry.getValue());
-            if (task.getDesc().contains(word)) {
+        if (isTag) {
+            for (Integer taskId : tagToTaskIds.get(word)) {
+                Magic8Task task = new Magic8Task(taskList.get(taskId));
                 bufferedTaskList.add(task);
+            }
+        } else {
+            for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+                Magic8Task task = new Magic8Task(entry.getValue());
+                if (task.getDesc().contains(word)) {
+                    bufferedTaskList.add(task);
+                }
             }
         }
 
