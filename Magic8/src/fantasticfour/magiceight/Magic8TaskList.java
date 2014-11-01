@@ -30,7 +30,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         ids = new ArrayList<Integer>();
         ids.add(id);
         taskLists = new ArrayList<TreeMap<Integer, Magic8Task>>();
-        taskLists.add(copyTaskList());
+        taskLists.add(copyTaskList(taskList));
 
         indexTaskList();
     }
@@ -175,14 +175,15 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         }
     }
 
-    private TreeMap<Integer, Magic8Task> copyTaskList() {
-        TreeMap<Integer, Magic8Task> tl = new TreeMap<Integer, Magic8Task>();
+    private TreeMap<Integer, Magic8Task> copyTaskList(
+            TreeMap<Integer, Magic8Task> tl) {
+        TreeMap<Integer, Magic8Task> copy = new TreeMap<Integer, Magic8Task>();
 
         for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
-            tl.put(entry.getKey(), new Magic8Task(entry.getValue()));
+            copy.put(entry.getKey(), new Magic8Task(entry.getValue()));
         }
 
-        return tl;
+        return copy;
     }
 
     private void indexTaskList() {
@@ -199,7 +200,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         taskLists.subList(opIdx, size).clear();
 
         ids.add(id);
-        taskLists.add(copyTaskList());
+        taskLists.add(copyTaskList(taskList));
     }
 
     private void writeToFile() throws IOException {
@@ -210,7 +211,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     public TreeMap<Integer, Magic8Task> getAllTasks() {
         bufferedTaskList.clear();
 
-        bufferedTaskList = copyTaskList();
+        bufferedTaskList = copyTaskList(taskList);
 
         return bufferedTaskList;
     }
