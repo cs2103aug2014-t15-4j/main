@@ -1,15 +1,21 @@
 package fantasticfour.magiceight;
 
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -46,6 +53,12 @@ public class Magic8UI {
 	TrayIcon trayIcon;
 	SystemTray tray;
 	
+	public static final int NORMAL = 0;
+	public static final int ICONIFIED = 1;
+	public static final int MAXIMIZED_HORIZ = 2;
+	public static final int MAXIMIZED_VERT = 4;
+	public static final int MAXIMIZED_BOTH = 6;
+	
 	private static String NAME_TITLE = "Magic 8";
 	private static Insets marginInsets = new Insets(3,3,3,3); 
 
@@ -62,10 +75,6 @@ public class Magic8UI {
     	write(message + "\n");
     }
     
-    private static void invoke() throws IOException {
-        new Magic8Controller(command, taskManager);
-    }
-    
 	public void launch() {
 		commandLine.addActionListener(new ActionListener(){
 			@Override
@@ -74,18 +83,6 @@ public class Magic8UI {
 				
 				System.out.println("" + inputStr);
 				
-			/*	if (inputStr != true){
-				  while(true) {
-			            try {
-			                command = br.readLine();
-			                invoke();
-			            } catch (IOException e) {
-			                System.out.println(e.toString());
-			            } catch (IllegalArgumentException e) {
-			                System.out.println(e.toString());
-			            }
-			        }
-				}*/
 				if((taskManager == null)&&(!inputStr.equalsIgnoreCase("exit")||
 						!inputStr.equalsIgnoreCase("help")|| !inputStr.equalsIgnoreCase("-h"))) {
 						writeln("");
@@ -117,14 +114,13 @@ public class Magic8UI {
 	private void initialize() {
 		constructWindow();
 		
-		/* TODO
 		if(checkSystemTraySupport()){
 			initSystemTray();
 		}
 		
 		//Activate Jfram windowstate listener for hiding programe into system tray
 		activateWindowStateListener();
-		*/
+		
 	    frameMagic8UI.pack();
 	    frameMagic8UI.setVisible(true); 
 	}
@@ -145,7 +141,9 @@ public class Magic8UI {
 	            setLayout(new BorderLayout());
 	            clock = new JLabel();
 	            clock.setHorizontalAlignment(JLabel.CENTER);
-	            clock.setFont(UIManager.getFont("Label.font").deriveFont(Font.PLAIN, 22));
+//	            clock.setOpaque(false);
+//	            clock.setBackground(new Color(0,255,0,0));
+	            clock.setFont(UIManager.getFont("Label.font").deriveFont(Font.PLAIN, 20));
 	            tickTock();
 	            add(clock);
 
@@ -194,7 +192,9 @@ public class Magic8UI {
 		taskListView.setFont(new Font("Trebuchet MS", Font.PLAIN, 12));
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setViewportView(taskListView);
+		displayPanel.add(scrollPane);
+//		scrollPane.setViewportView(taskListView);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		writeln("Welcome to Magic 8!\nFor assisstance, "
 				+ "type 'help'  or '-h' and press ENTER.\n\nPlease "
 				+ "enter the specified file name to continue.");
@@ -202,18 +202,19 @@ public class Magic8UI {
 		displayPanel.add(taskListView);
 
 		JPanel confirmDialogPanel = new JPanel();
-		confirmDialogPanel.setBounds(430, 100, 240, 330);
+		confirmDialogPanel.setBounds(430, 250, 240, 180);
 		frameMagic8UI.getContentPane().add(confirmDialogPanel);
 		confirmDialogPanel.setBackground(Color.BLACK);
 		confirmDialogPanel.setLayout(null);
 
 		confirmDialog = new JTextArea();
-		confirmDialog.setTabSize(5);
+//		confirmDialog.setTabSize(5);
 		confirmDialog.setEditable(false);
 		confirmDialog.setLineWrap(true);
 		confirmDialog.setWrapStyleWord(true);
 		confirmDialog.setColumns(20);
 		confirmDialog.setRows(25);
+		confirmDialog.setBounds(30, 30, 10, 10);
 		confirmDialog.setForeground(Color.DARK_GRAY);
 		confirmDialog.setBackground(Color.WHITE);
 		confirmDialog.setFont(new Font("Arial", Font.BOLD, 12));
@@ -221,10 +222,11 @@ public class Magic8UI {
 		confirmDialogPanel.add(confirmDialog);
 		
 		scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(12, 0, 615, 116);
+		scrollPane_1.setBounds(0, 0, 10, 10);
 		confirmDialogPanel.add(scrollPane_1);
+//		scrollPane_1.setViewportView(confirmDialog);
+		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane_1.setBackground(new Color(220, 220, 220));
-		scrollPane_1.setViewportView(confirmDialog);
 
 		JPanel inputPanel = new JPanel();
 		inputPanel.setBounds(30, 450, 640, 50);
@@ -259,7 +261,13 @@ public class Magic8UI {
 		frameMagic8UI.add(new ClockPane());
 		frameMagic8UI.setLocationRelativeTo(null);
 		clockPanel.add(new ClockPane());
-
+		
+		JPanel calendarPanel = new JPanel();
+		calendarPanel.setBounds(430, 90, 240, 150);
+		frameMagic8UI.getContentPane().add(calendarPanel);
+		calendarPanel.setBackground(Color.BLUE);
+		calendarPanel.setLayout(null);
+		
 		colorPanel1 = new JPanel();
 		colorPanel1.setBackground(new Color(255, 151, 4));
 		colorPanel1.setBounds(0, 444, 715, 85);
@@ -290,8 +298,92 @@ public class Magic8UI {
 			return true;
 		}
 
-		System.out.println("System tray not supported");
+		System.out.println("system tray not supported, check taskbar when minimized");
 		return false;
+	}
+
+	void initSystemTray(){
+
+		//Set image when program is in system tray
+		Image image = Toolkit.getDefaultToolkit().getImage("media/logo.png");
+
+		//Action Listener to exit the programme ONLY when in system tray
+		ActionListener exitListener = new ActionListener() {
+
+			//If clicked on the exit option
+			public void actionPerformed(ActionEvent e) {
+
+				System.out.println("Exiting Remembra....");
+				System.exit(0);
+
+			}
+		};
+
+		//Action Listener to open the programme frame ONLY when in system tray
+		ActionListener openListener = new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+
+				frameMagic8UI.setVisible(true);
+				frameMagic8UI.setExtendedState(JFrame.NORMAL);
+			}
+
+		};
+
+		/* Popup Menu @ system tray */
+		PopupMenu popup = new PopupMenu();
+		MenuItem defaultItem;
+
+		//Added a 'Exit' option to the menu when right clicked
+		defaultItem = new MenuItem("Exit");
+		defaultItem.addActionListener(exitListener);
+		popup.add(defaultItem);
+
+		//Added a 'Option' option to the menu when right clicked
+		defaultItem = new MenuItem("Open");
+		defaultItem.addActionListener(openListener);
+		popup.add(defaultItem);
+
+		trayIcon = new TrayIcon(image, "Remembra", popup);
+		trayIcon.setImageAutoSize(true);
+
+	}
+
+	void activateWindowStateListener(){
+
+		frameMagic8UI.addWindowStateListener(new WindowStateListener() {
+
+			public void windowStateChanged(WindowEvent e) {
+
+				//If click on the minimize icon on the window, this function will 
+				//detect the window new "ICONFIED" state and activate system tray
+				if(e.getNewState() == ICONIFIED){
+
+					try {
+
+						tray.add(trayIcon);
+						frameMagic8UI.setVisible(false);
+
+						System.out.println("added to SystemTray");
+
+					} catch (AWTException ex) {
+
+						System.out.println("unable to add to tray");
+					}
+				}
+
+				//If click on the 'open' open option to re-open the program,
+				//this call will reinstate the JFrame's visibility and remove trayicon
+				if(e.getNewState() == MAXIMIZED_BOTH || e.getNewState() == NORMAL){
+
+					tray.remove(trayIcon);
+					frameMagic8UI.setVisible(true);
+
+				System.out.println("Tray icon removed");
+
+				}
+			}
+		});
 	}
 	
     public static void main(String[] args) {   
