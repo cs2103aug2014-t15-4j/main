@@ -28,14 +28,14 @@ public class Magic8TaskTest {
             Arrays.asList("tag1", "tag2", "tag3"));
     private static final Magic8Task TEST_TASK = new Magic8Task(
             TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING, TEST_DATE,
-            TEST_TAGS);
+            TEST_DATE, TEST_TAGS);
 
     @Test
     public void testMagic8Task() {
         // Test with valid parameters
         try {
             new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
-                    TEST_DATE, TEST_TAGS);
+                    TEST_DATE, TEST_DATE, TEST_TAGS);
         } catch (Exception e) {
             fail(e.toString());
         }
@@ -50,7 +50,7 @@ public class Magic8TaskTest {
         // Test with zero id
         try {
             new Magic8Task(0, TEST_NON_ALPHANUMERIC_STRING, TEST_DATE,
-                    TEST_TAGS);
+                    TEST_DATE, TEST_TAGS);
         } catch (Exception e) {
             fail(e.toString());
         }
@@ -58,7 +58,7 @@ public class Magic8TaskTest {
         // Test with negative id
         try {
             new Magic8Task(TEST_NEGATIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
-                    TEST_DATE, TEST_TAGS);
+                    TEST_DATE, TEST_DATE, TEST_TAGS);
             fail(EXCEPTION_EXPECTED_NEGATIVE_ID);
         } catch (IllegalArgumentException e) {
         } catch (Exception e) {
@@ -67,7 +67,8 @@ public class Magic8TaskTest {
 
         // Test with null description
         try {
-            new Magic8Task(TEST_POSITIVE_ID, null, TEST_DATE, TEST_TAGS);
+            new Magic8Task(TEST_POSITIVE_ID, null, TEST_DATE, TEST_DATE,
+                    TEST_TAGS);
             fail(EXCEPTION_EXPECTED_NULL_DESCRIPTION);
         } catch (IllegalArgumentException e) {
         } catch (Exception e) {
@@ -77,17 +78,25 @@ public class Magic8TaskTest {
         // Test with empty string description
         try {
             new Magic8Task(TEST_POSITIVE_ID, TEST_EMPTY_STRING, TEST_DATE,
-                    TEST_TAGS);
+                    TEST_DATE, TEST_TAGS);
             fail(EXCEPTION_EXPECTED_EMPTY_DESCRIPTION);
         } catch (IllegalArgumentException e) {
         } catch (Exception e) {
             fail(e.toString());
         }
 
-        // Test without date parameter
+        // Test with null start time
         try {
             new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
-                    null, TEST_TAGS);
+                    null, TEST_DATE, TEST_TAGS);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with null end time
+        try {
+            new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
+                    TEST_DATE, null, TEST_TAGS);
         } catch (Exception e) {
             fail(e.toString());
         }
@@ -95,7 +104,7 @@ public class Magic8TaskTest {
         // Test with null tags
         try {
             new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
-                    TEST_DATE, null);
+                    TEST_DATE, TEST_DATE, null);
         } catch (Exception e) {
             fail(e.toString());
         }
@@ -106,7 +115,7 @@ public class Magic8TaskTest {
             tags.add(null);
 
             new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
-                    TEST_DATE, tags);
+                    TEST_DATE, TEST_DATE, tags);
             fail(EXCEPTION_EXPECTED_NULL_TAG);
         } catch (IllegalArgumentException e) {
         } catch (Exception e) {
@@ -119,7 +128,7 @@ public class Magic8TaskTest {
             tags.add(TEST_EMPTY_STRING);
 
             new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
-                    TEST_DATE, tags);
+                    TEST_DATE, TEST_DATE, tags);
             fail(EXCEPTION_EXPECTED_EMPTY_TAG);
         } catch (IllegalArgumentException e) {
         } catch (Exception e) {
@@ -132,7 +141,7 @@ public class Magic8TaskTest {
             tags.add(TEST_NON_ALPHANUMERIC_STRING);
 
             new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
-                    TEST_DATE, tags);
+                    TEST_DATE, TEST_DATE, tags);
             fail(EXCEPTION_EXPECTED_NON_ALPHANUMERIC_TAG);
         } catch (IllegalArgumentException e) {
         } catch (Exception e) {
@@ -200,7 +209,18 @@ public class Magic8TaskTest {
         // Test with different description
         try {
             Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
-                    "different description", TEST_DATE, TEST_TAGS);
+                    "different description", TEST_DATE, TEST_DATE, TEST_TAGS);
+
+            assert !task.equals(TEST_TASK);
+            assert !TEST_TASK.equals(task);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with null start time
+        try {
+            Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, null, TEST_DATE, TEST_TAGS);
 
             assert !task.equals(TEST_TASK);
             assert !TEST_TASK.equals(task);
@@ -211,7 +231,19 @@ public class Magic8TaskTest {
         // Test with null end time
         try {
             Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
-                    TEST_NON_ALPHANUMERIC_STRING, null, TEST_TAGS);
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, null, TEST_TAGS);
+
+            assert !task.equals(TEST_TASK);
+            assert !TEST_TASK.equals(task);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with different start time
+        try {
+            Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, new Date(), TEST_DATE,
+                    TEST_TAGS);
 
             assert !task.equals(TEST_TASK);
             assert !TEST_TASK.equals(task);
@@ -222,7 +254,8 @@ public class Magic8TaskTest {
         // Test with different end time
         try {
             Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
-                    TEST_NON_ALPHANUMERIC_STRING, new Date(), TEST_TAGS);
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, new Date(),
+                    TEST_TAGS);
 
             assert !task.equals(TEST_TASK);
             assert !TEST_TASK.equals(task);
@@ -233,7 +266,7 @@ public class Magic8TaskTest {
         // Test with null tags
         try {
             Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
-                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, null);
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_DATE, null);
 
             assert !task.equals(TEST_TASK);
             assert !TEST_TASK.equals(task);
@@ -246,7 +279,7 @@ public class Magic8TaskTest {
             HashSet<String> tags = new HashSet<String>(TEST_TAGS);
             tags.add(TEST_ALPHANUMERIC_STRING);
             Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
-                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, tags);
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_DATE, tags);
 
             assert !task.equals(TEST_TASK);
             assert !TEST_TASK.equals(task);
@@ -264,7 +297,8 @@ public class Magic8TaskTest {
             task.setId(id);
 
             Magic8Task expectedTask = new Magic8Task(id,
-                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_TAGS);
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_DATE,
+                    TEST_TAGS);
 
             assert task.equals(expectedTask);
         } catch (Exception e) {
@@ -303,7 +337,7 @@ public class Magic8TaskTest {
             task.setDesc(desc);
 
             Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID, desc,
-                    TEST_DATE, TEST_TAGS);
+                    TEST_DATE, TEST_DATE, TEST_TAGS);
 
             assert task.equals(expectedTask);
         } catch (Exception e) {
@@ -334,6 +368,24 @@ public class Magic8TaskTest {
     }
 
     @Test
+    public void testSetStartTime() {
+        // Test valid date
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            Date date = new Date();
+            task.setStartTime(new Date(date.getTime()));
+
+            Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, date, TEST_DATE, TEST_TAGS);
+
+            assert task.equals(expectedTask);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+    }
+
+    @Test
     public void testSetEndTime() {
         // Test valid date
         try {
@@ -342,7 +394,7 @@ public class Magic8TaskTest {
             task.setEndTime(new Date(date.getTime()));
 
             Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
-                    TEST_NON_ALPHANUMERIC_STRING, date, TEST_TAGS);
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, date, TEST_TAGS);
 
             assert task.equals(expectedTask);
         } catch (IllegalArgumentException e) {
@@ -361,7 +413,7 @@ public class Magic8TaskTest {
             task.setTags(tags);
 
             Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
-                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, tags);
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_DATE, tags);
 
             assert task.equals(expectedTask);
         } catch (Exception e) {
@@ -374,7 +426,7 @@ public class Magic8TaskTest {
             task.setTags(null);
 
             Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
-                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, null);
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_DATE, null);
 
             assert task.equals(expectedTask);
         } catch (Exception e) {
@@ -432,7 +484,7 @@ public class Magic8TaskTest {
             HashSet<String> tags = new HashSet<String>(TEST_TAGS);
             tags.add(tag);
             Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
-                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, tags);
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_DATE, tags);
 
             assert task.equals(expectedTask);
         } catch (Exception e) {
@@ -485,7 +537,7 @@ public class Magic8TaskTest {
             tags.remove(tag);
 
             Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
-                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, tags);
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_DATE, tags);
 
             assert task.equals(expectedTask);
         } catch (Exception e) {

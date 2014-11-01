@@ -12,6 +12,10 @@ interface Magic8TaskInterface {
 
     public void setDesc(String desc);
 
+    public Date getStartTime();
+
+    public void setStartTime(Date startTime);
+
     public Date getEndTime();
 
     public void setEndTime(Date endTime);

@@ -17,29 +17,54 @@ public class Magic8Task implements Magic8TaskInterface {
 
     private int id;
     private String desc;
+    private Date startTime;
     private Date endTime;
     private HashSet<String> tags;
 
-    public Magic8Task(int id, String desc, Date endTime, HashSet<String> tags)
-            throws IllegalArgumentException {
+    public Magic8Task(int id, String desc, Date startTime, Date endTime,
+            HashSet<String> tags) throws IllegalArgumentException {
         if (id < 0) {
             throw new IllegalArgumentException(MSG_NEGATIVE_ID);
         }
 
         this.id = id;
         setDesc(desc);
+        setStartTime(startTime);
         setEndTime(endTime);
         setTags(tags);
     }
 
+    public Magic8Task(String desc, Date startTime, Date endTime,
+            HashSet<String> tags) throws IllegalArgumentException {
+        this(0, desc, startTime, endTime, tags);
+    }
+
+    public Magic8Task(String desc, Date startTime, Date endTime)
+            throws IllegalArgumentException {
+        this(0, desc, startTime, endTime, null);
+    }
+
     public Magic8Task(String desc, Date endTime, HashSet<String> tags)
             throws IllegalArgumentException {
-        this(0, desc, endTime, tags);
+        this(0, desc, null, endTime, tags);
+    }
+
+    public Magic8Task(String desc, Date endTime) {
+        this(0, desc, null, endTime, null);
+    }
+
+    public Magic8Task(String desc, HashSet<String> tags)
+            throws IllegalArgumentException {
+        this(0, desc, null, null, tags);
+    }
+
+    public Magic8Task(String desc) throws IllegalArgumentException {
+        this(0, desc, null, null, null);
     }
 
     public Magic8Task(Magic8Task task) {
-        this(task.getId(), task.getDesc(), task.getEndTime(),
-                new HashSet<String>(task.getTags()));
+        this(task.getId(), task.getDesc(), task.getStartTime(), task
+                .getEndTime(), task.getTags());
     }
 
     @Override
@@ -74,6 +99,24 @@ public class Magic8Task implements Magic8TaskInterface {
         }
 
         this.desc = desc;
+    }
+
+    @Override
+    public Date getStartTime() {
+        if (startTime == null) {
+            return startTime;
+        }
+
+        return new Date(startTime.getTime());
+    }
+
+    @Override
+    public void setStartTime(Date startTime) {
+        if (startTime == null) {
+            this.startTime = startTime;
+        } else {
+            this.startTime = new Date(startTime.getTime());
+        }
     }
 
     @Override
@@ -126,27 +169,33 @@ public class Magic8Task implements Magic8TaskInterface {
 
     @Override
     public String[] toStringArray() {
-        String[] stringArray = new String[4];
+        String[] stringArray = new String[5];
         stringArray[0] = Integer.toString(id);
         stringArray[1] = desc;
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-        if (endTime == null) {
+        if (startTime == null) {
             stringArray[2] = "@null";
         } else {
-            stringArray[2] = df.format(endTime);
+            stringArray[2] = df.format(startTime);
+        }
+
+        if (endTime == null) {
+            stringArray[3] = "@null";
+        } else {
+            stringArray[3] = df.format(endTime);
         }
 
         if (tags == null) {
-            stringArray[3] = "@null";
+            stringArray[4] = "@null";
         } else if (tags.size() == 0) {
-            stringArray[3] = "@empty";
+            stringArray[4] = "@empty";
         } else {
-            stringArray[3] = "";
+            stringArray[4] = "";
             for (String tag : tags) {
                 stringArray[3] += " " + tag;
             }
-            stringArray[3] = stringArray[3].trim();
+            stringArray[4] = stringArray[4].trim();
         }
 
         return stringArray;
@@ -159,28 +208,35 @@ public class Magic8Task implements Magic8TaskInterface {
         if (stringArray.length >= 4) {
             int id = Integer.parseInt(stringArray[0]);
             String desc = stringArray[1];
+            Date startTime;
             Date endTime;
             HashSet<String> tags;
 
             if (stringArray[2].equals("@null")) {
-                endTime = null;
+                startTime = null;
             } else {
-                endTime = df.parse(stringArray[2]);
+                startTime = df.parse(stringArray[2]);
             }
 
             if (stringArray[3].equals("@null")) {
+                endTime = null;
+            } else {
+                endTime = df.parse(stringArray[3]);
+            }
+
+            if (stringArray[4].equals("@null")) {
                 tags = null;
-            } else if (stringArray[3].equals("@empty")) {
+            } else if (stringArray[4].equals("@empty")) {
                 tags = new HashSet<String>();
             } else {
                 tags = new HashSet<String>();
-                String[] tagStrings = stringArray[3].split("\\s+");
+                String[] tagStrings = stringArray[4].split("\\s+");
                 for (String tagString : tagStrings) {
                     tags.add(tagString);
                 }
             }
 
-            Magic8Task task = new Magic8Task(id, desc, endTime, tags);
+            Magic8Task task = new Magic8Task(id, desc, startTime, endTime, tags);
             return task;
         } else {
             throw new IllegalArgumentException("Error insufficient arguments");
