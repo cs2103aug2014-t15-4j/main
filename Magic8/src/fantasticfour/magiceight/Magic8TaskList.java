@@ -12,7 +12,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     private Magic8Storage storage;
     private int id;
     private TreeMap<Integer, Magic8Task> taskList;
-    private TreeMap<Integer, Magic8Task> bufferedTaskList;
+    private ArrayList<Magic8Task> bufferedTaskList;
     private HashMap<String, HashSet<Integer>> tagToTaskIds;
 
     private int opIdx;
@@ -23,7 +23,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         storage = new Magic8Storage(fileName);
         id = storage.getId();
         taskList = storage.getTaskList();
-        bufferedTaskList = new TreeMap<Integer, Magic8Task>();
+        bufferedTaskList = new ArrayList<Magic8Task>();
         tagToTaskIds = new HashMap<String, HashSet<Integer>>();
 
         opIdx = 0;
@@ -208,34 +208,37 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     }
 
     @Override
-    public TreeMap<Integer, Magic8Task> getAllTasks() {
+    public ArrayList<Magic8Task> getAllTasks() {
         bufferedTaskList.clear();
 
-        bufferedTaskList = copyTaskList(taskList);
-
-        return bufferedTaskList;
-    }
-
-    @Override
-    public TreeMap<Integer, Magic8Task> getTasksWithTag(String tag) {
-        bufferedTaskList.clear();
-
-        for (Integer taskId : tagToTaskIds.get(tag)) {
-            Magic8Task task = new Magic8Task(taskList.get(taskId));
-            bufferedTaskList.put(task.getId(), task);
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            Magic8Task task = new Magic8Task(entry.getValue());
+            bufferedTaskList.add(task);
         }
 
         return bufferedTaskList;
     }
 
     @Override
-    public TreeMap<Integer, Magic8Task> getTasksWithWord(String word) {
+    public ArrayList<Magic8Task> getTasksWithTag(String tag) {
+        bufferedTaskList.clear();
+
+        for (Integer taskId : tagToTaskIds.get(tag)) {
+            Magic8Task task = new Magic8Task(taskList.get(taskId));
+            bufferedTaskList.add(task);
+        }
+
+        return bufferedTaskList;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getTasksWithWord(String word) {
         bufferedTaskList.clear();
 
         for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
-            Magic8Task task = entry.getValue();
+            Magic8Task task = new Magic8Task(entry.getValue());
             if (task.getDesc().contains(word)) {
-                bufferedTaskList.put(task.getId(), new Magic8Task(task));
+                bufferedTaskList.add(task);
             }
         }
 

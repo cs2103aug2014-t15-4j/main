@@ -1,7 +1,7 @@
 package fantasticfour.magiceight;
 
 import java.io.IOException;
-import java.util.TreeMap;
+import java.util.ArrayList;
 
 interface Magic8TaskListInterface {
     /**
@@ -75,7 +75,7 @@ interface Magic8TaskListInterface {
      *
      * @return all tasks in the task list ordered by the task id.
      */
-    public TreeMap<Integer, Magic8Task> getAllTasks();
+    public ArrayList<Magic8Task> getAllTasks();
 
     /**
      * Returns all tasks in the task list with the specified tag, ordered by the
@@ -86,7 +86,7 @@ interface Magic8TaskListInterface {
      * @return all tasks in the task list with the specified tag, ordered task
      *         id.
      */
-    public TreeMap<Integer, Magic8Task> getTasksWithTag(String tag);
+    public ArrayList<Magic8Task> getTasksWithTag(String tag);
 
     /**
      * Returns all tasks in the task list with the specified word, ordered by
@@ -97,5 +97,5 @@ interface Magic8TaskListInterface {
      * @return all tasks in the task list with the specified tag, ordered task
      *         id.
      */
-    public TreeMap<Integer, Magic8Task> getTasksWithWord(String word);
+    public ArrayList<Magic8Task> getTasksWithWord(String word);
 }
