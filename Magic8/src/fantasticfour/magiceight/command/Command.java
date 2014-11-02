@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import fantasticfour.magiceight.Magic8CommandObject;
+import fantasticfour.magiceight.Magic8Status;
+import fantasticfour.magiceight.Magic8Task;
 import fantasticfour.magiceight.Magic8TaskList;
 
 public class Command implements ICommand {
@@ -15,6 +17,34 @@ public class Command implements ICommand {
     private ArrayList<String> keywords;
     private ArrayList<Integer> ids;
     private Calendar deadline;
+    
+    private ArrayList<Magic8Task> task;
+	private String infoMessage;
+    private Magic8Status status;
+    
+    public ArrayList<Magic8Task> getTask() {
+		return task;
+	}
+
+	public void setTask(ArrayList<Magic8Task> task) {
+		this.task = task;
+	}
+
+	public String getInfoMessage() {
+		return infoMessage;
+	}
+
+	public void setInfoMessage(String infoMessage) {
+		this.infoMessage = infoMessage;
+	}
+
+	public Magic8Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Magic8Status status) {
+		this.status = status;
+	}
     
     public Magic8TaskList getTaskManager() {
         return taskManager;
@@ -85,5 +115,20 @@ public class Command implements ICommand {
     public void execute() throws IOException {
         // TODO Auto-generated method stub
     }
+    
+    public void addStatus(String message) {
+    	this.setInfoMessage(message);
+    }    
 
+    public Magic8Status getStatusInfo() {
+    	return this.getStatus();
+    }
+    
+    public ArrayList<Magic8Task> getReturnTaskList() {
+    	return this.getTask();
+    }
+    
+    public String getStatusMessage() {
+        return this.getInfoMessage();
+    }
 }

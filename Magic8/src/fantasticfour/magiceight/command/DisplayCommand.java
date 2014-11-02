@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import fantasticfour.magiceight.Magic8CommandObject;
+import fantasticfour.magiceight.Magic8Status;
 import fantasticfour.magiceight.Magic8Task;
 import fantasticfour.magiceight.Magic8TaskList;
 
@@ -46,15 +47,21 @@ public class DisplayCommand extends Command {
         if(super.getTags() != null) {
             for(String tag : super.getTags()) {
                 ArrayList<Magic8Task> tasks = super.getTaskManager().getTasksWithWord(tag, true);
-                for(Magic8Task task : tasks) {
-                    display(task);
+                if(tasks == null) {
+                	this.setStatus(Magic8Status.ERROR);
+                	return;
                 }
+                this.setTask(tasks);
+                this.setStatus(Magic8Status.SUCCESS);
+                return;
             }
-            return;
         }
         ArrayList<Magic8Task> tasks = super.getTaskManager().getAllTasks();
-        for(Magic8Task task : tasks) {
-            display(task);
+        if(tasks == null) {
+        	this.setStatus(Magic8Status.ERROR);
+        	return;
         }
+        this.setTask(tasks);
+        this.setStatus(Magic8Status.SUCCESS);
     }
 }

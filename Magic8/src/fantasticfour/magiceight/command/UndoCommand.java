@@ -3,6 +3,7 @@ package fantasticfour.magiceight.command;
 import java.io.IOException;
 
 import fantasticfour.magiceight.Magic8CommandObject;
+import fantasticfour.magiceight.Magic8Status;
 import fantasticfour.magiceight.Magic8TaskList;
 
 public class UndoCommand extends Command {
@@ -12,6 +13,10 @@ public class UndoCommand extends Command {
     }
     
     public void execute() throws IOException {
-        super.getTaskManager().undo();
+        if(!super.getTaskManager().undo()) {
+            this.setStatus(Magic8Status.ERROR);
+        } else {
+            this.setStatus(Magic8Status.SUCCESS);
+        }
     }
 }
