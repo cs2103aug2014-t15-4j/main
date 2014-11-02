@@ -33,8 +33,8 @@ public class CalendarProgram {
 		//Create controls
 		lblMonth = new JLabel ("January");
 //		cmbYear = new JComboBox();
-		btnPrev = new JButton ("<");
-		btnNext = new JButton (">");
+		btnPrev = new JButton ("B");
+		btnNext = new JButton ("N");
 		mtblCalendar = new DefaultTableModel(){
 			public boolean isCellEditable(int rowIndex, int mColIndex){
 				return false;
@@ -57,10 +57,13 @@ public class CalendarProgram {
 		pnlCalendar.add(stblCalendar);
 		
 		//Set bounds
-		pnlCalendar.setBounds(410, 45, 300, 200);
+		pnlCalendar.setBounds(410, 20, 300, 181);
+		pnlCalendar.setBackground(new Color(255,205,155));
 //		lblMonth.setBounds(140-lblMonth.getPreferredSize().width/2, 15, 20, 5);
 		btnPrev.setBounds(10, 15, 20, 20);
+		btnPrev.setFont(new Font("Trebuchet MS", Font.PLAIN, 8));
 		btnNext.setBounds(270, 15, 20, 20);
+		btnNext.setFont(new Font("Trebuchet MS", Font.PLAIN, 8));
 		stblCalendar.setBounds(0, 35, 300, 200);
 	
 		
@@ -94,15 +97,7 @@ public class CalendarProgram {
 		tblCalendar.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		mtblCalendar.setColumnCount(7);
 		mtblCalendar.setRowCount(6);
-		
-		tblCalendar.getColumnModel().getColumn(0).setPreferredWidth(10);
-		tblCalendar.getColumnModel().getColumn(1).setPreferredWidth(10);
-		tblCalendar.getColumnModel().getColumn(2).setPreferredWidth(10);
-		tblCalendar.getColumnModel().getColumn(3).setPreferredWidth(10);
-		tblCalendar.getColumnModel().getColumn(4).setPreferredWidth(10);
-		tblCalendar.getColumnModel().getColumn(5).setPreferredWidth(10);
-		tblCalendar.getColumnModel().getColumn(6).setPreferredWidth(10);
-		
+	
 		//Refresh calendar
 		refreshCalendar (realMonth, realYear); //Refresh calendar
 	}
@@ -117,6 +112,7 @@ public class CalendarProgram {
 		btnNext.setEnabled(true);
 		if (month == 0 && year <= realYear-10){btnPrev.setEnabled(false);} //Too early
 		if (month == 11 && year >= realYear+100){btnNext.setEnabled(false);} //Too late
+		lblMonth.setFont(new Font("Trebuchet MS", Font.BOLD, 16));
 		lblMonth.setText(months[month]); //Refresh the month label (at the top)
 		lblMonth.setBounds(150-lblMonth.getPreferredSize().width/2, 5, 180, 25); //Re-align label with calendar
 		
