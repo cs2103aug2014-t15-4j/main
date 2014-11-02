@@ -1,10 +1,12 @@
 package fantasticfour.magiceight.command;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 
 import fantasticfour.magiceight.Magic8CommandObject;
+import fantasticfour.magiceight.Magic8Status;
 import fantasticfour.magiceight.Magic8Task;
 import fantasticfour.magiceight.Magic8TaskList;
 
@@ -24,7 +26,15 @@ public class AddCommand extends Command {
                               new GregorianCalendar(),
                               super.getDeadline(), 
                               tags);        
-        super.getTaskManager().addTask(task);
-        System.out.println("Task is added successfully");
+        task = super.getTaskManager().addTask(task);
+        if(task == null) {
+        	super.setStatus(Magic8Status.ERROR);
+        } else {
+        	super.setStatus(Magic8Status.SUCCESS);
+        	
+        	ArrayList<Magic8Task> taskList = new ArrayList<Magic8Task>();
+        	taskList.add(task);
+        	super.setTask(taskList);
+        }
     }
 }

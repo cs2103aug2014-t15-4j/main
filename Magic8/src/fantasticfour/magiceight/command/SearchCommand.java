@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import fantasticfour.magiceight.Magic8CommandObject;
+import fantasticfour.magiceight.Magic8Status;
 import fantasticfour.magiceight.Magic8Task;
 import fantasticfour.magiceight.Magic8TaskList;
 
@@ -35,8 +36,11 @@ public class SearchCommand extends Command {
     public void execute() throws IOException {
         for(String keyword : super.getKeywords()) {
             ArrayList<Magic8Task> tasks = super.getTaskManager().getTasksWithWord(keyword, false);
-            for(Magic8Task task : tasks) {
-                display(task);
+            if(tasks == null) {
+                this.setStatus(Magic8Status.ERROR);
+            } else {
+                this.setStatus(Magic8Status.SUCCESS);
+                this.setTask(tasks);
             }
         }
             

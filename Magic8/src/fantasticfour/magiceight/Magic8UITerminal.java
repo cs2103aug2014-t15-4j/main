@@ -14,7 +14,8 @@ public class Magic8UITerminal {
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     
     private static void invoke() throws IOException {
-        new Magic8Controller(cmd, taskListManager);
+        Magic8Controller controller = new Magic8Controller(cmd, taskListManager);
+        System.out.println(controller.getStatusMessage());
     }
     
     private static void magic8UIInit() throws IOException, ParseException {        

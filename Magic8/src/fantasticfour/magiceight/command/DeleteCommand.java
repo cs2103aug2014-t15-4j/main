@@ -1,10 +1,12 @@
 package fantasticfour.magiceight.command;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
 import fantasticfour.magiceight.Magic8CommandObject;
+import fantasticfour.magiceight.Magic8Status;
 import fantasticfour.magiceight.Magic8Task;
 import fantasticfour.magiceight.Magic8TaskList;
 
@@ -15,27 +17,29 @@ public class DeleteCommand extends Command {
     }
     
     public void execute() throws IOException {
-        Magic8Task task = null;
-        int count = 0;
+        ArrayList<Magic8Task> tasks = new ArrayList<Magic8Task>();
+        
         if(super.getIds() == null && super.getTags() == null) {
             super.getTaskManager().clearTasks();
         } else if(super.getTags() == null) {
             for(Integer id : super.getIds()) {
-                task = super.getTaskManager().getAllTasks().get(id);
-                if(task != null) {
-                    super.getTaskManager().removeTask(task);
-                    count++;
+                if(id >= super.getTaskManager().getAllTasks().size()) {
+                	this.setStatus(Magic8Status.ERROR);
+                    return;
                 }
+                tasks.add(super.getTaskManager().getAllTasks().get(id-1));
             }
+            tasks = super.getTaskManager().removeTasks(tasks);            
         } else {
             for(String tag : super.getTags()) {
-                super.getTaskManager().removeTasksWithTag(tag);
+                tasks = super.getTaskManager().removeTasksWithTag(tag);
             }
         }
-        
-        if(count > 1)
-            System.out.println(Integer.toString(count) + " tasks are removed");
-        else
-            System.out.println(Integer.toString(count) + " task is removed");
+        if(tasks == null) {
+        	this.setStatus(Magic8Status.ERROR);
+            return;
+        }
+        this.setStatus(Magic8Status.SUCCESS);
+        this.setTask(tasks);
     }
 }

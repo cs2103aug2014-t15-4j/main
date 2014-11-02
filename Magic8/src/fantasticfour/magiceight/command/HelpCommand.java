@@ -3,6 +3,7 @@ package fantasticfour.magiceight.command;
 import java.io.IOException;
 
 import fantasticfour.magiceight.Magic8CommandObject;
+import fantasticfour.magiceight.Magic8Status;
 import fantasticfour.magiceight.Magic8TaskList;
 
 public class HelpCommand extends Command {
@@ -12,6 +13,6 @@ public class HelpCommand extends Command {
     }
     
     public void execute() throws IOException {
-        System.out.println("Calling out help method");
+        this.setStatus(Magic8Status.SUCCESS);
     }
 }
