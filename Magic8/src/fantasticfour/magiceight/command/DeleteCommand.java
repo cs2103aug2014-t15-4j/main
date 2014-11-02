@@ -38,6 +38,6 @@ public class DeleteCommand extends Command {
             return;
         }
         this.setStatus(Magic8Status.SUCCESS);
-        this.setTask(tasks);
+        this.setTask(super.getTaskManager().getAllTasks());
     }
 }

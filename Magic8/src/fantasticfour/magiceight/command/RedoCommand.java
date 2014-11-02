@@ -17,6 +17,7 @@ public class RedoCommand extends Command {
             this.setStatus(Magic8Status.ERROR);
         } else {
             this.setStatus(Magic8Status.SUCCESS);
+            this.setTask(super.getTaskManager().getAllTasks());
         }
     }
 }

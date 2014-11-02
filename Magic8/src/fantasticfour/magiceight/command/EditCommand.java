@@ -16,7 +16,6 @@ public class EditCommand extends Command {
     }
     
     public void execute() throws IOException {
-        ArrayList<Magic8Task> tasks = new ArrayList<Magic8Task>();
         int id = super.getIds().get(0);
 	    for(Magic8Task task : super.getTaskManager().getAllTasks()) {
 	    	if(task.getId() == id) {
@@ -24,8 +23,7 @@ public class EditCommand extends Command {
 	            task.setDesc(super.getTaskDescription());
 	            if(super.getTaskManager().updateTask(task)) {
 	            	this.setStatus(Magic8Status.SUCCESS);
-	            	tasks.add(task);
-	            	this.setTask(tasks);
+	            	this.setTask(super.getTaskManager().getAllTasks());
 	                return;
 	            }
 	    	}

@@ -17,6 +17,7 @@ public class OpenCommand extends Command{
         try {
             super.setTaskManager(new Magic8TaskList(super.getTaskDescription()));
             this.setStatus(Magic8Status.SUCCESS);
+            this.setTask(super.getTaskManager().getAllTasks());
         } catch (IOException | ParseException e) {
             this.setStatus(Magic8Status.ERROR);
         }

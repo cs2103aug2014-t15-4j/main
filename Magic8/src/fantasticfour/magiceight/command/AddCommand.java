@@ -35,7 +35,7 @@ public class AddCommand extends Command {
         	
         	ArrayList<Magic8Task> taskList = new ArrayList<Magic8Task>();
         	taskList.add(task);
-        	super.setTask(taskList);
+        	super.setTask(super.getTaskManager().getAllTasks());
         }
     }
 }
