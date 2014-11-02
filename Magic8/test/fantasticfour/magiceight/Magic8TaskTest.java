@@ -3,7 +3,8 @@ package fantasticfour.magiceight;
 import static org.junit.Assert.fail;
 
 import java.util.Arrays;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 
 import org.junit.Test;
@@ -23,7 +24,7 @@ public class Magic8TaskTest {
     private static final String TEST_EMPTY_STRING = "";
     private static final String TEST_NON_ALPHANUMERIC_STRING = "string!";
     private static final String TEST_ALPHANUMERIC_STRING = "tag4";
-    private static final Date TEST_DATE = new Date(0);
+    private static final Calendar TEST_DATE = new GregorianCalendar();
     private static final HashSet<String> TEST_TAGS = new HashSet<String>(
             Arrays.asList("tag1", "tag2", "tag3"));
     private static final Magic8Task TEST_TASK = new Magic8Task(
@@ -242,7 +243,7 @@ public class Magic8TaskTest {
         // Test with different start time
         try {
             Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
-                    TEST_NON_ALPHANUMERIC_STRING, new Date(), TEST_DATE,
+                    TEST_NON_ALPHANUMERIC_STRING, new GregorianCalendar(), TEST_DATE,
                     TEST_TAGS);
 
             assert !task.equals(TEST_TASK);
@@ -254,7 +255,7 @@ public class Magic8TaskTest {
         // Test with different end time
         try {
             Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
-                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, new Date(),
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, new GregorianCalendar(),
                     TEST_TAGS);
 
             assert !task.equals(TEST_TASK);
@@ -372,8 +373,8 @@ public class Magic8TaskTest {
         // Test valid date
         try {
             Magic8Task task = new Magic8Task(TEST_TASK);
-            Date date = new Date();
-            task.setStartTime(new Date(date.getTime()));
+            Calendar date = new GregorianCalendar();
+            task.setStartTime(date);
 
             Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
                     TEST_NON_ALPHANUMERIC_STRING, date, TEST_DATE, TEST_TAGS);
@@ -390,8 +391,8 @@ public class Magic8TaskTest {
         // Test valid date
         try {
             Magic8Task task = new Magic8Task(TEST_TASK);
-            Date date = new Date();
-            task.setEndTime(new Date(date.getTime()));
+            Calendar date = new GregorianCalendar();
+            task.setEndTime(date);
 
             Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
                     TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, date, TEST_TAGS);

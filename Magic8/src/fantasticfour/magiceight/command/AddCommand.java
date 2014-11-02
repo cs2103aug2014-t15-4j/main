@@ -1,6 +1,7 @@
 package fantasticfour.magiceight.command;
 
 import java.io.IOException;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 
 import fantasticfour.magiceight.Magic8CommandObject;
@@ -19,7 +20,8 @@ public class AddCommand extends Command {
         if(super.getTags() != null) {
              tags = new HashSet<String>(super.getTags());
         }        
-        task = new Magic8Task(super.getTaskDescription(), 
+        task = new Magic8Task(super.getTaskDescription(),
+                              new GregorianCalendar(),
                               super.getDeadline(), 
                               tags);        
         super.getTaskManager().addTask(task);

@@ -3,7 +3,8 @@ package fantasticfour.magiceight;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 
 public class Magic8Task implements Magic8TaskInterface {
@@ -28,11 +29,11 @@ public class Magic8Task implements Magic8TaskInterface {
     
     private int id;
     private String desc;
-    private Date startTime;
-    private Date endTime;
+    private Calendar startTime;
+    private Calendar endTime;
     private HashSet<String> tags;
 
-    public Magic8Task(int id, String desc, Date startTime, Date endTime,
+    public Magic8Task(int id, String desc, Calendar startTime, Calendar endTime,
             HashSet<String> tags) throws IllegalArgumentException {
         if (id < 0) {
             throw new IllegalArgumentException(MSG_NEGATIVE_ID);
@@ -45,22 +46,22 @@ public class Magic8Task implements Magic8TaskInterface {
         setTags(tags);
     }
 
-    public Magic8Task(String desc, Date startTime, Date endTime,
+    public Magic8Task(String desc, Calendar startTime, Calendar endTime,
             HashSet<String> tags) throws IllegalArgumentException {
         this(0, desc, startTime, endTime, tags);
     }
 
-    public Magic8Task(String desc, Date startTime, Date endTime)
+    public Magic8Task(String desc, Calendar startTime, Calendar endTime)
             throws IllegalArgumentException {
         this(0, desc, startTime, endTime, null);
     }
 
-    public Magic8Task(String desc, Date endTime, HashSet<String> tags)
+    public Magic8Task(String desc, Calendar endTime, HashSet<String> tags)
             throws IllegalArgumentException {
         this(0, desc, null, endTime, tags);
     }
 
-    public Magic8Task(String desc, Date endTime) {
+    public Magic8Task(String desc, Calendar endTime) {
         this(0, desc, null, endTime, null);
     }
 
@@ -113,38 +114,46 @@ public class Magic8Task implements Magic8TaskInterface {
     }
 
     @Override
-    public Date getStartTime() {
+    public Calendar getStartTime() {
         if (startTime == null) {
             return startTime;
         }
-
-        return new Date(startTime.getTime());
+        
+        Calendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(startTime.getTimeInMillis());
+        return cal;
     }
 
     @Override
-    public void setStartTime(Date startTime) {
+    public void setStartTime(Calendar startTime) {
         if (startTime == null) {
             this.startTime = startTime;
         } else {
-            this.startTime = new Date(startTime.getTime());
+            Calendar cal = new GregorianCalendar();
+            cal.setTimeInMillis(startTime.getTimeInMillis());
+            this.startTime = cal;
         }
     }
 
     @Override
-    public Date getEndTime() {
+    public Calendar getEndTime() {
         if (endTime == null) {
             return endTime;
         }
-
-        return new Date(endTime.getTime());
+        
+        Calendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(endTime.getTimeInMillis());
+        return cal;
     }
 
     @Override
-    public void setEndTime(Date endTime) {
+    public void setEndTime(Calendar endTime) {
         if (endTime == null) {
             this.endTime = endTime;
         } else {
-            this.endTime = new Date(endTime.getTime());
+            Calendar cal = new GregorianCalendar();
+            cal.setTimeInMillis(endTime.getTimeInMillis());
+            this.endTime = cal;
         }
     }
 
@@ -188,13 +197,13 @@ public class Magic8Task implements Magic8TaskInterface {
         if (startTime == null) {
             stringArray[INDEX_START_TIME] = STRING_PARSED_NULL;
         } else {
-            stringArray[INDEX_START_TIME] = df.format(startTime);
+            stringArray[INDEX_START_TIME] = df.format(startTime.getTime());
         }
 
         if (endTime == null) {
             stringArray[INDEX_END_TIME] = STRING_PARSED_NULL;
         } else {
-            stringArray[INDEX_END_TIME] = df.format(endTime);
+            stringArray[INDEX_END_TIME] = df.format(endTime.getTime());
         }
 
         if (tags == null) {
@@ -219,20 +228,18 @@ public class Magic8Task implements Magic8TaskInterface {
         if (stringArray.length >= NUM_FIELDS) {
             int id = Integer.parseInt(stringArray[INDEX_ID]);
             String desc = stringArray[INDEX_DESC];
-            Date startTime;
-            Date endTime;
+            Calendar startTime = null;
+            Calendar endTime = null;
             HashSet<String> tags;
 
-            if (stringArray[INDEX_START_TIME].equals(STRING_PARSED_NULL)) {
-                startTime = null;
-            } else {
-                startTime = df.parse(stringArray[INDEX_START_TIME]);
+            if (!stringArray[INDEX_START_TIME].equals(STRING_PARSED_NULL)) {
+                startTime = Calendar.getInstance();
+                startTime.setTime(df.parse(stringArray[INDEX_START_TIME]));
             }
 
-            if (stringArray[INDEX_END_TIME].equals(STRING_PARSED_NULL)) {
-                endTime = null;
-            } else {
-                endTime = df.parse(stringArray[INDEX_END_TIME]);
+            if (!stringArray[INDEX_END_TIME].equals(STRING_PARSED_NULL)) {
+                endTime = Calendar.getInstance();
+                endTime.setTime(df.parse(stringArray[INDEX_END_TIME]));
             }
 
             if (stringArray[INDEX_TAGS].equals(STRING_PARSED_NULL)) {
@@ -270,8 +277,8 @@ public class Magic8Task implements Magic8TaskInterface {
                 return false;
             }
             // Check end time
-            Date d1 = getEndTime();
-            Date d2 = other.getEndTime();
+            Calendar d1 = getEndTime();
+            Calendar d2 = other.getEndTime();
 
             if (d1 == null && d2 != null) {
                 return false;
