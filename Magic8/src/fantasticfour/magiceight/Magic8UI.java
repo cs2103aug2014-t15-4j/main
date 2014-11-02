@@ -4,7 +4,6 @@ import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -24,11 +23,8 @@ import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,12 +32,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 public class Magic8UI {
@@ -80,6 +74,9 @@ public class Magic8UI {
 	public static final int MAXIMIZED_BOTH = 6;
 	
 	private static String NAME_TITLE = "Magic 8";
+	private static String MESSAGE_WELCOME = "Welcome to Magic 8!\nFor assisstance, "
+			+ "type 'help'  or '-h' and press ENTER.\n\nPlease "
+			+ "enter the specified file name to continue.";
 	private static Insets marginInsets = new Insets(3,3,3,3); 
 
 	public Magic8UI() {
@@ -150,9 +147,9 @@ public class Magic8UI {
             setLayout(new BorderLayout());
             clock = new JLabel();
             clock.setHorizontalAlignment(JLabel.CENTER);
-//	            clock.setOpaque(false);
-//	            clock.setBackground(new Color(0,255,0,0));
-            clock.setFont(UIManager.getFont("Label.font").deriveFont(Font.PLAIN, 20));
+            clock.setFont(UIManager.getFont("Label.font").deriveFont(Font.PLAIN, 16));
+            clock.setOpaque(true);
+            clock.setBackground(new Color(255,205,155));
             tickTock();
             add(clock);
 
@@ -185,10 +182,10 @@ public class Magic8UI {
 		frameMagic8UI.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		JPanel displayPanel = new JPanel();
-		displayPanel.setBounds(30, 30, 370, 400);
+		displayPanel.setBounds(20, 20, 370, 400);
 		displayPanel.setBackground(new Color(255,205,155));
 		frameMagic8UI.getContentPane().add(displayPanel);
-		
+			
 		taskListView = new JTextArea();
 		taskListView.setEditable(false);
 		taskListView.setLineWrap(true);
@@ -199,23 +196,21 @@ public class Magic8UI {
 		taskListView.setForeground(Color.DARK_GRAY);
 		taskListView.setBackground(Color.WHITE);
 		taskListView.setFont(new Font("Trebuchet MS", Font.PLAIN, 12));
+		taskListView.setMargin(marginInsets);
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(330, 5, 15, 380);
 		displayPanel.add(scrollPane);
 		scrollPane.setViewportView(taskListView);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		taskListView.setText("Welcome to Magic 8!\nFor assisstance, "
-				+ "type 'help'  or '-h' and press ENTER.\n\nPlease "
-				+ "enter the specified file name to continue.");
+		taskListView.setText(MESSAGE_WELCOME);
 		scrollPane.setBackground(new Color(220, 220, 220));
 		displayPanel.add(taskListView);
 
 		JPanel confirmDialogPanel = new JPanel();
-		confirmDialogPanel.setBounds(410, 260, 240, 200);
+		confirmDialogPanel.setBounds(410, 210, 300, 203);
 		frameMagic8UI.getContentPane().add(confirmDialogPanel);
-		confirmDialogPanel.setBackground(Color.BLACK);
-	//	confirmDialogPanel.setBackground(new Color(255,205,155));
+		confirmDialogPanel.setBackground(new Color(255,205,155));
 		confirmDialogPanel.setLayout(null);
 
 		confirmDialog = new JTextArea();
@@ -225,7 +220,7 @@ public class Magic8UI {
 		confirmDialog.setWrapStyleWord(true);
 		confirmDialog.setColumns(10);
 		confirmDialog.setRows(15);
-		confirmDialog.setBounds(0, 0, 240, 170);
+		confirmDialog.setBounds(0, 0, 300, 203);
 		confirmDialog.setForeground(Color.DARK_GRAY);
 		confirmDialog.setBackground(Color.WHITE);
 		confirmDialog.setFont(new Font("Trebuchet MS", Font.BOLD, 12));
@@ -256,9 +251,10 @@ public class Magic8UI {
 		inputPanel.add(commandLine);
 
 		JPanel clockPanel = new JPanel();
-		clockPanel.setBounds(450, 0, 240, 45);
+		clockPanel.setBounds(565, 415, 180, 45);
 		frameMagic8UI.getContentPane().add(clockPanel);
-		clockPanel.setBackground(new Color(255,205,155));
+		clockPanel.setOpaque(false);
+		clockPanel.setBackground(new Color(255,205,155,0));
 		
 		frameMagic8UI.add(new ClockPane());
 		frameMagic8UI.setLocationRelativeTo(null);
