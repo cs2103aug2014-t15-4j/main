@@ -1,6 +1,7 @@
 package fantasticfour.magiceight.command;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 import fantasticfour.magiceight.Magic8CommandObject;
@@ -14,17 +15,18 @@ public class EditCommand extends Command {
     }
     
     public void execute() throws IOException {
-        Magic8Task task = null;
-        TreeMap<Integer, Magic8Task> tasks = null;
+        ArrayList<Magic8Task> tasks = null;
         int id = super.getIds().get(0);
         tasks = super.getTaskManager().getAllTasks();
-        if(tasks.containsKey(id)) {
-            task = tasks.get(id);
-            task.setDesc(super.getTaskDescription());
-            super.getTaskManager().updateTask(task);
-            System.out.println("Task is edited succesfully");
-        } else {
-            System.out.println("No such task is found");
-        }
+	    for(Magic8Task task : tasks) {
+	    	if(task.getId() == id) {
+	            task = tasks.get(id);
+	            task.setDesc(super.getTaskDescription());
+	            super.getTaskManager().updateTask(task);
+	            System.out.println("Task is edited succesfully");
+	            return;
+	    	}
+	    }
+    	System.out.println("No such task is found");
     }
 }

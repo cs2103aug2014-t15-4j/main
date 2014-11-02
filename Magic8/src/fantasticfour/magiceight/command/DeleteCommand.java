@@ -29,14 +29,7 @@ public class DeleteCommand extends Command {
             }
         } else {
             for(String tag : super.getTags()) {
-                TreeMap<Integer, Magic8Task> tasks = super.getTaskManager().getTasksWithTag(tag);
-                for(Map.Entry<Integer, Magic8Task> entry : tasks.entrySet()) {
-                    task = entry.getValue();
-                    if(task != null) {
-                        super.getTaskManager().removeTask(task);
-                        count++;
-                    }
-                }
+                super.getTaskManager().removeTasksWithTag(tag);
             }
         }
         

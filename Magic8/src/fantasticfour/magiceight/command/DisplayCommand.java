@@ -3,6 +3,7 @@ package fantasticfour.magiceight.command;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -42,20 +43,17 @@ public class DisplayCommand extends Command {
     }
     
     public void execute() throws IOException {
-        Magic8Task task = null;
         if(super.getTags() != null) {
             for(String tag : super.getTags()) {
-                TreeMap<Integer, Magic8Task> tasks = super.getTaskManager().getTasksWithTag(tag);
-                for(Map.Entry<Integer, Magic8Task> entry : tasks.entrySet()) {
-                    task = entry.getValue();
+                ArrayList<Magic8Task> tasks = super.getTaskManager().getTasksWithWord(tag, true);
+                for(Magic8Task task : tasks) {
                     display(task);
                 }
             }
             return;
         }
-        TreeMap<Integer, Magic8Task> tasks = super.getTaskManager().getAllTasks();
-        for(Map.Entry<Integer, Magic8Task> entry : tasks.entrySet()) {
-            task = entry.getValue();
+        ArrayList<Magic8Task> tasks = super.getTaskManager().getAllTasks();
+        for(Magic8Task task : tasks) {
             display(task);
         }
     }

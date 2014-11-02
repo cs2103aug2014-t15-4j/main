@@ -225,13 +225,14 @@ public class Magic8Task implements Magic8TaskInterface {
             throws IllegalArgumentException, ParseException {
 
         DateFormat df = new SimpleDateFormat(FORMAT_DATE);
+        
         if (stringArray.length >= NUM_FIELDS) {
             int id = Integer.parseInt(stringArray[INDEX_ID]);
             String desc = stringArray[INDEX_DESC];
             Calendar startTime = null;
             Calendar endTime = null;
             HashSet<String> tags;
-
+            
             if (!stringArray[INDEX_START_TIME].equals(STRING_PARSED_NULL)) {
                 startTime = Calendar.getInstance();
                 startTime.setTime(df.parse(stringArray[INDEX_START_TIME]));

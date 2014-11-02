@@ -1,6 +1,7 @@
 package fantasticfour.magiceight.command;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -32,11 +33,9 @@ public class SearchCommand extends Command {
     }
     
     public void execute() throws IOException {
-        Magic8Task task = null;
         for(String keyword : super.getKeywords()) {
-            TreeMap<Integer, Magic8Task> tasks = super.getTaskManager().getTasksWithWord(keyword);
-            for(Map.Entry<Integer, Magic8Task> entry : tasks.entrySet()) {
-                task = entry.getValue();
+            ArrayList<Magic8Task> tasks = super.getTaskManager().getTasksWithWord(keyword, false);
+            for(Magic8Task task : tasks) {
                 display(task);
             }
         }
