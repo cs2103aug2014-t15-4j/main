@@ -190,6 +190,10 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         for (String tag : task.getTags()) {
             HashSet<Integer> taskIdsWithTag = tagToTaskIds.get(tag);
             taskIdsWithTag.remove(taskId);
+
+            if (taskIdsWithTag.size() == 0) {
+                tagToTaskIds.remove(tag);
+            }
         }
     }
 
