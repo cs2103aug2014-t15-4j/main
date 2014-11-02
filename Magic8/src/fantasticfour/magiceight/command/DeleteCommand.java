@@ -2,8 +2,6 @@ package fantasticfour.magiceight.command;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
 
 import fantasticfour.magiceight.Magic8CommandObject;
 import fantasticfour.magiceight.Magic8Status;
@@ -20,7 +18,7 @@ public class DeleteCommand extends Command {
         ArrayList<Magic8Task> tasks = new ArrayList<Magic8Task>();
         
         if(super.getIds() == null && super.getTags() == null) {
-            super.getTaskManager().clearTasks();
+            tasks = super.getTaskManager().clearTasks();
         } else if(super.getTags() == null) {
             for(Integer id : super.getIds()) {
                 if(id >= super.getTaskManager().getAllTasks().size()) {

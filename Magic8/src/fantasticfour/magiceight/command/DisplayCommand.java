@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
 
 import fantasticfour.magiceight.Magic8CommandObject;
 import fantasticfour.magiceight.Magic8Status;
@@ -18,6 +16,7 @@ public class DisplayCommand extends Command {
         super(obj, tm);
     }
     
+    /*
     private void display(Magic8Task task) {
         System.out.println(Integer.toString(task.getId()) + ": " + task.getDesc() + " ");
         if(task.getTags() != null) {
@@ -42,6 +41,7 @@ public class DisplayCommand extends Command {
         
         System.out.println();
     }
+    */
     
     public void execute() throws IOException {
         if(super.getTags() != null) {
