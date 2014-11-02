@@ -120,20 +120,19 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     }
 
     @Override
-    public boolean clearTasks() throws IOException {
-        boolean result = false;
-
+    public ArrayList<Magic8Task> clearTasks() throws IOException {
         if (!taskList.isEmpty()) {
             // Remove all tasks from task list
+            getAllTasks();
             taskList.clear();
             writeToFile();
 
             backupTaskList();
 
-            result = true;
+            return bufferedTaskList;
         }
 
-        return result;
+        return null;
     }
 
     @Override

@@ -49,10 +49,10 @@ interface Magic8TaskListInterface {
     /**
      * Removes all tasks from the task list.
      *
-     * @return true if tasks were removed. false if task list was empty.
+     * @return an ArrayList of Magic8Tasks removed from the task list.
      * @throws IOException
      */
-    public boolean clearTasks() throws IOException;
+    public ArrayList<Magic8Task> clearTasks() throws IOException;
 
     /**
      * Undoes the last operation.
