@@ -10,20 +10,20 @@ import java.util.regex.Pattern;
 
 public class Magic8Parser {
     private final static String ADD_FUNCTION = "add";
-    private final static String ADD_DESC = "\\s[\\w\\p{Punct}]+((\\s[\\w\\p{Punct}]+)+)?";
-    private final static String ADD_TAGS = "((\\s#\\w+)+)?";
-    private final static String ADD_DEADLINE = "( by \\d{1,2}/\\d{1,2}/\\d{4})?";
+    private final static String ADD_DESC = "(\\s[^#][\\w\\p{Punct}]+)+";
+    private final static String ADD_TAGS = "(\\s#\\w+)*";
+    private final static String ADD_DEADLINE = "";
     
     private final static String CLEAR_FUNCTION ="clear";
     
     private final static String DELETE_FUNCTION = "delete";
     private final static String DELETE_ALL = "\\sall|\\s\\*";
     private final static String DELETE_BY_INT = "\\s\\d+( to \\d+|(,\\d+)+)?";
-    private final static String DELETE_BY_TAG = "\\s#\\w+((\\s#\\w+)+)?";
+    private final static String DELETE_BY_TAG = "(\\s#\\w+)+";
     private final static String DELETE_CONJUNC = "(" + DELETE_ALL + "|" + DELETE_BY_INT + "|" + DELETE_BY_TAG + ")";
     
     private final static String DISPLAY_FUNCTION = "display";
-    private final static String DISPLAY_BY_TAG = "((\\s#\\w+)+)?";
+    private final static String DISPLAY_BY_TAG = "(\\s#\\w+)*";
     
     private final static String EDIT_FUNCTION = "edit";
     private final static String EDIT_ID = "\\s\\d+";
@@ -34,7 +34,7 @@ public class Magic8Parser {
     private final static String HELP_FUNCTION = "help|\\-h";
     
     private final static String SEARCH_FUNCTION = "search";
-    private final static String SEARCH_BY_KEYWORD = "\\s\\w+(\\s+\\w+)?";
+    private final static String SEARCH_BY_KEYWORD = "(\\s+\\w+)+";
     
     private final static String UNDO_FUNCTION = "undo";
     
