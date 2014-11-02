@@ -125,6 +125,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
             // Remove all tasks from task list
             getAllTasks();
             taskList.clear();
+            tagToTaskIds.clear();
             writeToFile();
 
             backupTaskList();
