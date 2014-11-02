@@ -11,6 +11,7 @@ import fantasticfour.magiceight.command.EditCommand;
 import fantasticfour.magiceight.command.ExitCommand;
 import fantasticfour.magiceight.command.HelpCommand;
 import fantasticfour.magiceight.command.ICommand;
+import fantasticfour.magiceight.command.OpenCommand;
 import fantasticfour.magiceight.command.RedoCommand;
 import fantasticfour.magiceight.command.SearchCommand;
 import fantasticfour.magiceight.command.UndoCommand;
@@ -24,6 +25,7 @@ public class Magic8Controller {
     private static final String EDIT_FUNCTION = "edit";
     private static final String EXIT_FUNCTION = "exit";
     private static final String HELP_FUNCTION = "help";
+    private static final String OPEN_FUNCTION = "open";
     private static final String REDO_FUNCTION = "redo";
     private static final String SEARCH_FUNCTION = "search";
     private static final String UNDO_FUNCTION = "undo";
@@ -35,6 +37,7 @@ public class Magic8Controller {
     private static final String EDIT_SUCCESS_MESSAGE = "task is successfully edited";
     private static final String EXIT_SUCCESS_MESSAGE = "exit is successful";
     private static final String HELP_SUCCESS_MESSAGE = "help is successfully displayed";
+    private static final String OPEN_SUCCESS_MESSAGE = "file is successfully opened";
     private static final String REDO_SUCCESS_MESSAGE = "redo is successful";
     private static final String SEARCH_SUCCESS_MESSAGE = "search is successful";
     private static final String UNDO_SUCCESS_MESSAGE = "undo is successful";
@@ -46,6 +49,7 @@ public class Magic8Controller {
     private static final String EDIT_ERROR_MESSAGE = "edit fails";
     private static final String EXIT_ERROR_MESSAGE = "exit fails";
     private static final String HELP_ERROR_MESSAGE = "help fails";
+    private static final String OPEN_ERROR_MESSAGE = "open fails";
     private static final String REDO_ERROR_MESSAGE = "redo fails";
     private static final String SEARCH_ERROR_MESSAGE = "search fails";
     private static final String UNDO_ERROR_MESSAGE = "undo fails";
@@ -89,6 +93,11 @@ public class Magic8Controller {
                 command = new HelpCommand(obj, tm);
                 successMessage = HELP_SUCCESS_MESSAGE;
                 errorMessage = HELP_ERROR_MESSAGE;
+                break;
+            case OPEN_FUNCTION:
+                command = new OpenCommand(obj, tm);
+                successMessage = OPEN_SUCCESS_MESSAGE;
+                errorMessage = OPEN_ERROR_MESSAGE;
                 break;
             case REDO_FUNCTION:
                 command = new RedoCommand(obj, tm);

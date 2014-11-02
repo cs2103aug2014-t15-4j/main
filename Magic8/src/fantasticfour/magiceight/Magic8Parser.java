@@ -33,6 +33,9 @@ public class Magic8Parser {
     
     private final static String HELP_FUNCTION = "help|\\-h";
     
+    private final static String OPEN_FUNCTION = "open";
+    private final static String OPEN_FILENAME = "\\s[\\w\\p{Punct}]+";
+    
     private final static String SEARCH_FUNCTION = "search";
     private final static String SEARCH_BY_KEYWORD = "(\\s+\\w+)+";
     
@@ -47,6 +50,7 @@ public class Magic8Parser {
     private final static String EDIT_REGEX = EDIT_FUNCTION + EDIT_ID + EDIT_DESC;
     private final static String EXIT_REGEX = EXIT_FUNCTION;
     private final static String HELP_REGEX = HELP_FUNCTION;
+    private final static String OPEN_REGEX = OPEN_FUNCTION + OPEN_FILENAME;
     private final static String SEARCH_REGEX = SEARCH_FUNCTION + SEARCH_BY_KEYWORD;
     private final static String UNDO_REGEX = UNDO_FUNCTION;
     private final static String REDO_REGEX = REDO_FUNCTION;
@@ -60,6 +64,7 @@ public class Magic8Parser {
             add(EDIT_REGEX);
             add(EXIT_REGEX);
             add(HELP_REGEX);
+            add(OPEN_REGEX);
             add(SEARCH_REGEX);
             add(UNDO_REGEX);
             add(REDO_REGEX);
@@ -171,6 +176,10 @@ public class Magic8Parser {
                     for(String keyword : commandParams) {
                         keywords.add(keyword);
                     }                    
+                    break;
+                    
+                case OPEN_FUNCTION :
+                    taskDesc.add(commandParams[0]);                 
                     break;
                     
             }
