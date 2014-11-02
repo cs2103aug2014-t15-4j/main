@@ -107,7 +107,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
             throws IOException {
         bufferedTaskList.clear();
 
-        if (tasks != null && !tasks.isEmpty()) {
+        if (!tasks.isEmpty()) {
             for (Magic8Task task : tasks) {
                 Magic8Task storedTask = taskList.remove(task.getId());
 
