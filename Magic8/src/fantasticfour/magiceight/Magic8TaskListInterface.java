@@ -36,11 +36,23 @@ interface Magic8TaskListInterface {
     public Magic8Task removeTask(Magic8Task task) throws IOException;
 
     /**
+     * Removes the tasks with the same task ids as those in the specified
+     * ArrayList from the task list, and returns them in an ArrayList.
+     *
+     * @param tasks
+     *            ArrayList of tasks with task ids to be removed.
+     * @return ArrayList of Magic8Tasks that were removed.
+     * @throws IOException
+     */
+    public ArrayList<Magic8Task> removeTasks(ArrayList<Magic8Task> tasks)
+            throws IOException;
+
+    /**
      * Removes all tasks with the specified tag from the task list.
      *
      * @param tag
      *            Tag to remove tasks with.
-     * @return an ArrayList of Magic8Tasks that were removed from the task list.
+     * @return ArrayList of Magic8Tasks that were removed.
      * @throws IOException
      */
     public ArrayList<Magic8Task> removeTasksWithTag(String tag)
