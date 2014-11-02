@@ -40,11 +40,11 @@ interface Magic8TaskListInterface {
      *
      * @param tag
      *            Tag to remove tasks with.
-     * @return true if tasks were removed. false if there are no tasks with the
-     *         specified tag.
+     * @return an ArrayList of Magic8Tasks that were removed from the task list.
      * @throws IOException
      */
-    public boolean removeTasksWithTag(String tag) throws IOException;
+    public ArrayList<Magic8Task> removeTasksWithTag(String tag)
+            throws IOException;
 
     /**
      * Removes all tasks from the task list.
