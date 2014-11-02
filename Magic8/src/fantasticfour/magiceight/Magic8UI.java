@@ -45,6 +45,7 @@ public class Magic8UI {
 //	private static String command; 
 	private static String filename;
 	private static JTextField commandLine; 
+	private JTable table_1;
 	static JTextArea taskListView; 
 	static JTextArea confirmDialog; 
 	static JFrame frameMagic8UI;
@@ -180,12 +181,12 @@ public class Magic8UI {
 		frameMagic8UI.setForeground(new Color(0, 0, 0));
 		frameMagic8UI.setBackground(new Color(255, 205, 155));
 		frameMagic8UI.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
+		
 		JPanel displayPanel = new JPanel();
 		displayPanel.setBounds(20, 20, 370, 400);
 		displayPanel.setBackground(new Color(255,205,155));
 		frameMagic8UI.getContentPane().add(displayPanel);
-			
+		/*	
 		taskListView = new JTextArea();
 		taskListView.setEditable(false);
 		taskListView.setLineWrap(true);
@@ -198,14 +199,47 @@ public class Magic8UI {
 		taskListView.setFont(new Font("Trebuchet MS", Font.PLAIN, 12));
 		taskListView.setMargin(marginInsets);
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(330, 5, 15, 380);
+		
 		displayPanel.add(scrollPane);
 		scrollPane.setViewportView(taskListView);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		taskListView.setText(MESSAGE_WELCOME);
 		scrollPane.setBackground(new Color(220, 220, 220));
 		displayPanel.add(taskListView);
+		*/
+
+		table_1 = new JTable();
+		table_1.setModel(new DefaultTableModel(
+			new Object[][] {
+					{"1", "SampleTask1", "16/11/14, 0800", "16/11/14, 1000", "Tag1, Tag2"},
+					{"2", "SampleTask2", "18/11/14, 0900", "18/11/14, 1100", "Tag3, Tag4"},
+			},
+			new String[] {
+					"Task ID", "Task Description", "Start Time", "End Time", "Tags" 
+			}
+			) {
+		/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+			boolean[] columnEditables = new boolean[] {
+					true, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		/*
+		table_1.getColumnModel().getColumn(0).setPreferredWidth(10);
+		table_1.getColumnModel().getColumn(1).setPreferredWidth(10);
+		table_1.getColumnModel().getColumn(2).setPreferredWidth(10);
+		table_1.getColumnModel().getColumn(3).setPreferredWidth(10);
+		table_1.getColumnModel().getColumn(4).setPreferredWidth(10);
+		*/
+		scrollPane = new JScrollPane(table_1);
+		scrollPane.setViewportView(table_1);
+		displayPanel.add(scrollPane);
+		
 
 		JPanel confirmDialogPanel = new JPanel();
 		confirmDialogPanel.setBounds(410, 210, 300, 203);
@@ -225,6 +259,7 @@ public class Magic8UI {
 		confirmDialog.setBackground(Color.WHITE);
 		confirmDialog.setFont(new Font("Trebuchet MS", Font.BOLD, 12));
 		confirmDialogPanel.add(confirmDialog);
+		confirmDialog.setText(MESSAGE_WELCOME);
 
 		JPanel inputPanel = new JPanel();
 		inputPanel.setBounds(30, 460, 640, 50);
@@ -251,7 +286,7 @@ public class Magic8UI {
 		inputPanel.add(commandLine);
 
 		JPanel clockPanel = new JPanel();
-		clockPanel.setBounds(565, 415, 180, 45);
+		clockPanel.setBounds(553, 415, 180, 45);
 		frameMagic8UI.getContentPane().add(clockPanel);
 		clockPanel.setOpaque(false);
 		clockPanel.setBackground(new Color(255,205,155,0));
@@ -273,6 +308,7 @@ public class Magic8UI {
 		colorPanel2.setBounds(0, 0, 750, 550);
 		frameMagic8UI.getContentPane().add(colorPanel2);
 	}
+	
 
 	void setFrameIcon(){
 

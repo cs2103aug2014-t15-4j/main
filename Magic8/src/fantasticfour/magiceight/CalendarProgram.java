@@ -1,11 +1,24 @@
 package fantasticfour.magiceight;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.GregorianCalendar;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 public class CalendarProgram {
 	static JLabel lblMonth, lblYear;
@@ -36,6 +49,11 @@ public class CalendarProgram {
 		btnPrev = new JButton ("B");
 		btnNext = new JButton ("N");
 		mtblCalendar = new DefaultTableModel(){
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public boolean isCellEditable(int rowIndex, int mColIndex){
 				return false;
 				}
