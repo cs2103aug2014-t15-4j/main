@@ -117,7 +117,7 @@ public class Magic8UI {
 	        String tags = "";
 	        String deadline = "";
 	        Magic8Task task = tasks.get(index);
-	        id = index.toString();
+	        id = index.toString() + 1;
 	        desc = task.getDesc();
 	        if(task.getTags().size() > 0) {
     	        for(String tag : task.getTags()) {

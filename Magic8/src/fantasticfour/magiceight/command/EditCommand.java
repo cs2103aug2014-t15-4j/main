@@ -16,7 +16,7 @@ public class EditCommand extends Command {
     }
     
     public void execute() throws IOException {
-        int id = super.getIds().get(0);
+        int id = super.getIds().get(0) - 1;
 	    for(Magic8Task task : super.getTaskManager().getAllTasks()) {
 	    	if(task.getId() == id) {
 	            task = super.getTaskManager().getAllTasks().get(id);
