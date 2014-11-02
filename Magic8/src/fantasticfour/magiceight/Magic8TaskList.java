@@ -92,12 +92,14 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         Magic8Task storedTask = taskList.remove(taskId);
         if (storedTask != null) {
             unindexTask(task);
+            writeToFile();
+
+            backupTaskList();
+
+            return new Magic8Task(storedTask);
         }
-        writeToFile();
 
-        backupTaskList();
-
-        return new Magic8Task(storedTask);
+        return null;
     }
 
     @Override
