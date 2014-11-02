@@ -27,6 +27,7 @@ public class AddCommand extends Command {
                               super.getDeadline(), 
                               tags);        
         task = super.getTaskManager().addTask(task);
+        
         if(task == null) {
         	super.setStatus(Magic8Status.ERROR);
         } else {

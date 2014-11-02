@@ -22,14 +22,12 @@ public class EditCommand extends Command {
 	    	if(task.getId() == id) {
 	            task = super.getTaskManager().getAllTasks().get(id);
 	            task.setDesc(super.getTaskDescription());
-	            if(!super.getTaskManager().updateTask(task)) {
-	            	this.setStatus(Magic8Status.ERROR);
-	            } else {
+	            if(super.getTaskManager().updateTask(task)) {
 	            	this.setStatus(Magic8Status.SUCCESS);
 	            	tasks.add(task);
 	            	this.setTask(tasks);
+	                return;
 	            }
-	            return;
 	    	}
 	    }
 	    this.setStatus(Magic8Status.ERROR);
