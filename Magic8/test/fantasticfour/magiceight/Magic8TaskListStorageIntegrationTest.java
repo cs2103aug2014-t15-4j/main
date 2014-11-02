@@ -12,7 +12,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 
 import org.junit.Test;
@@ -34,7 +35,7 @@ public class Magic8TaskListStorageIntegrationTest {
     private static final String TEST_EMPTY_STRING = "";
     private static final String TEST_NON_ALPHANUMERIC_STRING = "string!";
     private static final String TEST_ALPHANUMERIC_STRING = "tag4";
-    private static final Date TEST_DATE = new Date(0);
+    private static final Calendar TEST_DATE = new GregorianCalendar();
     private static final HashSet<String> TEST_TAGS = new HashSet<String>(
             Arrays.asList("tag1", "tag2", "tag3"));
     private static final Magic8Task TEST_TASK = new Magic8Task(
@@ -217,7 +218,11 @@ public class Magic8TaskListStorageIntegrationTest {
             task.setId(3);
             task.setDesc("Updated task description");
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            task.setEndTime(df.parse("29/10/2014 11:11:11"));
+            
+            Calendar cal = new GregorianCalendar();
+            cal.setTime(df.parse("29/10/2014 11:11:11"));
+            task.setEndTime(cal);
+            
             HashSet<String> tags = new HashSet<String>(Arrays.asList("tag4",
                     "tag5"));
             task.setTags(tags);
@@ -484,7 +489,11 @@ public class Magic8TaskListStorageIntegrationTest {
             task.setId(1);
             task.setDesc("Updated task description");
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            task.setEndTime(df.parse("29/10/2014 11:11:11"));
+
+            Calendar cal = new GregorianCalendar();
+            cal.setTime(df.parse("29/10/2014 11:11:11"));
+            task.setEndTime(cal);
+            
             HashSet<String> tags = new HashSet<String>(Arrays.asList("tag4",
                     "tag5"));
             task.setTags(tags);
@@ -587,7 +596,11 @@ public class Magic8TaskListStorageIntegrationTest {
             task.setId(3);
             task.setDesc("Updated task description");
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            task.setEndTime(df.parse("29/10/2014 11:11:11"));
+
+            Calendar cal = new GregorianCalendar();
+            cal.setTime(df.parse("29/10/2014 11:11:11"));
+            task.setEndTime(cal);
+            
             HashSet<String> tags = new HashSet<String>(Arrays.asList("tag4",
                     "tag5"));
             task.setTags(tags);
@@ -899,7 +912,11 @@ public class Magic8TaskListStorageIntegrationTest {
             task.setId(1);
             task.setDesc("Updated task description");
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            task.setEndTime(df.parse("29/10/2014 11:11:11"));
+           
+            Calendar cal = new GregorianCalendar();
+            cal.setTime(df.parse("29/10/2014 11:11:11"));
+            task.setEndTime(cal);
+            
             HashSet<String> tags = new HashSet<String>(Arrays.asList("tag4",
                     "tag5"));
             task.setTags(tags);

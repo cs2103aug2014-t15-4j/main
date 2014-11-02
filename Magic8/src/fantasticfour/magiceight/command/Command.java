@@ -2,7 +2,7 @@ package fantasticfour.magiceight.command;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
 import fantasticfour.magiceight.Magic8CommandObject;
 import fantasticfour.magiceight.Magic8TaskList;
@@ -14,7 +14,7 @@ public class Command implements ICommand {
     private ArrayList<String> tags;
     private ArrayList<String> keywords;
     private ArrayList<Integer> ids;
-    private Date deadline;
+    private Calendar deadline;
     
     public Magic8TaskList getTaskManager() {
         return taskManager;
@@ -64,11 +64,11 @@ public class Command implements ICommand {
         this.ids = ids;
     }
 
-    public Date getDeadline() {
+    public Calendar getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(Date deadline) {
+    public void setDeadline(Calendar deadline) {
         this.deadline = deadline;
     }
     

@@ -1,7 +1,7 @@
 package fantasticfour.magiceight;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
 public class Magic8CommandObject {
     
@@ -10,7 +10,7 @@ public class Magic8CommandObject {
     ArrayList<String> tags;
     ArrayList<String> keywords;
     ArrayList<Integer> ids;
-    Date deadline;
+    Calendar deadline;
 
     Magic8CommandObject() {
         function = null;
@@ -60,11 +60,11 @@ public class Magic8CommandObject {
         this.ids = ids;
     }
 
-    public Date getDeadline() {
+    public Calendar getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(Date deadline) {
+    public void setDeadline(Calendar deadline) {
         this.deadline = deadline;
     }
 }

@@ -4,10 +4,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.regex.Pattern;
 
 public class Magic8Parser {
+    private final static String ADD_FUNCTION = "add";
+    private final static String ADD_DESC = "[\\w\\p{Punct}]+((\\s[\\w\\p{Punct}]+)+)?";
+    private final static String ADD_TAGS = "((\\s#\\w+)+)?";
+    private final static String ADD_DEADLINE = "( by \\d{1,2}/\\d{1,2}/\\d{4})?";
     
     private static ArrayList<String> commandRegexList = new ArrayList<String>() {
         {
@@ -40,7 +45,7 @@ public class Magic8Parser {
     public static Magic8CommandObject parseCommand(String command) throws IllegalArgumentException {
         Magic8CommandObject parsedCmdOutput = new Magic8CommandObject();
         if (isCommandValid(command)) {
-            Date deadline = null;
+            Calendar deadline = null;
             ArrayList<Integer> ids = new ArrayList<Integer>();
             ArrayList<String> taskDesc = new ArrayList<String>();
             ArrayList<String> tags = new ArrayList<String>();
@@ -61,11 +66,12 @@ public class Magic8Parser {
                     for (String commandParam : commandParams) {
                         if (commandParam.equals("by")) {
                             deadlineFlag = true;
+                            deadline = new GregorianCalendar();
                             continue;
                         }
                         if (deadlineFlag) {
                             try {
-                                deadline = new SimpleDateFormat("dd/MM/yyyy").parse(commandParam);
+                                deadline.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(commandParam));
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
