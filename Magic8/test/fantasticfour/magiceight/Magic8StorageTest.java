@@ -20,7 +20,7 @@ import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
 public class Magic8StorageTest {
-
+    
     @Test
     public void testMagic8Storage() {
         // Test with valid parameters
@@ -465,5 +465,4 @@ public class Magic8StorageTest {
     public void testGetTaskList() {
 
     }
-
 }
