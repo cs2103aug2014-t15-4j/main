@@ -10,22 +10,59 @@ import java.util.regex.Pattern;
 
 public class Magic8Parser {
     private final static String ADD_FUNCTION = "add";
-    private final static String ADD_DESC = "[\\w\\p{Punct}]+((\\s[\\w\\p{Punct}]+)+)?";
+    private final static String ADD_DESC = "\\s[\\w\\p{Punct}]+((\\s[\\w\\p{Punct}]+)+)?";
     private final static String ADD_TAGS = "((\\s#\\w+)+)?";
     private final static String ADD_DEADLINE = "( by \\d{1,2}/\\d{1,2}/\\d{4})?";
     
+    private final static String CLEAR_FUNCTION ="clear";
+    
+    private final static String DELETE_FUNCTION = "delete";
+    private final static String DELETE_ALL = "\\sall|\\s\\*";
+    private final static String DELETE_BY_INT = "\\s\\d+( to \\d+|(,\\d+)+)?";
+    private final static String DELETE_BY_TAG = "\\s#\\w+((\\s#\\w+)+)?";
+    private final static String DELETE_CONJUNC = "(" + DELETE_ALL + "|" + DELETE_BY_INT + "|" + DELETE_BY_TAG + ")";
+    
+    private final static String DISPLAY_FUNCTION = "display";
+    private final static String DISPLAY_BY_TAG = "((\\s#\\w+)+)?";
+    
+    private final static String EDIT_FUNCTION = "edit";
+    private final static String EDIT_ID = "\\s\\d+";
+    private final static String EDIT_DESC = "(\\s\\w+)+";
+    
+    private final static String EXIT_FUNCTION = "exit";
+    
+    private final static String HELP_FUNCTION = "help|\\-h";
+    
+    private final static String SEARCH_FUNCTION = "search";
+    private final static String SEARCH_BY_KEYWORD = "\\s\\w+(\\s+\\w+)?";
+    
+    private final static String UNDO_FUNCTION = "undo";
+    
+    private final static String REDO_FUNCTION = "redo";
+    
+    private final static String ADD_REGEX = ADD_FUNCTION + ADD_DESC + ADD_TAGS + ADD_DEADLINE;
+    private final static String CLEAR_REGEX = CLEAR_FUNCTION;
+    private final static String DELETE_REGEX = DELETE_FUNCTION + DELETE_CONJUNC;
+    private final static String DISPLAY_REGEX = DISPLAY_FUNCTION + DISPLAY_BY_TAG;
+    private final static String EDIT_REGEX = EDIT_FUNCTION + EDIT_ID + EDIT_DESC;
+    private final static String EXIT_REGEX = EXIT_FUNCTION;
+    private final static String HELP_REGEX = HELP_FUNCTION;
+    private final static String SEARCH_REGEX = SEARCH_FUNCTION + SEARCH_BY_KEYWORD;
+    private final static String UNDO_REGEX = UNDO_FUNCTION;
+    private final static String REDO_REGEX = REDO_FUNCTION;
+    
     private static ArrayList<String> commandRegexList = new ArrayList<String>() {
         {
-            add("add [\\w\\p{Punct}]+((\\s[\\w\\p{Punct}]+)+)?((\\s#\\w+)+)?( by \\d{1,2}/\\d{1,2}/\\d{4})?");
-            add("clear");
-            add("delete(\\sall|\\s\\d+( to \\d+|(,\\d+)+)?|\\s\\*|\\s#\\w+((\\s#\\w+)+)?)");
-            add("display((\\s#\\w+)+)?");
-            add("edit \\d+( \\w+)+");
-            add("exit");
-            add("help");
-            add("search \\w+(\\s+\\w+)?");
-            add("undo");
-            add("redo");
+            add(ADD_REGEX);
+            add(CLEAR_REGEX);
+            add(DELETE_REGEX);
+            add(DISPLAY_REGEX);
+            add(EDIT_REGEX);
+            add(EXIT_REGEX);
+            add(HELP_REGEX);
+            add(SEARCH_REGEX);
+            add(UNDO_REGEX);
+            add(REDO_REGEX);
         }
     };
     
@@ -60,7 +97,7 @@ public class Magic8Parser {
             }
 
             switch (function) {
-                case "add" :
+                case ADD_FUNCTION :
                     boolean deadlineFlag = false;
 
                     for (String commandParam : commandParams) {
@@ -83,7 +120,7 @@ public class Magic8Parser {
                     }
                     break;
                     
-                case "delete" :
+                case DELETE_FUNCTION :
                     int id = 0;
                     boolean lineToFlag = false;
                     
@@ -112,7 +149,7 @@ public class Magic8Parser {
                     }                    
                     break;
                     
-                case "display":
+                case DISPLAY_FUNCTION:
                     if(commandParams != null) {
                         for(String commandParam : commandParams) {
                             if (commandParam.startsWith("#")) {
@@ -122,7 +159,7 @@ public class Magic8Parser {
                     }
                     break;
                     
-                case "edit" :
+                case EDIT_FUNCTION :
                     ids.add(Integer.parseInt(commandParams[0]));
 
                     for (int i = 1; i < commandParams.length; i++) {
@@ -130,7 +167,7 @@ public class Magic8Parser {
                     }                    
                     break;
                     
-                case "search" :
+                case SEARCH_FUNCTION :
                     for(String keyword : commandParams) {
                         keywords.add(keyword);
                     }                    
