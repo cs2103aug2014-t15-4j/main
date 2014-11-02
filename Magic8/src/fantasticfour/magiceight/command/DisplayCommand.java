@@ -35,7 +35,7 @@ public class DisplayCommand extends Command {
             System.out. println("not specified");
         } else {
         	DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-            System.out.println(df.format(task.getEndTime()));
+            System.out.println(df.format(task.getEndTime().getTime()));
         }
         
         System.out.println();

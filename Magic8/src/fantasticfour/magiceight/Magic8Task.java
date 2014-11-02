@@ -197,13 +197,13 @@ public class Magic8Task implements Magic8TaskInterface {
         if (startTime == null) {
             stringArray[INDEX_START_TIME] = STRING_PARSED_NULL;
         } else {
-            stringArray[INDEX_START_TIME] = df.format(startTime);
+            stringArray[INDEX_START_TIME] = df.format(startTime.getTime());
         }
 
         if (endTime == null) {
             stringArray[INDEX_END_TIME] = STRING_PARSED_NULL;
         } else {
-            stringArray[INDEX_END_TIME] = df.format(endTime);
+            stringArray[INDEX_END_TIME] = df.format(endTime.getTime());
         }
 
         if (tags == null) {
@@ -233,10 +233,12 @@ public class Magic8Task implements Magic8TaskInterface {
             HashSet<String> tags;
 
             if (!stringArray[INDEX_START_TIME].equals(STRING_PARSED_NULL)) {
+                startTime = Calendar.getInstance();
                 startTime.setTime(df.parse(stringArray[INDEX_START_TIME]));
             }
 
             if (!stringArray[INDEX_END_TIME].equals(STRING_PARSED_NULL)) {
+                endTime = Calendar.getInstance();
                 endTime.setTime(df.parse(stringArray[INDEX_END_TIME]));
             }
 
