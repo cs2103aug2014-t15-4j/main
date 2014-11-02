@@ -152,7 +152,7 @@ public class Magic8Task implements Magic8TaskInterface {
             this.endTime = endTime;
         } else {
             Calendar cal = new GregorianCalendar();
-            cal.setTimeInMillis(startTime.getTimeInMillis());
+            cal.setTimeInMillis(endTime.getTimeInMillis());
             this.endTime = cal;
         }
     }
