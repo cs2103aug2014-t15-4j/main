@@ -134,6 +134,8 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     @Override
     public ArrayList<Magic8Task> removeTasksWithTag(String tag)
             throws IOException {
+        bufferedTaskList.clear();
+
         if (tagToTaskIds.containsKey(tag)) {
             for (Integer taskId : tagToTaskIds.get(tag)) {
                 Magic8Task task = taskList.remove(taskId);
