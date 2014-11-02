@@ -32,11 +32,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.JTextPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 public class Magic8UI {
 
@@ -49,9 +50,10 @@ public class Magic8UI {
 	static JTextArea taskListView; 
 	static JTextArea confirmDialog; 
 	static JFrame frameMagic8UI;
-	private JPanel colorPanel1;
+	private JPanel colorPanel1, tableDisplay;
 	private JPanel colorPanel2;
 	private JScrollPane scrollPane;
+	private JTextPane txtpnId;
 	static JLabel lblMonth, lblYear;
 	static JButton btnPrev, btnNext;
 	static JTable tblCalendar;
@@ -64,6 +66,11 @@ public class Magic8UI {
 	private final static String emptyString = "";
 	private static int timerDelay = 500;
 	private static int timerInitialDelay = 0;
+	private static DefaultTableModel myData;
+	static Object[][] objects = new Object[9][5];
+	private static String[] tableHeaders = { "", 
+		"Task Id.", "Description", "Start Time", "End Time", "Tags"
+	};
 	
 	TrayIcon trayIcon;
 	SystemTray tray;
@@ -199,14 +206,52 @@ public class Magic8UI {
 		taskListView.setFont(new Font("Trebuchet MS", Font.PLAIN, 12));
 		taskListView.setMargin(marginInsets);
 		
-		
 		displayPanel.add(scrollPane);
 		scrollPane.setViewportView(taskListView);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setBackground(new Color(220, 220, 220));
 		displayPanel.add(taskListView);
 		*/
+//		displayPanel.setBounds(34, 80, 705, 378);
+//		frameMagic8UI.getContentPane().add(displayPanel);
+//		tableDisplay = new JPanel();
+//		tableDisplay.setBackground(Color.WHITE);
+		myData = new DefaultTableModel(objects, tableHeaders);
+		
+		table_1 = new JTable(myData);
+		table_1.setForeground(new Color(0, 0, 0));
+		table_1.setFont(new Font("Trebuchet MS", Font.PLAIN, 10));
+		table_1.setShowHorizontalLines(true);
+		table_1.setBorder(null);
+		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+		table_1.setTableHeader(null);
+		table_1.setRowHeight(40);
+		table_1.getColumnModel().getColumn(0).setPreferredWidth(5);
+		table_1.getColumnModel().getColumn(1).setPreferredWidth(170);
+		table_1.getColumnModel().getColumn(2).setPreferredWidth(25);
+		table_1.getColumnModel().getColumn(3).setPreferredWidth(25);
+		table_1.getColumnModel().getColumn(4).setPreferredWidth(10);
+		table_1.getColumnModel().getColumn(5).setPreferredWidth(1);
 
+		table_1.getColumnModel().getColumn(5).setCellRenderer(new MyCellRenderer());
+		displayPanel.setLayout(null);
+
+		txtpnId = new JTextPane();
+		txtpnId.setBounds(22, 20, 367, 30);
+		displayPanel.add(txtpnId);
+		txtpnId.setEditable(false);
+		txtpnId.setForeground(Color.ORANGE);
+		txtpnId.setFont(new Font("Segoe UI Light", Font.PLAIN, 12));
+		txtpnId.setText(" ID                      DESCRIPTION                     START     END     TAGS");
+
+		JScrollPane scrollPaneTable = new JScrollPane(table_1);
+		scrollPaneTable.setBounds(20, 20, 370, 400);
+		displayPanel.add(scrollPaneTable);
+		scrollPaneTable.setBackground(new Color(255, 255, 255));
+		scrollPaneTable.setBorder(null);
+		table_1.setFillsViewportHeight(true);
+		
+		/*
 		table_1 = new JTable();
 		table_1.setModel(new DefaultTableModel(
 			new Object[][] {
@@ -217,9 +262,6 @@ public class Magic8UI {
 					"Task ID", "Task Description", "Start Time", "End Time", "Tags" 
 			}
 			) {
-		/**
-				 * 
-				 */
 				private static final long serialVersionUID = 1L;
 			boolean[] columnEditables = new boolean[] {
 					true, false
@@ -229,17 +271,17 @@ public class Magic8UI {
 			}
 		});
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		/*
+		
 		table_1.getColumnModel().getColumn(0).setPreferredWidth(10);
 		table_1.getColumnModel().getColumn(1).setPreferredWidth(10);
 		table_1.getColumnModel().getColumn(2).setPreferredWidth(10);
 		table_1.getColumnModel().getColumn(3).setPreferredWidth(10);
 		table_1.getColumnModel().getColumn(4).setPreferredWidth(10);
-		*/
+		
 		scrollPane = new JScrollPane(table_1);
 		scrollPane.setViewportView(table_1);
 		displayPanel.add(scrollPane);
-		
+		*/
 
 		JPanel confirmDialogPanel = new JPanel();
 		confirmDialogPanel.setBounds(410, 210, 300, 203);
@@ -327,6 +369,24 @@ public class Magic8UI {
 		System.out.println("system tray not supported, check taskbar when minimized");
 		return false;
 	}
+	
+	public class MyCellRenderer extends JTextArea implements TableCellRenderer {
+        public MyCellRenderer() {
+            setLineWrap(true);
+            setWrapStyleWord(true);
+         }
+
+        public Component getTableCellRendererComponent(JTable table, Object
+                value, boolean isSelected, boolean hasFocus, int row, int column) {
+            setText((String) value);//or something in value, like value.getNote()...
+            setSize(table.getColumnModel().getColumn(column).getWidth(),
+                    getPreferredSize().height);
+            if (table.getRowHeight(row) != getPreferredSize().height) {
+                    table.setRowHeight(row, getPreferredSize().height);
+            }
+            return this;
+        }
+    }
 
 	void initSystemTray(){
 
