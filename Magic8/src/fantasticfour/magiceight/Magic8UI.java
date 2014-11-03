@@ -22,8 +22,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -43,16 +43,17 @@ public class Magic8UI {
 
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	private static Magic8TaskList taskManager = null;
-//	private static String command; 
+	private static Magic8CommandObject command; 
 	private static String filename;
 	private static JTextField commandLine; 
-	private JTable table_1;
+	private static JTable table_1;
 	static JTextArea taskListView; 
 	static JTextArea confirmDialog; 
 	static JFrame frameMagic8UI;
 	private JPanel colorPanel1, tableDisplay;
 	private JPanel colorPanel2;
 	private JScrollPane scrollPane;
+	private static Magic8Controller controller;
 	private JTextPane txtpnId;
 	static JLabel lblMonth, lblYear;
 	static JButton btnPrev, btnNext;
@@ -69,7 +70,7 @@ public class Magic8UI {
 	private static DefaultTableModel myData;
 	static Object[][] objects = new Object[9][5];
 	private static String[] tableHeaders = { "", 
-		"Task Id.", "Description", "Start Time", "End Time", "Tags"
+		"Task Id.", "Description", "Deadline", "Tags"
 	};
 	
 	TrayIcon trayIcon;
@@ -84,20 +85,21 @@ public class Magic8UI {
 	private static String NAME_TITLE = "Magic 8";
 	private static String MESSAGE_WELCOME = "Welcome to Magic 8!\nFor assisstance, "
 			+ "type 'help'  or '-h' and press ENTER.\n\nPlease "
-			+ "enter the specified file name to continue.";
+			+ "enter the specified file name to continue.\n\n";
 	private static Insets marginInsets = new Insets(3,3,3,3); 
 
 	public Magic8UI() {
 		initialize();
 		launch();
+		updateTable();
 	}
 
 	public void launch() {
 		commandLine.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg){
-				String confirmText = emptyString;
-				String taskText = taskListView.getText();
+//				String taskText = emptyString;
+				String confirmText = confirmDialog.getText();
 				String inputStr = commandLine.getText();		
 				
 				if((taskManager == null)&&(!inputStr.equalsIgnoreCase("exit")||
@@ -117,10 +119,10 @@ public class Magic8UI {
 						e.printStackTrace();
 					}
 				}
-
-				confirmDialog.setText(confirmText);
-				taskListView.setText(taskText);
+		
+//				command = Magic8Parser.parseCommand(inputStr);
 				commandLine.setText(emptyString);
+				confirmDialog.setText(controller.getStatusMessage());
 			}
 		});
 	}
@@ -137,6 +139,31 @@ public class Magic8UI {
 		
 	    frameMagic8UI.pack();
 	    frameMagic8UI.setVisible(true); 
+	}
+	
+	public static void updateTable() {
+		DefaultTableModel tableModel = (DefaultTableModel) table_1.getModel();
+		tableModel.setRowCount(0);
+		ArrayList<Magic8Task> allTasks= controller.getTaskList();
+		if (!(allTasks.size()==0)){
+//			Magic8Task firstTask = allTasks.get(0);
+			myData = (DefaultTableModel) table_1.getModel();
+
+			for(int i=0; i<allTasks.size(); i++) {
+				Magic8Task tempTask = allTasks.get(i);
+				Object[] data = new Object[6];
+
+				data[1] = i+1;
+				data[2] = tempTask.getDesc();
+				data[3] = tempTask.getStartTime();
+				data[4] = tempTask.getEndTime();
+				data[5] = tempTask.getTags();
+				
+				myData.addRow(data);
+			}
+
+			table_1.setModel(myData);
+		}
 	}
 	
 	private static void magic8UIInit() throws IOException, ParseException {        
@@ -221,7 +248,7 @@ public class Magic8UI {
 		table_1 = new JTable(myData);
 		table_1.setForeground(new Color(0, 0, 0));
 		table_1.setFont(new Font("Trebuchet MS", Font.PLAIN, 10));
-		table_1.setShowHorizontalLines(true);
+		table_1.setShowHorizontalLines(false);
 		table_1.setBorder(null);
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 		table_1.setTableHeader(null);
@@ -229,11 +256,11 @@ public class Magic8UI {
 		table_1.getColumnModel().getColumn(0).setPreferredWidth(5);
 		table_1.getColumnModel().getColumn(1).setPreferredWidth(170);
 		table_1.getColumnModel().getColumn(2).setPreferredWidth(25);
-		table_1.getColumnModel().getColumn(3).setPreferredWidth(25);
-		table_1.getColumnModel().getColumn(4).setPreferredWidth(10);
-		table_1.getColumnModel().getColumn(5).setPreferredWidth(1);
+		table_1.getColumnModel().getColumn(2).setPreferredWidth(25);
+		table_1.getColumnModel().getColumn(3).setPreferredWidth(20);
+		table_1.getColumnModel().getColumn(4).setPreferredWidth(1);
 
-		table_1.getColumnModel().getColumn(5).setCellRenderer(new MyCellRenderer());
+		table_1.getColumnModel().getColumn(4).setCellRenderer(new MyCellRenderer());
 		displayPanel.setLayout(null);
 
 		txtpnId = new JTextPane();
@@ -242,7 +269,7 @@ public class Magic8UI {
 		txtpnId.setEditable(false);
 		txtpnId.setForeground(Color.ORANGE);
 		txtpnId.setFont(new Font("Segoe UI Light", Font.PLAIN, 12));
-		txtpnId.setText(" ID                      DESCRIPTION                     START     END     TAGS");
+		txtpnId.setText(" ID                      DESCRIPTION                    START      END       TAGS");
 
 		JScrollPane scrollPaneTable = new JScrollPane(table_1);
 		scrollPaneTable.setBounds(20, 20, 370, 400);
@@ -378,7 +405,7 @@ public class Magic8UI {
 
         public Component getTableCellRendererComponent(JTable table, Object
                 value, boolean isSelected, boolean hasFocus, int row, int column) {
-            setText((String) value);//or something in value, like value.getNote()...
+            setText((String) value);
             setSize(table.getColumnModel().getColumn(column).getWidth(),
                     getPreferredSize().height);
             if (table.getRowHeight(row) != getPreferredSize().height) {
