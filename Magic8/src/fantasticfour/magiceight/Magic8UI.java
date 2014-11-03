@@ -3,7 +3,6 @@ package fantasticfour.magiceight;
 import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -36,12 +35,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
 public class Magic8UI {
     private final static Integer WINDOW_HEIGHT = 800;
@@ -62,10 +59,8 @@ public class Magic8UI {
 	static JTextArea taskListView; 
 	static JTextArea confirmDialog; 
 	static JFrame frameMagic8UI;
-	private JPanel colorPanel1, tableDisplay;
 	private JPanel colorPanel2;
 	private JScrollPane scrollPane;
-	private JTextPane txtpnId;
 	static JLabel lblMonth, lblYear;
 	static JButton btnPrev, btnNext;
 	static JTable tblCalendar;
@@ -78,11 +73,7 @@ public class Magic8UI {
 	private final static String emptyString = "";
 	private static int timerDelay = 500;
 	private static int timerInitialDelay = 0;
-	private static DefaultTableModel myData;
 	static Object[][] objects = new Object[9][5];
-	private static String[] tableHeaders = { "", 
-		"Task Id.", "Description", "Start Time", "End Time", "Tags"
-	};
 	
 	TrayIcon trayIcon;
 	SystemTray tray;
@@ -97,7 +88,6 @@ public class Magic8UI {
 	private static String MESSAGE_WELCOME = "Welcome to Magic 8!\nFor assisstance, "
 			+ "type 'help'  or '-h' and press ENTER.\n\nPlease "
 			+ "enter the specified file name to continue.";
-	private static Insets marginInsets = new Insets(3,3,3,3); 
 
 	public Magic8UI() {
 		initialize();
@@ -117,7 +107,7 @@ public class Magic8UI {
 	        String tags = "";
 	        String deadline = "";
 	        Magic8Task task = tasks.get(index);
-	        id = index.toString() + 1;
+	        id = (++index).toString();
 	        desc = task.getDesc();
 	        if(task.getTags().size() > 0) {
     	        for(String tag : task.getTags()) {
