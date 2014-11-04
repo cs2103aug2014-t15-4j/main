@@ -12,7 +12,7 @@ public class Magic8Parser {
     private final static String ADD_FUNCTION = "add";
     private final static String ADD_DESC = "(\\s[^#][\\w\\p{Punct}]+)+";
     private final static String ADD_TAGS = "(\\s#\\w+)*";
-    private final static String ADD_DEADLINE = "";
+    private final static String ADD_DEADLINE = "(\\sby\\s\\d{1,2}/\\d{1,2}/\\d{2,4})?";
     
     private final static String CLEAR_FUNCTION ="clear";
     

@@ -75,7 +75,7 @@ public class CalendarProgram {
 		pnlCalendar.add(stblCalendar);
 		
 		//Set bounds
-		pnlCalendar.setBounds(820, 50, 300, 181);
+		pnlCalendar.setBounds(510, 50, 300, 181);
 		pnlCalendar.setBackground(new Color(255,205,155));
 //		lblMonth.setBounds(140-lblMonth.getPreferredSize().width/2, 15, 20, 5);
 		btnPrev.setBounds(10, 15, 20, 20);

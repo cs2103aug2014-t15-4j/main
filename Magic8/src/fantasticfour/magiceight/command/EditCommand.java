@@ -17,17 +17,16 @@ public class EditCommand extends Command {
     
     public void execute() throws IOException {
         int id = super.getIds().get(0) - 1;
-	    for(Magic8Task task : super.getTaskManager().getAllTasks()) {
-	    	if(task.getId() == id) {
-	            task = super.getTaskManager().getAllTasks().get(id);
-	            task.setDesc(super.getTaskDescription());
-	            if(super.getTaskManager().updateTask(task)) {
-	            	this.setStatus(Magic8Status.SUCCESS);
-	            	this.setTask(super.getTaskManager().getAllTasks());
-	                return;
-	            }
-	    	}
-	    }
+        if(id < super.getTaskManager().getAllTasks().size()) {
+	        Magic8Task task = super.getTaskManager().getAllTasks().get(id);
+            task.setDesc(super.getTaskDescription());
+            if(super.getTaskManager().updateTask(task)) {
+            	this.setStatus(Magic8Status.SUCCESS);
+            	this.setTask(super.getTaskManager().getAllTasks());
+                return;
+            }
+	    	
+        }
 	    this.setStatus(Magic8Status.ERROR);
 	    return;
     }

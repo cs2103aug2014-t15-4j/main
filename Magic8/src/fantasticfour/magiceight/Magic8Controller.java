@@ -134,4 +134,8 @@ public class Magic8Controller {
     public ArrayList<Magic8Task> getTaskList() {
         return command.getReturnTaskList();
     }
+    
+    public Magic8TaskList getTaskManager() {
+    	return command.getTaskManager();
+    }
 }

@@ -21,7 +21,7 @@ public class DeleteCommand extends Command {
             tasks = super.getTaskManager().clearTasks();
         } else if(super.getTags() == null) {
             for(Integer id : super.getIds()) {
-                if(id >= super.getTaskManager().getAllTasks().size()) {
+                if(id > super.getTaskManager().getAllTasks().size()) {
                 	this.setStatus(Magic8Status.ERROR);
                     return;
                 }

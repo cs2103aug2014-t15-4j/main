@@ -257,6 +257,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
 
         ids.add(id);
         taskLists.add(copyTaskList(taskList));
+        
     }
 
     private void writeToFile() throws IOException {
