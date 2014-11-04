@@ -35,10 +35,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.DefaultCaret;
 
 import fantasticfour.magiceight.AutoComplete.Autocomplete;
 
@@ -71,6 +73,8 @@ public class Magic8UI {
     static JScrollPane stblCalendar; //The scrollpane   
     static JPanel pnlCalendar, calPanel; //The panel
     static int realDay, realMonth, realYear, currentMonth, currentYear;
+    TrayIcon trayIcon;
+    SystemTray tray;
 
     private final static String emptyString = "";
     private static int timerDelay = 500;
@@ -78,14 +82,12 @@ public class Magic8UI {
     static Object[][] objects = new Object[9][5];
     private ArrayList<String> keywords = new ArrayList<String>(5);
     
-    TrayIcon trayIcon;
-    SystemTray tray;
-    
     public static final int NORMAL = 0;
     public static final int ICONIFIED = 1;
     public static final int MAXIMIZED_HORIZ = 2;
     public static final int MAXIMIZED_VERT = 4;
     public static final int MAXIMIZED_BOTH = 6;
+    private static final String COMMIT_ACTION = "commit";
     
     private static String NAME_TITLE = "Magic 8";
     private static String MESSAGE_WELCOME = "Welcome to Magic 8!\nFor assisstance, "
@@ -301,13 +303,22 @@ public class Magic8UI {
 		keywords.add("search");//Search function
 		keywords.add("by");//'by' deadline 
 		keywords.add("remind"); //Reminder function
-
+/*
 		// Without this, cursor always leaves text field
 		commandLine.setFocusTraversalKeysEnabled(false);
+		Autocomplete autoComplete = new Autocomplete(commandLine, keywords);
+		
+		//To prevent autoscrolling
+		DefaultCaret caret1 = (DefaultCaret) confirmDialog.getCaret();
+		caret1.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 
+		commandLine.getDocument().addDocumentListener(autoComplete);
 
-//TODO		Autocomplete autoComplete = new Autocomplete(commandLine, keywords);
-
+		// Maps the tab key to the commit action, which finishes the autocomplete
+		// when given a suggestion
+		commandLine.getInputMap().put(KeyStroke.getKeyStroke("TAB"), COMMIT_ACTION);
+		commandLine.getActionMap().put(COMMIT_ACTION, autoComplete.new CommitAction());
+*/
         // Clock Panel
         JPanel clockPanel = new JPanel();
         clockPanel.setBounds(WINDOW_WIDTH-270, WINDOW_HEIGHT-165, 180, 45);
@@ -328,6 +339,9 @@ public class Magic8UI {
         colorPanel1.setBackground(new Color(255, 205, 155));
         colorPanel1.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
         frameMagic8UI.getContentPane().add(colorPanel1);
+        
+        //Sets Magic 8 logo
+        setFrameIcon();
     }
     
 
