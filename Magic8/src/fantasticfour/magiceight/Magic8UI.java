@@ -40,10 +40,12 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 
+import fantasticfour.magiceight.AutoComplete.Autocomplete;
+
 public class Magic8UI {
-    private final static Integer WINDOW_HEIGHT = 800;
-    private final static Integer WINDOW_WIDTH = 1200;
-    private final static String[][] EMPTY_ROW = {{"","","",""}};
+    private final static Integer WINDOW_HEIGHT = 600;
+    private final static Integer WINDOW_WIDTH = 800;
+    private final static String[][] EMPTY_ROW = {{"","","","",""}};
     private final static Integer TEXT_PANEL_LENGTH = 120;
     
     private Magic8Controller controller;
@@ -59,7 +61,7 @@ public class Magic8UI {
     static JTextArea taskListView; 
     static JTextArea confirmDialog; 
     static JFrame frameMagic8UI;
-    private JPanel colorPanel2;
+    private JPanel colorPanel1;
     private JScrollPane scrollPane;
     static JLabel lblMonth, lblYear;
     static JButton btnPrev, btnNext;
@@ -74,6 +76,7 @@ public class Magic8UI {
     private static int timerDelay = 500;
     private static int timerInitialDelay = 0;
     static Object[][] objects = new Object[9][5];
+    private ArrayList<String> keywords = new ArrayList<String>(5);
     
     TrayIcon trayIcon;
     SystemTray tray;
@@ -213,7 +216,7 @@ public class Magic8UI {
 
     private void constructWindow() {
         frameMagic8UI = new JFrame(NAME_TITLE);
-        frameMagic8UI.setResizable(false);
+        frameMagic8UI.setResizable(true);
         frameMagic8UI.getContentPane().setBackground(Color.WHITE);
         frameMagic8UI.setMinimumSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         frameMagic8UI.getContentPane().setLayout(null);
@@ -222,46 +225,27 @@ public class Magic8UI {
         
         // Big Window
         JPanel displayPanel = new JPanel();
-        displayPanel.setBounds(40, 70, 580, 540);
+        displayPanel.setBounds(0, 0, 580, 540);
         displayPanel.setBackground(new Color(255, 205, 155));
         frameMagic8UI.getContentPane().add(displayPanel);
-        /*  
-        taskListView = new JTextArea();
-        taskListView.setEditable(false);
-        taskListView.setLineWrap(true);
-        taskListView.setWrapStyleWord(true);
-        taskListView.setColumns(40);
-        taskListView.setRows(25);
-        taskListView.setBounds(0, 0, 10, 10);
-        taskListView.setForeground(Color.DARK_GRAY);
-        taskListView.setBackground(Color.WHITE);
-        taskListView.setFont(new Font("Trebuchet MS", Font.PLAIN, 12));
-        taskListView.setMargin(marginInsets);
-        
-        displayPanel.add(scrollPane);
-        scrollPane.setViewportView(taskListView);
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setBackground(new Color(220, 220, 220));
-        displayPanel.add(taskListView);
-        */
-//      displayPanel.setBounds(34, 80, 705, 378);
-//      frameMagic8UI.getContentPane().add(displayPanel);
-//      tableDisplay = new JPanel();
-//      tableDisplay.setBackground(Color.WHITE);
-        
+
         // Table
         model = new DefaultTableModel();
         table = new JTable(model);
         model.addColumn("Id");
         model.addColumn("Description");
+        model.addColumn("Start Time");
+        model.addColumn("End Time");
         model.addColumn("Tags");
-        model.addColumn("Deadline");
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        table.getColumnModel().getColumn(0).setPreferredWidth(50);
-        table.getColumnModel().getColumn(1).setPreferredWidth(200);
-        table.getColumnModel().getColumn(2).setPreferredWidth(100);
-        table.getColumnModel().getColumn(3).setPreferredWidth(100);
         
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table.getColumnModel().getColumn(0).setPreferredWidth(30);
+        table.getColumnModel().getColumn(1).setPreferredWidth(200);
+        table.getColumnModel().getColumn(2).setPreferredWidth(70);
+        table.getColumnModel().getColumn(3).setPreferredWidth(70);
+        table.getColumnModel().getColumn(3).setPreferredWidth(75);
+        
+        // Scroll Pane for the Table
         scrollPane = new JScrollPane(table);
         displayPanel.add(scrollPane, BorderLayout.CENTER);
         displayPanel.revalidate();
@@ -273,9 +257,9 @@ public class Magic8UI {
         frameMagic8UI.getContentPane().add(confirmDialogPanel);
         confirmDialogPanel.setBackground(new Color(255,205,155));
         confirmDialogPanel.setLayout(null);
-
+        
+        // Confirm Area for giving feedback to the user
         confirmDialog = new JTextArea();
-//      confirmDialog.setTabSize(5);
         confirmDialog.setEditable(false);
         confirmDialog.setLineWrap(true);
         confirmDialog.setWrapStyleWord(true);
@@ -298,7 +282,6 @@ public class Magic8UI {
         inputPanel.setBackground(new Color(255,151,4));
         
         // Input Field
-        
         commandLine = new JTextField();
         inputPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 30));
         commandLine.putClientProperty("JTextField.variant", "search");
@@ -308,6 +291,22 @@ public class Magic8UI {
         commandLine.setColumns(90);
         commandLine.setBorder(BorderFactory.createLineBorder(Color.WHITE, 10));
         inputPanel.add(commandLine);
+        
+        keywords.add("add"); //Add function
+		keywords.add("display");//Display function
+		keywords.add("delete");//Delete function
+		keywords.add("edit");//Update function
+		keywords.add("undo");//Undo function
+		keywords.add("redo");//Re do function
+		keywords.add("search");//Search function
+		keywords.add("by");//'by' deadline 
+		keywords.add("remind"); //Reminder function
+
+		// Without this, cursor always leaves text field
+		commandLine.setFocusTraversalKeysEnabled(false);
+
+
+//TODO		Autocomplete autoComplete = new Autocomplete(commandLine, keywords);
 
         // Clock Panel
         JPanel clockPanel = new JPanel();
@@ -320,14 +319,15 @@ public class Magic8UI {
         frameMagic8UI.setLocationRelativeTo(null);
         clockPanel.add(new ClockPane());
         
+        // Calendar 
         CalendarProgram.frameSetUp(frameMagic8UI);
         frameMagic8UI.setLocationRelativeTo(null);
 
         // Overall Background Panel
-        colorPanel2 = new JPanel();
-        colorPanel2.setBackground(new Color(255, 205, 155));
-        colorPanel2.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-        frameMagic8UI.getContentPane().add(colorPanel2);
+        colorPanel1 = new JPanel();
+        colorPanel1.setBackground(new Color(255, 205, 155));
+        colorPanel1.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        frameMagic8UI.getContentPane().add(colorPanel1);
     }
     
 
@@ -348,26 +348,7 @@ public class Magic8UI {
         System.out.println("system tray not supported, check taskbar when minimized");
         return false;
     }
-    
-    /*
-    public class MyCellRenderer extends JTextArea implements TableCellRenderer {
-        public MyCellRenderer() {
-            setLineWrap(true);
-            setWrapStyleWord(true);
-         }
 
-        public Component getTableCellRendererComponent(JTable table, Object
-                value, boolean isSelected, boolean hasFocus, int row, int column) {
-            setText((String) value);//or something in value, like value.getNote()...
-            setSize(table.getColumnModel().getColumn(column).getWidth(),
-                    getPreferredSize().height);
-            if (table.getRowHeight(row) != getPreferredSize().height) {
-                    table.setRowHeight(row, getPreferredSize().height);
-            }
-            return this;
-        }
-    }
-    */
 
     void initSystemTray(){
 
