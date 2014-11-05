@@ -206,9 +206,7 @@ public class Magic8Task implements Magic8TaskInterface {
             stringArray[INDEX_END_TIME] = df.format(endTime.getTime());
         }
 
-        if (tags == null) {
-            stringArray[INDEX_TAGS] = STRING_PARSED_NULL;
-        } else if (tags.size() == 0) {
+        if (tags.size() == 0) {
             stringArray[INDEX_TAGS] = STRING_PARSED_EMPTY;
         } else {
             stringArray[INDEX_TAGS] = STRING_EMPTY;
