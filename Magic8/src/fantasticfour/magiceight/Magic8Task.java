@@ -29,19 +29,21 @@ public class Magic8Task implements Magic8TaskInterface {
 
     private int id;
     private String desc;
+    private boolean isDone;
     private Calendar startTime;
     private Calendar endTime;
     private HashSet<String> tags;
 
     public Magic8Task(int id, String desc, Calendar startTime,
             Calendar endTime, HashSet<String> tags)
-            throws IllegalArgumentException {
+                    throws IllegalArgumentException {
         if (id < 0) {
             throw new IllegalArgumentException(MSG_NEGATIVE_ID);
         }
 
         this.id = id;
         setDesc(desc);
+        setDone(false);
         setStartTime(startTime);
         setEndTime(endTime);
         setTags(tags);
@@ -112,6 +114,16 @@ public class Magic8Task implements Magic8TaskInterface {
         }
 
         this.desc = desc;
+    }
+
+    @Override
+    public boolean isDone() {
+        return isDone;
+    }
+
+    @Override
+    public void setDone(boolean isDone) {
+        this.isDone = isDone;
     }
 
     @Override

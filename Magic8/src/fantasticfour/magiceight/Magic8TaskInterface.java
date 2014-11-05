@@ -12,6 +12,10 @@ public interface Magic8TaskInterface extends Comparable<Magic8Task> {
 
     public void setDesc(String desc);
 
+    public boolean isDone();
+
+    public void setDone(boolean isDone);
+
     public Calendar getStartTime();
 
     public void setStartTime(Calendar startTime);
