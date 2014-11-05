@@ -276,9 +276,22 @@ public class Magic8Task implements Magic8TaskInterface {
             if (!getDesc().equals(other.getDesc())) {
                 return false;
             }
+            // Check start time
+            Calendar d1 = getStartTime();
+            Calendar d2 = other.getStartTime();
+
+            if (d1 == null && d2 != null) {
+                return false;
+            }
+            if (d1 != null && d2 == null) {
+                return false;
+            }
+            if (d1 != null && d2 != null && !d1.equals(d2)) {
+                return false;
+            }
             // Check end time
-            Calendar d1 = getEndTime();
-            Calendar d2 = other.getEndTime();
+            d1 = getEndTime();
+            d2 = other.getEndTime();
 
             if (d1 == null && d2 != null) {
                 return false;
