@@ -78,10 +78,6 @@ public class Magic8Task implements Magic8TaskInterface {
         this(task.getId(), task.getDesc(), task.getStartTime(), task
                 .getEndTime(), task.getTags());
     }
-    
-    public Magic8Task(int id, String desc, Calendar endTime, HashSet<String> tags) {
-        this(id, desc, null, endTime, tags);
-    }
 
     @Override
     public int getId() {
