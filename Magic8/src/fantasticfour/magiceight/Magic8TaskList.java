@@ -214,11 +214,19 @@ public class Magic8TaskList implements Magic8TaskListInterface {
 
     @Override
     public ArrayList<Magic8Task> getTimedTasks() {
+        return getTimedTasks(false);
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getTimedTasks(boolean isDone) {
         ArrayList<Magic8Task> result = new ArrayList<>();
 
         for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
-            if (entry.getValue().getEndTime() != null) {
-                result.add(new Magic8Task(entry.getValue()));
+            Magic8Task task = entry.getValue();
+            if (task.getEndTime() != null) {
+                if (isDone || !isDone && !task.isDone()) {
+                    result.add(new Magic8Task(task));
+                }
             }
         }
 
@@ -229,11 +237,19 @@ public class Magic8TaskList implements Magic8TaskListInterface {
 
     @Override
     public ArrayList<Magic8Task> getUntimedTasks() {
+        return getUntimedTasks(false);
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getUntimedTasks(boolean isDone) {
         ArrayList<Magic8Task> result = new ArrayList<>();
 
         for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
-            if (entry.getValue().getEndTime() == null) {
-                result.add(new Magic8Task(entry.getValue()));
+            Magic8Task task = entry.getValue();
+            if (task.getEndTime() == null) {
+                if (isDone || !isDone && !task.isDone()) {
+                    result.add(new Magic8Task(task));
+                }
             }
         }
 
@@ -242,10 +258,18 @@ public class Magic8TaskList implements Magic8TaskListInterface {
 
     @Override
     public ArrayList<Magic8Task> getAllTasks() {
+        return getAllTasks(false);
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getAllTasks(boolean isDone) {
         ArrayList<Magic8Task> result = new ArrayList<>();
 
         for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
-            result.add(new Magic8Task(entry.getValue()));
+            Magic8Task task = entry.getValue();
+            if (isDone || !isDone && !task.isDone()) {
+                result.add(new Magic8Task(task));
+            }
         }
 
         Collections.sort(result);
@@ -255,22 +279,35 @@ public class Magic8TaskList implements Magic8TaskListInterface {
 
     @Override
     public ArrayList<Magic8Task> getTasksWithWord(String word) {
-        return getTasksWithWord(word, false);
+        return getTasksWithWord(false, word, false);
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getTasksWithWord(String word, boolean isDone) {
+        return getTasksWithWord(false, word, isDone);
     }
 
     @Override
     public ArrayList<Magic8Task> getTasksWithTag(String tag) {
-        return getTasksWithWord(tag, true);
+        return getTasksWithWord(true, tag, false);
     }
 
     @Override
-    public ArrayList<Magic8Task> getTasksWithWord(String word, boolean isTag) {
+    public ArrayList<Magic8Task> getTasksWithTag(String tag, boolean isDone) {
+        return getTasksWithWord(true, tag, isDone);
+    }
+
+    private ArrayList<Magic8Task> getTasksWithWord(boolean isTag, String word,
+            boolean isDone) {
         ArrayList<Magic8Task> result = new ArrayList<>();
 
         for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
-            if (isTag && entry.getValue().getTags().contains(word) || !isTag
-                    && entry.getValue().getDesc().contains(word)) {
-                result.add(new Magic8Task(entry.getValue()));
+            Magic8Task task = entry.getValue();
+            if (isTag && task.getTags().contains(word) || !isTag
+                    && task.getDesc().contains(word)) {
+                if (isDone || !isDone && !task.isDone()) {
+                    result.add(new Magic8Task(task));
+                }
             }
         }
 

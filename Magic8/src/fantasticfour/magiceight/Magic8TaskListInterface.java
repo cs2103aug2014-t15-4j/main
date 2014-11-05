@@ -86,20 +86,40 @@ public interface Magic8TaskListInterface {
     public boolean redo() throws IOException;
 
     /**
-     * Returns all tasks in the task list with end times.
+     * Returns all tasks in the task list with end times that are not done.
      *
      * @return an ArrayList containing all the tasks in the task list with end
-     *         times
+     *         times that are not done
      */
     public ArrayList<Magic8Task> getTimedTasks();
 
     /**
-     * Returns all tasks in the task list without end times
+     * Returns all tasks in the task list with end times.
+     *
+     * @param isDone
+     *            indicates if tasks that are done should be included
+     * @return an ArrayList containing all the tasks in the task list with end
+     *         times
+     */
+    public ArrayList<Magic8Task> getTimedTasks(boolean isDone);
+
+    /**
+     * Returns all tasks in the task list without end times that are not done.
      *
      * @return an ArrayList containing all the tasks in the task list without
      *         end times
      */
     public ArrayList<Magic8Task> getUntimedTasks();
+
+    /**
+     * Returns all tasks in the task list without end times
+     *
+     * @param isDone
+     *            indicates if tasks that are done should be included
+     * @return an ArrayList containing all the tasks in the task list without
+     *         end times
+     */
+    public ArrayList<Magic8Task> getUntimedTasks(boolean isDone);
 
     /**
      * Returns all tasks in the task list.
@@ -111,12 +131,33 @@ public interface Magic8TaskListInterface {
     /**
      * Returns all tasks in the task list.
      *
+     * @param isDone
+     *            indicates if tasks that are done should be included
+     * @return an ArrayList containing all the tasks in the task list
+     */
+    public ArrayList<Magic8Task> getAllTasks(boolean isDone);
+
+    /**
+     * Returns all tasks in the task list.
+     *
      * @param word
      *            Word to retrieve tasks with
      * @return an ArrayList containing all the tasks in the task list with the
      *         specified word
      */
     public ArrayList<Magic8Task> getTasksWithWord(String word);
+
+    /**
+     * Returns all tasks in the task list.
+     *
+     * @param word
+     *            Word to retrieve tasks with
+     * @param isDone
+     *            indicates if tasks that are done should be included
+     * @return an ArrayList containing all the tasks in the task list with the
+     *         specified word
+     */
+    public ArrayList<Magic8Task> getTasksWithWord(String word, boolean isDone);
 
     /**
      * Returns all tasks in the task list.
@@ -133,10 +174,10 @@ public interface Magic8TaskListInterface {
      *
      * @param word
      *            Word or tag to retrieve tasks with
-     * @param isTag
-     *            true if word is a tag
+     * @param isDone
+     *            indicates if tasks that are done should be included
      * @return an ArrayList containing all the tasks in the task list with the
      *         specified word or tag
      */
-    public ArrayList<Magic8Task> getTasksWithWord(String word, boolean isTag);
+    public ArrayList<Magic8Task> getTasksWithTag(String tag, boolean isDone);
 }
