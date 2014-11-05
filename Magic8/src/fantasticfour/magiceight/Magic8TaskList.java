@@ -2,9 +2,9 @@ package fantasticfour.magiceight;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -12,253 +12,200 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     private Magic8Storage storage;
     private int id;
     private TreeMap<Integer, Magic8Task> taskList;
-    private ArrayList<Magic8Task> bufferedTaskList;
-    private HashMap<String, HashSet<Integer>> tagToTaskIds;
 
-    private int opIdx;
-    private ArrayList<Integer> ids;
-    private ArrayList<TreeMap<Integer, Magic8Task>> taskLists;
+    private int tempId;
+    private TreeMap<Integer, Magic8Task> tempTaskList;
+    private ArrayDeque<Integer> idPast;
+    private ArrayDeque<Integer> idFuture;
+    private ArrayDeque<TreeMap<Integer, Magic8Task>> taskListPast;
+    private ArrayDeque<TreeMap<Integer, Magic8Task>> taskListFuture;
 
     public Magic8TaskList(String fileName) throws IOException, ParseException {
         storage = new Magic8Storage(fileName);
         id = storage.getId();
         taskList = storage.getTaskList();
-        bufferedTaskList = new ArrayList<Magic8Task>();
-        tagToTaskIds = new HashMap<String, HashSet<Integer>>();
-
-        opIdx = 0;
-        ids = new ArrayList<Integer>();
-        ids.add(id);
-        taskLists = new ArrayList<TreeMap<Integer, Magic8Task>>();
-        taskLists.add(copyTaskList(taskList));
-
-        indexTaskList();
+        idPast = new ArrayDeque<>();
+        idFuture = new ArrayDeque<>();
+        taskListPast = new ArrayDeque<>();
+        taskListFuture = new ArrayDeque<>();
     }
 
     @Override
-    public Magic8Task addTask(Magic8Task task) throws IOException {
+    public boolean addTask(Magic8Task task) throws IOException {
         assert task != null;
 
         task = new Magic8Task(task);
+        task.setId(id++);
 
-        // Assign task id
-        int taskId = id++;
-        task.setId(taskId);
-
-        // Add task to task list
-        taskList.put(taskId, task);
-        indexTask(task);
+        updateTimeline();
+        taskList.put(task.getId(), task);
         writeToFile();
 
-        backupTaskList();
+        return true;
+    }
 
-        return new Magic8Task(task);
+    @Override
+    public boolean removeTask(Magic8Task task) throws IOException {
+        assert task != null;
+
+        if (taskList.containsKey(task.getId())) {
+            updateTimeline();
+            taskList.remove(task.getId());
+            writeToFile();
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
     public boolean updateTask(Magic8Task task) throws IOException {
         assert task != null;
 
-        task = new Magic8Task(task);
-
-        boolean result = false;
-
-        int taskId = task.getId();
-
-        // Remove task from task list
-        Magic8Task storedTask = taskList.remove(taskId);
-        if (storedTask != null) {
-            unindexTask(storedTask);
-
-            // Add task to task list
-            taskList.put(taskId, task);
-            indexTask(task);
+        if (taskList.containsKey(task.getId())) {
+            updateTimeline();
+            taskList.put(task.getId(), task);
             writeToFile();
 
-            backupTaskList();
+            return true;
+        }
 
-            result = true;
+        return false;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> removeTasks(ArrayList<Magic8Task> tasks)
+            throws IOException {
+        assert tasks != null;
+
+        backup();
+
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        for (Magic8Task task : tasks) {
+            assert task != null;
+
+            if (!taskList.containsKey(task.getId())) {
+                restore();
+
+                return new ArrayList<>();
+            }
+
+            result.add(new Magic8Task(taskList.remove(task.getId())));
+        }
+
+        updateTimeline(true);
+        writeToFile();
+
+        return result;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> removeTasksWithTag(String tag)
+            throws IOException {
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            if (entry.getValue().getTags().contains(tag)) {
+                result.add(new Magic8Task(taskList.remove(entry.getKey())));
+            }
+        }
+
+        updateTimeline();
+        writeToFile();
+
+        return result;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> clearTasks() throws IOException {
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        if (!taskList.isEmpty()) {
+            for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+                result.add(new Magic8Task(entry.getValue()));
+            }
+
+            taskList.clear();
+
+            updateTimeline();
+            writeToFile();
         }
 
         return result;
     }
 
     @Override
-    public Magic8Task removeTask(Magic8Task task) throws IOException {
-        assert task != null;
-
-        // Remove task from task list
-        int taskId = task.getId();
-        Magic8Task storedTask = taskList.remove(taskId);
-        if (storedTask != null) {
-            unindexTask(task);
-            writeToFile();
-
-            backupTaskList();
-
-            return new Magic8Task(storedTask);
-        }
-
-        return null;
-    }
-
-    @Override
-    public ArrayList<Magic8Task> removeTasks(ArrayList<Magic8Task> tasks)
-            throws IOException {
-        bufferedTaskList.clear();
-
-        if (!tasks.isEmpty()) {
-            for (Magic8Task task : tasks) {
-                Magic8Task storedTask = taskList.remove(task.getId());
-
-                if (storedTask == null) {
-                    taskList = copyTaskList(taskLists.get(opIdx));
-                    indexTaskList();
-
-                    return null;
-                } else {
-                    bufferedTaskList.add(storedTask);
-                }
-            }
-
-            writeToFile();
-
-            backupTaskList();
-
-            return bufferedTaskList;
-        }
-
-        return null;
-    }
-
-    @Override
-    public ArrayList<Magic8Task> removeTasksWithTag(String tag)
-            throws IOException {
-        bufferedTaskList.clear();
-
-        if (tagToTaskIds.containsKey(tag)) {
-            for (Integer taskId : tagToTaskIds.get(tag)) {
-                Magic8Task task = taskList.remove(taskId);
-                unindexTask(task);
-                bufferedTaskList.add(task);
-            }
-            writeToFile();
-
-            backupTaskList();
-
-            return bufferedTaskList;
-        }
-
-        return null;
-    }
-
-    @Override
-    public ArrayList<Magic8Task> clearTasks() throws IOException {
-        if (!taskList.isEmpty()) {
-            // Remove all tasks from task list
-            getAllTasks();
-            taskList.clear();
-            tagToTaskIds.clear();
-            writeToFile();
-
-            backupTaskList();
-
-            return bufferedTaskList;
-        }
-
-        return null;
-    }
-
-    @Override
     public boolean undo() throws IOException {
-        if (opIdx == 0) {
+        if (idPast.isEmpty()) {
             return false;
         }
 
-        opIdx--;
-        id = ids.get(opIdx);
-        taskList = copyTaskList(taskLists.get(opIdx));
-        writeToFile();
+        idFuture.push(id);
+        taskListFuture.push(taskList);
 
-        indexTaskList();
+        id = idPast.pop();
+        taskList = taskListPast.pop();
+
+        writeToFile();
 
         return true;
     }
 
     @Override
     public boolean redo() throws IOException {
-        if (opIdx == ids.size() - 1) {
+        if (idFuture.isEmpty()) {
             return false;
         }
 
-        opIdx++;
-        id = ids.get(opIdx);
-        taskList = copyTaskList(taskLists.get(opIdx));
-        writeToFile();
+        idPast.push(id);
+        taskListPast.push(taskList);
 
-        indexTaskList();
+        id = idFuture.pop();
+        taskList = taskListFuture.pop();
+
+        writeToFile();
 
         return true;
     }
 
-
-    private void indexTask(Magic8Task task) {
-        assert task != null;
-
-        int taskId = task.getId();
-
-        for (String tag : task.getTags()) {
-            HashSet<Integer> taskIdsWithTag = tagToTaskIds.get(tag);
-            if (taskIdsWithTag == null) {
-                taskIdsWithTag = new HashSet<Integer>();
-                tagToTaskIds.put(tag, taskIdsWithTag);
-            }
-            taskIdsWithTag.add(taskId);
-        }
-    }
-
-    private void unindexTask(Magic8Task task) {
-        assert task != null;
-
-        int taskId = task.getId();
-
-        for (String tag : task.getTags()) {
-            HashSet<Integer> taskIdsWithTag = tagToTaskIds.get(tag);
-            taskIdsWithTag.remove(taskId);
-
-            if (taskIdsWithTag.size() == 0) {
-                tagToTaskIds.remove(tag);
-            }
-        }
-    }
-
     private TreeMap<Integer, Magic8Task> copyTaskList(
             TreeMap<Integer, Magic8Task> tl) {
-        TreeMap<Integer, Magic8Task> copy = new TreeMap<Integer, Magic8Task>();
+        TreeMap<Integer, Magic8Task> copy = new TreeMap<>();
 
-        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+        for (Map.Entry<Integer, Magic8Task> entry : tl.entrySet()) {
             copy.put(entry.getKey(), new Magic8Task(entry.getValue()));
         }
 
         return copy;
     }
 
-    private void indexTaskList() {
-        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
-            indexTask(entry.getValue());
-        }
+    private void backup() {
+        tempId = id;
+        tempTaskList = copyTaskList(taskList);
     }
 
-    private void backupTaskList() {
-        opIdx++;
+    private void restore() {
+        id = tempId;
+        taskList = copyTaskList(tempTaskList);
+    }
 
-        int size = ids.size();
-        ids.subList(opIdx, size).clear();
-        taskLists.subList(opIdx, size).clear();
+    private void updateTimeline(boolean useTemp) {
+        if (useTemp) {
+            idPast.push(tempId);
+            taskListPast.push(tempTaskList);
+        } else {
+            idPast.push(id);
+            taskListPast.push(copyTaskList(taskList));
+        }
 
-        ids.add(id);
-        taskLists.add(copyTaskList(taskList));
-        
+        idFuture.clear();
+        taskListFuture.clear();
+    }
+
+    private void updateTimeline() {
+        updateTimeline(false);
     }
 
     private void writeToFile() throws IOException {
@@ -266,35 +213,69 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     }
 
     @Override
-    public ArrayList<Magic8Task> getAllTasks() {
-        bufferedTaskList.clear();
+    public ArrayList<Magic8Task> getTimedTasks() {
+        ArrayList<Magic8Task> result = new ArrayList<>();
 
         for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
-            Magic8Task task = new Magic8Task(entry.getValue());
-            bufferedTaskList.add(task);
+            if (entry.getValue().getEndTime() != null) {
+                result.add(new Magic8Task(entry.getValue()));
+            }
         }
 
-        return bufferedTaskList;
+        Collections.sort(result);
+
+        return result;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getUntimedTasks() {
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            if (entry.getValue().getEndTime() == null) {
+                result.add(new Magic8Task(entry.getValue()));
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getAllTasks() {
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            result.add(new Magic8Task(entry.getValue()));
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getTasksWithWord(String word) {
+        return getTasksWithWord(word, false);
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getTasksWithTag(String tag) {
+        return getTasksWithWord(tag, true);
     }
 
     @Override
     public ArrayList<Magic8Task> getTasksWithWord(String word, boolean isTag) {
-        bufferedTaskList.clear();
+        ArrayList<Magic8Task> result = new ArrayList<>();
 
-        if (isTag) {
-            for (Integer taskId : tagToTaskIds.get(word)) {
-                Magic8Task task = new Magic8Task(taskList.get(taskId));
-                bufferedTaskList.add(task);
-            }
-        } else {
-            for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
-                Magic8Task task = new Magic8Task(entry.getValue());
-                if (task.getDesc().contains(word)) {
-                    bufferedTaskList.add(task);
-                }
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            if (isTag && entry.getValue().getTags().contains(word) || !isTag
+                    && entry.getValue().getDesc().contains(word)) {
+                result.add(new Magic8Task(entry.getValue()));
             }
         }
 
-        return bufferedTaskList;
+        Collections.sort(result);
+
+        return result;
     }
 }

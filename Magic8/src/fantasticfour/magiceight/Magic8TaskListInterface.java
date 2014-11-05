@@ -3,45 +3,47 @@ package fantasticfour.magiceight;
 import java.io.IOException;
 import java.util.ArrayList;
 
-interface Magic8TaskListInterface {
+public interface Magic8TaskListInterface {
     /**
-     * Assigns a task id, adds the task to the task list and returns it.
+     * Assigns a task id to the task and adds it to the task list.
      *
      * @param task
-     *            Task to be added.
-     * @return Task with assigned task id.
+     *            Task whose presence in the task list is to be ensured
+     * @return true if the task list changed as a result of the call
      * @throws IOException
      */
-    public Magic8Task addTask(Magic8Task task) throws IOException;
+    public boolean addTask(Magic8Task task) throws IOException;
 
     /**
-     * Replaces the stored task with the same task id with the specified task
+     * Removes the task with the specified task's id from the task list.
      *
      * @param task
-     *            Task to replace the stored task with.
-     * @return true if stored task was updated. false otherwise.
+     *            Task with task id to be removed from the task list, if present
+     * @return true if the task list changed as a result of the call
+     * @throws IOException
+     */
+    public boolean removeTask(Magic8Task task) throws IOException;
+
+    /**
+     * Replaces the task with the specified task's id in the task list with the
+     * specified task.
+     *
+     * @param task
+     *            Task to replace the task with the same id
+     * @return true if the task list changed as a result of the call
      * @throws IOException
      */
     public boolean updateTask(Magic8Task task) throws IOException;
 
     /**
-     * Removes the task with the same task id of the specified task from the
-     * task list, and returns it.
-     *
-     * @param task
-     *            Task with task id to be removed.
-     * @return Task with the same id as the specified task.
-     * @throws IOException
-     */
-    public Magic8Task removeTask(Magic8Task task) throws IOException;
-
-    /**
-     * Removes the tasks with the same task ids as those in the specified
-     * ArrayList from the task list, and returns them in an ArrayList.
+     * Removes all tasks with the specified tasks' ids from the task list. If a
+     * specified task id cannot be found in the task list, none of the tasks are
+     * removed.
      *
      * @param tasks
-     *            ArrayList of tasks with task ids to be removed.
-     * @return ArrayList of Magic8Tasks that were removed.
+     *            Tasks with the task ids to be removed from the task list
+     * @return an ArrayList containing the tasks that were removed from the task
+     *         list
      * @throws IOException
      */
     public ArrayList<Magic8Task> removeTasks(ArrayList<Magic8Task> tasks)
@@ -51,8 +53,9 @@ interface Magic8TaskListInterface {
      * Removes all tasks with the specified tag from the task list.
      *
      * @param tag
-     *            Tag to remove tasks with.
-     * @return ArrayList of Magic8Tasks that were removed.
+     *            Tag to remove tasks with
+     * @return an ArrayList containing the tasks that were removed from the task
+     *         list
      * @throws IOException
      */
     public ArrayList<Magic8Task> removeTasksWithTag(String tag)
@@ -61,7 +64,7 @@ interface Magic8TaskListInterface {
     /**
      * Removes all tasks from the task list.
      *
-     * @return an ArrayList of Magic8Tasks that were removed from the task list.
+     * @return an ArrayList containing the tasks that were removed
      * @throws IOException
      */
     public ArrayList<Magic8Task> clearTasks() throws IOException;
@@ -69,7 +72,7 @@ interface Magic8TaskListInterface {
     /**
      * Undoes the last operation.
      *
-     * @return true if undo succeeds. false if there was no operation to undo.
+     * @return true if the task list changed as a result of the call
      * @throws IOException
      */
     public boolean undo() throws IOException;
@@ -77,30 +80,63 @@ interface Magic8TaskListInterface {
     /**
      * Redoes the last operation.
      *
-     * @return true if redo succeeds. false if there was no operation to redo.
+     * @return true if the task list changed as a result of the call
      * @throws IOException
      */
-    
     public boolean redo() throws IOException;
 
     /**
-     * Returns all tasks in the task list ordered by the task id.
+     * Returns all tasks in the task list with end times.
      *
-     * @return all tasks in the task list ordered by the task id.
+     * @return an ArrayList containing all the tasks in the task list with end
+     *         times
      */
+    public ArrayList<Magic8Task> getTimedTasks();
 
+    /**
+     * Returns all tasks in the task list without end times
+     *
+     * @return an ArrayList containing all the tasks in the task list without
+     *         end times
+     */
+    public ArrayList<Magic8Task> getUntimedTasks();
+
+    /**
+     * Returns all tasks in the task list.
+     *
+     * @return an ArrayList containing all the tasks in the task list
+     */
     public ArrayList<Magic8Task> getAllTasks();
 
     /**
-     * Returns all tasks in the task list with the specified word or tag,
-     * ordered by the task id.
+     * Returns all tasks in the task list.
      *
      * @param word
-     *            Word or tag to retrieve tasks with.
+     *            Word to retrieve tasks with
+     * @return an ArrayList containing all the tasks in the task list with the
+     *         specified word
+     */
+    public ArrayList<Magic8Task> getTasksWithWord(String word);
+
+    /**
+     * Returns all tasks in the task list.
+     *
+     * @param tag
+     *            Tag to retrieve tasks with
+     * @return an ArrayList containing all the tasks in the task list with the
+     *         specified tag
+     */
+    public ArrayList<Magic8Task> getTasksWithTag(String tag);
+
+    /**
+     * Returns all tasks in the task list.
+     *
+     * @param word
+     *            Word or tag to retrieve tasks with
      * @param isTag
-     *            true if word is a tag.
-     * @return all tasks in the task list with the specified tag, ordered task
-     *         id.
+     *            true if word is a tag
+     * @return an ArrayList containing all the tasks in the task list with the
+     *         specified word or tag
      */
     public ArrayList<Magic8Task> getTasksWithWord(String word, boolean isTag);
 }
