@@ -1,23 +1,10 @@
 package fantasticfour.magiceight;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 
 public class Magic8Task implements Magic8TaskInterface {
-    private static final String STRING_EMPTY = "";
-    private static final String STRING_PARSED_EMPTY = "@empty";
-    private static final String STRING_PARSED_NULL = "@null";
-    private static final String FORMAT_DATE = "dd/MM/yyyy HH:mm:ss";
-    private static final int INDEX_TAGS = 4;
-    private static final int INDEX_END_TIME = 3;
-    private static final int INDEX_START_TIME = 2;
-    private static final int INDEX_DESC = 1;
-    private static final int INDEX_ID = 0;
-    private static final int NUM_FIELDS = 5;
     private static final String MSG_NEGATIVE_ID = "id cannot be negative";
     private static final String MSG_ZERO_ID = "id cannot be zero";
     private static final String MSG_NULL_DESCRIPTION = "description cannot be null";
@@ -25,7 +12,7 @@ public class Magic8Task implements Magic8TaskInterface {
     private static final String MSG_NULL_TAG = "tag cannot be null";
     private static final String MSG_EMPTY_TAG = "tag cannot be empty";
     private static final String MSG_NON_ALPHANUMERIC_TAG = "tag must be alphanumeric";
-    private static final String MSG_INSUFFICIENT_ARGUMENTS = "Error insufficient arguments";
+    
 
     private int id;
     private String desc;
@@ -198,81 +185,8 @@ public class Magic8Task implements Magic8TaskInterface {
     @Override
     public void removeTag(String tag) {
         tags.remove(tag);
-    }
-
-    @Override
-    public String[] toStringArray() {
-        String[] stringArray = new String[NUM_FIELDS];
-        stringArray[INDEX_ID] = Integer.toString(id);
-        stringArray[INDEX_DESC] = desc;
-        DateFormat df = new SimpleDateFormat(FORMAT_DATE);
-
-        if (startTime == null) {
-            stringArray[INDEX_START_TIME] = STRING_PARSED_NULL;
-        } else {
-            stringArray[INDEX_START_TIME] = df.format(startTime.getTime());
-        }
-
-        if (endTime == null) {
-            stringArray[INDEX_END_TIME] = STRING_PARSED_NULL;
-        } else {
-            stringArray[INDEX_END_TIME] = df.format(endTime.getTime());
-        }
-
-        if (tags.size() == 0) {
-            stringArray[INDEX_TAGS] = STRING_PARSED_EMPTY;
-        } else {
-            stringArray[INDEX_TAGS] = STRING_EMPTY;
-            for (String tag : tags) {
-                stringArray[INDEX_TAGS] += " " + tag;
-            }
-            stringArray[INDEX_TAGS] = stringArray[INDEX_TAGS].trim();
-        }
-
-        return stringArray;
-    }
-
-    public static Magic8Task stringArrayToMagic8Task(String[] stringArray)
-            throws IllegalArgumentException, ParseException {
-
-        DateFormat df = new SimpleDateFormat(FORMAT_DATE);
-
-        if (stringArray.length >= NUM_FIELDS) {
-            int id = Integer.parseInt(stringArray[INDEX_ID]);
-            String desc = stringArray[INDEX_DESC];
-            Calendar startTime = null;
-            Calendar endTime = null;
-            HashSet<String> tags;
-
-            if (!stringArray[INDEX_START_TIME].equals(STRING_PARSED_NULL)) {
-                startTime = Calendar.getInstance();
-                startTime.setTime(df.parse(stringArray[INDEX_START_TIME]));
-            }
-
-            if (!stringArray[INDEX_END_TIME].equals(STRING_PARSED_NULL)) {
-                endTime = Calendar.getInstance();
-                endTime.setTime(df.parse(stringArray[INDEX_END_TIME]));
-            }
-
-            if (stringArray[INDEX_TAGS].equals(STRING_PARSED_NULL)) {
-                tags = null;
-            } else if (stringArray[INDEX_TAGS].equals(STRING_PARSED_EMPTY)) {
-                tags = new HashSet<String>();
-            } else {
-                tags = new HashSet<String>();
-                String[] tagStrings = stringArray[INDEX_TAGS].split("\\s+");
-                for (String tagString : tagStrings) {
-                    tags.add(tagString);
-                }
-            }
-
-            Magic8Task task = new Magic8Task(id, desc, startTime, endTime, tags);
-            return task;
-        } else {
-            throw new IllegalArgumentException(MSG_INSUFFICIENT_ARGUMENTS);
-        }
-    }
-
+    } 
+    
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Magic8Task)) {
