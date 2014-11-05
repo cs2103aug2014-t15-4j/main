@@ -92,26 +92,29 @@ public class Magic8StorageTest {
             line[0] = "4";
 
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "1";
             line[1] = "Do Software Engineering homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework CS2103T";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2103T";
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "2";
             line[1] = "Do Data Structures and Algorithms homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework CS2010";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2010";
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "3";
             line[1] = "Do Biology homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework LSM1302";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework LSM1302";
             cw.writeNext(line);
             cw.close();
 
@@ -212,26 +215,29 @@ public class Magic8StorageTest {
             line[0] = "4";
 
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "1";
             line[1] = "Do Software Engineering homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework CS2103T";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2103T";
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "2";
             line[1] = "Do Data Structures and Algorithms homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework CS2010";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2010";
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "3";
             line[1] = "Do Biology homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework LSM1302";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework LSM1302";
             cw.writeNext(line);
             cw.close();
 
@@ -251,10 +257,10 @@ public class Magic8StorageTest {
 
                         assertTrue(lineExpected.equals(lineActual));
                     } else {
-                        Magic8Task actualTask = Magic8Task
+                        Magic8Task actualTask = Magic8Storage
                                 .stringArrayToMagic8Task(cp
                                         .parseLine(lineActual));
-                        Magic8Task expectedTask = Magic8Task
+                        Magic8Task expectedTask = Magic8Storage
                                 .stringArrayToMagic8Task(cp
                                         .parseLine(lineExpected));
                         assertTrue(expectedTask.equals(actualTask));
@@ -317,26 +323,29 @@ public class Magic8StorageTest {
             line[0] = "4";
 
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "1";
             line[1] = "Do Software Engineering homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework CS2103T";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2103T";
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "2";
             line[1] = "Do Data Structures and Algorithms homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework CS2010";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2010";
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "3";
             line[1] = "Do Biology homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework LSM1302";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework LSM1302";
             cw.writeNext(line);
             cw.close();
 
@@ -355,10 +364,10 @@ public class Magic8StorageTest {
                     if (cp.parseLine(lineExpected).length == 1) {
                         assertTrue(lineExpected.equals(lineActual));
                     } else {
-                        Magic8Task actualTask = Magic8Task
+                        Magic8Task actualTask = Magic8Storage
                                 .stringArrayToMagic8Task(cp
                                         .parseLine(lineActual));
-                        Magic8Task expectedTask = Magic8Task
+                        Magic8Task expectedTask = Magic8Storage
                                 .stringArrayToMagic8Task(cp
                                         .parseLine(lineExpected));
                         assertTrue(expectedTask.equals(actualTask));
@@ -384,26 +393,29 @@ public class Magic8StorageTest {
             line[0] = "4";
 
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "1";
             line[1] = "Do Software Engineering homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework CS2103T";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2103T";
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "2";
             line[1] = "Do Data Structures and Algorithms homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework CS2010";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2010";
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "3";
             line[1] = "Do Biology homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework LSM1302";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework LSM1302";
             cw.writeNext(line);
             cw.close();
             Magic8Storage testStorage = new Magic8Storage(testFile.getName());
@@ -440,40 +452,45 @@ public class Magic8StorageTest {
             line[0] = "6";
 
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "1";
             line[1] = "Do Software Engineering homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework CS2103T";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2103T";
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "2";
             line[1] = "Do Data Structures and Algorithms homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework CS2010";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2010";
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "3";
             line[1] = "Do Biology homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework LSM1302";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework LSM1302";
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "4";
             line[1] = "Do Computer Networks homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework CS2105";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2105";
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "5";
             line[1] = "Do Effective Communication homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework CS2101";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2101";
             cw.writeNext(line);
             cw.close();
 
@@ -492,10 +509,10 @@ public class Magic8StorageTest {
                     if (cp.parseLine(lineExpected).length == 1) {
                         assertTrue(lineExpected.equals(lineActual));
                     } else {
-                        Magic8Task actualTask = Magic8Task
+                        Magic8Task actualTask = Magic8Storage
                                 .stringArrayToMagic8Task(cp
                                         .parseLine(lineActual));
-                        Magic8Task expectedTask = Magic8Task
+                        Magic8Task expectedTask = Magic8Storage
                                 .stringArrayToMagic8Task(cp
                                         .parseLine(lineExpected));
                         assertTrue(expectedTask.equals(actualTask));
@@ -536,26 +553,29 @@ public class Magic8StorageTest {
             line[0] = "4";
 
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "1";
             line[1] = "Do Software Engineering homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework CS2103T";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2103T";
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "2";
             line[1] = "Do Data Structures and Algorithms homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework CS2010";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2010";
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "3";
             line[1] = "Do Biology homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework LSM1302";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework LSM1302";
             cw.writeNext(line);
             cw.close();
             Magic8Storage testStorage = new Magic8Storage(testFile.getName());
@@ -605,29 +625,32 @@ public class Magic8StorageTest {
             line[0] = "4";
 
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "1";
             line[1] = "Do Software Engineering homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework CS2103T";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2103T";
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "2";
             line[1] = "Do Data Structures and Algorithms homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework CS2010";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2010";
             cw.writeNext(line);
-            line = new String[5];
+            line = new String[6];
             line[0] = "3";
             line[1] = "Do Biology homework";
-            line[2] = START_DATE;
-            line[3] = END_DATE;
-            line[4] = "NUS Homework LSM1302";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework LSM1302";
             cw.writeNext(line);
             cw.close();
-
+            
             TreeMap<Integer, Magic8Task> expectedTaskList = new TreeMap<Integer, Magic8Task>();
 
             HashSet<String> testTags = new HashSet<String>();
