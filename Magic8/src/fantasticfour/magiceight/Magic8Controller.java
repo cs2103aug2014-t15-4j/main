@@ -30,29 +30,29 @@ public class Magic8Controller {
     private static final String SEARCH_FUNCTION = "search";
     private static final String UNDO_FUNCTION = "undo";
     
-    private static final String ADD_SUCCESS_MESSAGE = "task is successfully added";  
-    private static final String CLEAR_SUCCESS_MESSAGE = "clear is successful";
-    private static final String DELETE_SUCCESS_MESSAGE = "tasks are succesfullly deleted";
-    private static final String DISPLAY_SUCCESS_MESSAGE = "tasks are successfully displayed";
-    private static final String EDIT_SUCCESS_MESSAGE = "task is successfully edited";
-    private static final String EXIT_SUCCESS_MESSAGE = "exit is successful";
-    private static final String HELP_SUCCESS_MESSAGE = "help is successfully displayed";
-    private static final String OPEN_SUCCESS_MESSAGE = "file is successfully opened";
-    private static final String REDO_SUCCESS_MESSAGE = "redo is successful";
-    private static final String SEARCH_SUCCESS_MESSAGE = "search is successful";
-    private static final String UNDO_SUCCESS_MESSAGE = "undo is successful";
+    private static final String ADD_SUCCESS_MESSAGE = "Task successfully added";  
+    private static final String CLEAR_SUCCESS_MESSAGE = "Clear is successful";
+    private static final String DELETE_SUCCESS_MESSAGE = "Tasks succesfullly deleted";
+    private static final String DISPLAY_SUCCESS_MESSAGE = "Tasks successfully displayed";
+    private static final String EDIT_SUCCESS_MESSAGE = "Task successfully edited";
+    private static final String EXIT_SUCCESS_MESSAGE = "Exit successful";
+    private static final String HELP_SUCCESS_MESSAGE = "Help successfully displayed";
+    private static final String OPEN_SUCCESS_MESSAGE = "File successfully opened";
+    private static final String REDO_SUCCESS_MESSAGE = "Redo successful";
+    private static final String SEARCH_SUCCESS_MESSAGE = "Search successful";
+    private static final String UNDO_SUCCESS_MESSAGE = "Undo successful";
     
-    private static final String ADD_ERROR_MESSAGE = "add fails";  
-    private static final String CLEAR_ERROR_MESSAGE = "clear fails";
-    private static final String DELETE_ERROR_MESSAGE = "delete fails";
-    private static final String DISPLAY_ERROR_MESSAGE = "display fails";
-    private static final String EDIT_ERROR_MESSAGE = "edit fails";
-    private static final String EXIT_ERROR_MESSAGE = "exit fails";
-    private static final String HELP_ERROR_MESSAGE = "help fails";
-    private static final String OPEN_ERROR_MESSAGE = "open fails";
-    private static final String REDO_ERROR_MESSAGE = "redo fails";
-    private static final String SEARCH_ERROR_MESSAGE = "search fails";
-    private static final String UNDO_ERROR_MESSAGE = "undo fails";
+    private static final String ADD_ERROR_MESSAGE = "Add failed";  
+    private static final String CLEAR_ERROR_MESSAGE = "Clear failed";
+    private static final String DELETE_ERROR_MESSAGE = "Delete failed";
+    private static final String DISPLAY_ERROR_MESSAGE = "Display failed";
+    private static final String EDIT_ERROR_MESSAGE = "Edit failed";
+    private static final String EXIT_ERROR_MESSAGE = "Exit failed";
+    private static final String HELP_ERROR_MESSAGE = "Help failed";
+    private static final String OPEN_ERROR_MESSAGE = "Open failed";
+    private static final String REDO_ERROR_MESSAGE = "Redo failed";
+    private static final String SEARCH_ERROR_MESSAGE = "Search failed";
+    private static final String UNDO_ERROR_MESSAGE = "Undo failed";
      
     public Magic8Controller(String input, Magic8TaskList tm) throws IOException {
     	String errorMessage = null;
@@ -117,10 +117,20 @@ public class Magic8Controller {
         }
         command.execute();
         
-        if(command.getStatusInfo() == Magic8Status.SUCCESS)
+        if((command.getStatusInfo() == Magic8Status.ADD_SUCCESS)||
+        	(command.getStatusInfo() == Magic8Status.DELETE_SUCCESS)||
+        	(command.getStatusInfo() == Magic8Status.DISPLAY_SUCCESS)||
+        	(command.getStatusInfo() == Magic8Status.EDIT_SUCCESS)||
+        	(command.getStatusInfo() == Magic8Status.EXIT_SUCCESS)||
+        	(command.getStatusInfo() == Magic8Status.HELP_SUCCESS)||
+        	(command.getStatusInfo() == Magic8Status.OPEN_SUCCESS)||
+        	(command.getStatusInfo() == Magic8Status.REDO_SUCCESS)||
+        	(command.getStatusInfo() == Magic8Status.SEARCH_SUCCESS)||
+        	(command.getStatusInfo() == Magic8Status.UNDO_SUCCESS)){
             command.addStatus(successMessage);
-        else
+        } else {
             command.addStatus(errorMessage);
+        }
     }
     
     public String getStatusMessage() {

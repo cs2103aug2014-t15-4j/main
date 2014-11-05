@@ -26,15 +26,16 @@ public class Magic8Task implements Magic8TaskInterface {
     private static final String MSG_EMPTY_TAG = "tag cannot be empty";
     private static final String MSG_NON_ALPHANUMERIC_TAG = "tag must be alphanumeric";
     private static final String MSG_INSUFFICIENT_ARGUMENTS = "Error insufficient arguments";
-    
+
     private int id;
     private String desc;
     private Calendar startTime;
     private Calendar endTime;
     private HashSet<String> tags;
 
-    public Magic8Task(int id, String desc, Calendar startTime, Calendar endTime,
-            HashSet<String> tags) throws IllegalArgumentException {
+    public Magic8Task(int id, String desc, Calendar startTime,
+            Calendar endTime, HashSet<String> tags)
+            throws IllegalArgumentException {
         if (id < 0) {
             throw new IllegalArgumentException(MSG_NEGATIVE_ID);
         }
@@ -118,7 +119,7 @@ public class Magic8Task implements Magic8TaskInterface {
         if (startTime == null) {
             return startTime;
         }
-        
+
         Calendar cal = new GregorianCalendar();
         cal.setTimeInMillis(startTime.getTimeInMillis());
         return cal;
@@ -140,7 +141,7 @@ public class Magic8Task implements Magic8TaskInterface {
         if (endTime == null) {
             return endTime;
         }
-        
+
         Calendar cal = new GregorianCalendar();
         cal.setTimeInMillis(endTime.getTimeInMillis());
         return cal;
@@ -223,14 +224,14 @@ public class Magic8Task implements Magic8TaskInterface {
             throws IllegalArgumentException, ParseException {
 
         DateFormat df = new SimpleDateFormat(FORMAT_DATE);
-        
+
         if (stringArray.length >= NUM_FIELDS) {
             int id = Integer.parseInt(stringArray[INDEX_ID]);
             String desc = stringArray[INDEX_DESC];
             Calendar startTime = null;
             Calendar endTime = null;
             HashSet<String> tags;
-            
+
             if (!stringArray[INDEX_START_TIME].equals(STRING_PARSED_NULL)) {
                 startTime = Calendar.getInstance();
                 startTime.setTime(df.parse(stringArray[INDEX_START_TIME]));
@@ -275,9 +276,22 @@ public class Magic8Task implements Magic8TaskInterface {
             if (!getDesc().equals(other.getDesc())) {
                 return false;
             }
+            // Check start time
+            Calendar d1 = getStartTime();
+            Calendar d2 = other.getStartTime();
+
+            if (d1 == null && d2 != null) {
+                return false;
+            }
+            if (d1 != null && d2 == null) {
+                return false;
+            }
+            if (d1 != null && d2 != null && !d1.equals(d2)) {
+                return false;
+            }
             // Check end time
-            Calendar d1 = getEndTime();
-            Calendar d2 = other.getEndTime();
+            d1 = getEndTime();
+            d2 = other.getEndTime();
 
             if (d1 == null && d2 != null) {
                 return false;
@@ -305,6 +319,18 @@ public class Magic8Task implements Magic8TaskInterface {
 
             return true;
         }
+    }
+
+    @Override
+    public int compareTo(Magic8Task task) {
+        if (getEndTime() == null) {
+            return 1;
+        }
+        if (task.getEndTime() == null) {
+            return -1;
+        }
+
+        return getEndTime().compareTo(task.getEndTime());
     }
 
     private static void validateTag(String tag) {
