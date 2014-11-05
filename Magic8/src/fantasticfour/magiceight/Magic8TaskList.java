@@ -201,6 +201,7 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         return true;
     }
 
+
     private void indexTask(Magic8Task task) {
         assert task != null;
 

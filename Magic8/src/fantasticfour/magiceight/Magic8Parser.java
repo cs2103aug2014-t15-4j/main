@@ -43,7 +43,9 @@ public class Magic8Parser {
     
     private final static String REDO_FUNCTION = "redo";
     
-    private final static String ADD_REGEX = ADD_FUNCTION + ADD_DESC + ADD_TAGS + ADD_DEADLINE;
+    private final static String BLOCK_FUNCTION = "block";
+    
+    private final static String ADD_REGEX = ADD_FUNCTION + ADD_DESC + ADD_DEADLINE + ADD_TAGS;
     private final static String CLEAR_REGEX = CLEAR_FUNCTION;
     private final static String DELETE_REGEX = DELETE_FUNCTION + DELETE_CONJUNC;
     private final static String DISPLAY_REGEX = DISPLAY_FUNCTION + DISPLAY_BY_TAG;
@@ -54,6 +56,7 @@ public class Magic8Parser {
     private final static String SEARCH_REGEX = SEARCH_FUNCTION + SEARCH_BY_KEYWORD;
     private final static String UNDO_REGEX = UNDO_FUNCTION;
     private final static String REDO_REGEX = REDO_FUNCTION;
+    private final static String BLOCK_REGEX = BLOCK_FUNCTION;
     
     private static ArrayList<String> commandRegexList = new ArrayList<String>() {
         {
@@ -68,6 +71,7 @@ public class Magic8Parser {
             add(SEARCH_REGEX);
             add(UNDO_REGEX);
             add(REDO_REGEX);
+            add(BLOCK_REGEX);
         }
     };
     

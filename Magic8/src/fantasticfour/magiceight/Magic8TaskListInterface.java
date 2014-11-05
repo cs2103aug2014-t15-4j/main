@@ -80,6 +80,7 @@ interface Magic8TaskListInterface {
      * @return true if redo succeeds. false if there was no operation to redo.
      * @throws IOException
      */
+    
     public boolean redo() throws IOException;
 
     /**
@@ -87,6 +88,7 @@ interface Magic8TaskListInterface {
      *
      * @return all tasks in the task list ordered by the task id.
      */
+
     public ArrayList<Magic8Task> getAllTasks();
 
     /**

@@ -14,10 +14,10 @@ import javax.swing.text.BadLocationException;
 public class AutoComplete {
 	public class Autocomplete implements DocumentListener {
 
-		private static enum Status {
+		private static enum Status { 
 			INSERT,
 			COMPLETION
-		};
+		};//TODO
 
 		private JTextField textField;
 		private final List<String> keywords;
@@ -39,10 +39,14 @@ public class AutoComplete {
 		}
 
 		@Override
-		public void changedUpdate(DocumentEvent ev) { }
+		public void changedUpdate(DocumentEvent ev) { 
+			
+		}
 
 		@Override
-		public void removeUpdate(DocumentEvent ev) { }
+		public void removeUpdate(DocumentEvent ev) {
+			
+		}
 
 		@Override
 		public void insertUpdate(DocumentEvent ev) {

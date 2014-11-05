@@ -109,8 +109,9 @@ public class Magic8UI {
         for(Integer index = 0; index < tasks.size(); index++) {
             String id = "";
             String desc = "";
+            String startTime = "";
+            String endTime = "";
             String tags = "";
-            String deadline = "";
             Magic8Task task = tasks.get(index);
             id = (++index).toString();
             desc = task.getDesc();
@@ -121,12 +122,17 @@ public class Magic8UI {
             } else {
                 tags = "-";
             }
-            if(task.getEndTime() == null) {
-                deadline = "-";
-            } else {
-                deadline = new SimpleDateFormat("dd/MM/yyyy").format(task.getEndTime().getTime());
+            if((task.getStartTime() == null)&&(task.getEndTime()== null)) {
+                startTime = "-";
+                endTime = "-";
+            } else if ((task.getStartTime() != null)&& (task.getEndTime() == null)){
+            	startTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:SS").format(task.getStartTime().getTime());
+            	endTime = "-";
+            } else if ((task.getStartTime() == null)&&(task.getEndTime() != null)){
+            	startTime = "-";
+            	endTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:SS").format(task.getEndTime().getTime());
             }
-            model.addRow(new Object[]{id, desc, tags, deadline});
+            model.addRow(new Object[]{id, desc, startTime, endTime, tags});
         }
     }
 
@@ -354,12 +360,12 @@ public class Magic8UI {
 
         if(SystemTray.isSupported()){
 
-            System.out.println("system tray supported");
+            System.out.println("System tray supported");
             tray = SystemTray.getSystemTray();
             return true;
         }
 
-        System.out.println("system tray not supported, check taskbar when minimized");
+        System.out.println("System tray not supported, check taskbar when minimized");
         return false;
     }
 
