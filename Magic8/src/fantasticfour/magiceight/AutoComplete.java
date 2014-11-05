@@ -12,13 +12,11 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
 public class AutoComplete {
+	private static enum Status { 
+		INSERT,
+		COMPLETION
+	};
 	public class Autocomplete implements DocumentListener {
-
-		private static enum Status { 
-			INSERT,
-			COMPLETION
-		};//TODO
-
 		private JTextField textField;
 		private final List<String> keywords;
 		private Status mode = Status.INSERT;
@@ -31,6 +29,7 @@ public class AutoComplete {
 		private String findHelp = "Suggestions:\n\n;find\n\n;search\n\n;look";
 		private String remindHelp = "Suggestions:\n\n;remind\n\n;reminder\n\n;notify";
 		private String deadlineHelp = "Suggestions:\n\n;by\n\n;on";
+	
 
 		public Autocomplete(JTextField textField, List<String> keywords) {
 			this.textField = textField;

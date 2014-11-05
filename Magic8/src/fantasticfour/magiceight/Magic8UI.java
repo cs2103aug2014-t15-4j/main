@@ -46,7 +46,7 @@ import fantasticfour.magiceight.AutoComplete.Autocomplete;
 
 public class Magic8UI {
     private final static Integer WINDOW_HEIGHT = 600;
-    private final static Integer WINDOW_WIDTH = 800;
+    private final static Integer WINDOW_WIDTH = 820;
     private final static String[][] EMPTY_ROW = {{"","","","",""}};
     private final static Integer TEXT_PANEL_LENGTH = 120;
     
@@ -224,7 +224,7 @@ public class Magic8UI {
 
     private void constructWindow() {
         frameMagic8UI = new JFrame(NAME_TITLE);
-        frameMagic8UI.setResizable(true);
+        frameMagic8UI.setResizable(false);
         frameMagic8UI.getContentPane().setBackground(Color.WHITE);
         frameMagic8UI.setMinimumSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         frameMagic8UI.getContentPane().setLayout(null);
@@ -233,7 +233,7 @@ public class Magic8UI {
         
         // Big Window
         JPanel displayPanel = new JPanel();
-        displayPanel.setBounds(0, 0, 580, 540);
+        displayPanel.setBounds(-10, 20, 500, 460);
         displayPanel.setBackground(new Color(255, 205, 155));
         frameMagic8UI.getContentPane().add(displayPanel);
 
@@ -261,7 +261,7 @@ public class Magic8UI {
 
         // Small Window
         JPanel confirmDialogPanel = new JPanel();
-        confirmDialogPanel.setBounds(720, 260, 400, 400);
+        confirmDialogPanel.setBounds(490, 220, 300, 200);
         frameMagic8UI.getContentPane().add(confirmDialogPanel);
         confirmDialogPanel.setBackground(new Color(255,205,155));
         confirmDialogPanel.setLayout(null);
@@ -273,7 +273,7 @@ public class Magic8UI {
         confirmDialog.setWrapStyleWord(true);
         confirmDialog.setColumns(10);
         confirmDialog.setRows(15);
-        confirmDialog.setBounds(0, 0, 800, 350);
+        confirmDialog.setBounds(0, 0, 300, 300);
         confirmDialog.setForeground(Color.DARK_GRAY);
         confirmDialog.setBackground(Color.WHITE);
         confirmDialog.setFont(new Font("Trebuchet MS", Font.BOLD, 12));
@@ -285,18 +285,18 @@ public class Magic8UI {
 
         // Text Input Background Panel
         JPanel inputPanel = new JPanel();
-        inputPanel.setBounds(0, WINDOW_HEIGHT-TEXT_PANEL_LENGTH, WINDOW_WIDTH, TEXT_PANEL_LENGTH);
+        inputPanel.setBounds(0, 490, 805, 75);
         frameMagic8UI.getContentPane().add(inputPanel);
         inputPanel.setBackground(new Color(255,151,4));
         
         // Input Field
         commandLine = new JTextField();
-        inputPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 30));
+        inputPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 20));
         commandLine.putClientProperty("JTextField.variant", "search");
         commandLine.setFont(new Font("Trebuchet MS", Font.PLAIN, 14));
         commandLine.setForeground(new Color(0, 0, 0));
         commandLine.setBackground(new Color(255, 255, 255));
-        commandLine.setColumns(90);
+        commandLine.setColumns(70);
         commandLine.setBorder(BorderFactory.createLineBorder(Color.WHITE, 10));
         inputPanel.add(commandLine);
         
@@ -309,25 +309,26 @@ public class Magic8UI {
 		keywords.add("search");//Search function
 		keywords.add("by");//'by' deadline 
 		keywords.add("remind"); //Reminder function
-/*
+
 		// Without this, cursor always leaves text field
 		commandLine.setFocusTraversalKeysEnabled(false);
-		Autocomplete autoComplete = new Autocomplete(commandLine, keywords);
+//		Autocomplete autocomplete = new Autocomplete();
+//		Autocomplete autoComplete = new Autocomplete(commandLine, keywords);
 		
 		//To prevent autoscrolling
 		DefaultCaret caret1 = (DefaultCaret) confirmDialog.getCaret();
 		caret1.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 
-		commandLine.getDocument().addDocumentListener(autoComplete);
+//		commandLine.getDocument().addDocumentListener(autoComplete);
 
 		// Maps the tab key to the commit action, which finishes the autocomplete
 		// when given a suggestion
-		commandLine.getInputMap().put(KeyStroke.getKeyStroke("TAB"), COMMIT_ACTION);
-		commandLine.getActionMap().put(COMMIT_ACTION, autoComplete.new CommitAction());
-*/
+//		commandLine.getInputMap().put(KeyStroke.getKeyStroke("TAB"), COMMIT_ACTION);
+//		commandLine.getActionMap().put(COMMIT_ACTION, autoComplete.new CommitAction());
+
         // Clock Panel
         JPanel clockPanel = new JPanel();
-        clockPanel.setBounds(WINDOW_WIDTH-270, WINDOW_HEIGHT-165, 180, 45);
+        clockPanel.setBounds(WINDOW_WIDTH-200, WINDOW_HEIGHT-150, 180, 45);
         frameMagic8UI.getContentPane().add(clockPanel);
         clockPanel.setOpaque(false);
         clockPanel.setBackground(new Color(255,205,155,0));
