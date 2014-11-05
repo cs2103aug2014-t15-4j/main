@@ -11,5 +11,7 @@ interface Magic8StorageInterface {
     public int getId();
 
     public TreeMap<Integer, Magic8Task> getTaskList();
+    
+    
 
 }
