@@ -12,7 +12,6 @@ public class Magic8Task implements Magic8TaskInterface {
     private static final String MSG_NULL_TAG = "tag cannot be null";
     private static final String MSG_EMPTY_TAG = "tag cannot be empty";
     private static final String MSG_NON_ALPHANUMERIC_TAG = "tag must be alphanumeric";
-    
 
     private int id;
     private String desc;
@@ -185,8 +184,8 @@ public class Magic8Task implements Magic8TaskInterface {
     @Override
     public void removeTag(String tag) {
         tags.remove(tag);
-    } 
-    
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Magic8Task)) {

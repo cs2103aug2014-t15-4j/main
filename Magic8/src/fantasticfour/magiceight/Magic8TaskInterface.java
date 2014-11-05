@@ -31,5 +31,4 @@ public interface Magic8TaskInterface extends Comparable<Magic8Task> {
     public void addTag(String tag);
 
     public void removeTag(String tag);
-
 }

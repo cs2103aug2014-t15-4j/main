@@ -243,8 +243,8 @@ public class Magic8TaskTest {
         // Test with different start time
         try {
             Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
-                    TEST_NON_ALPHANUMERIC_STRING, new GregorianCalendar(), TEST_DATE,
-                    TEST_TAGS);
+                    TEST_NON_ALPHANUMERIC_STRING, new GregorianCalendar(),
+                    TEST_DATE, TEST_TAGS);
 
             assert !task.equals(TEST_TASK);
             assert !TEST_TASK.equals(task);
@@ -255,8 +255,8 @@ public class Magic8TaskTest {
         // Test with different end time
         try {
             Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
-                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, new GregorianCalendar(),
-                    TEST_TAGS);
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE,
+                    new GregorianCalendar(), TEST_TAGS);
 
             assert !task.equals(TEST_TASK);
             assert !TEST_TASK.equals(task);
