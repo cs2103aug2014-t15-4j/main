@@ -21,16 +21,6 @@ public class AutoComplete {
 		private JTextField textField;
 		private final List<String> keywords;
 		private Status mode = Status.INSERT;
-		private String addHelp = "Suggestions:\n\nadd";
-		private String deleteHelp = "Suggestions:\n\ndelete";
-		private String displayHelp = "Suggestions:\n\ndisplay";
-		private String editHelp = "Suggestions:\n\nedit";
-		private String undoHelp = "Suggestions:\n\nundo";
-		private String redoHelp = "Suggestions:\n\nredo";
-		private String findHelp = "Suggestions:\n\nsearch";
-		private String deadlineHelp = "Suggestions:\n\nby\n\non";
-		private String exitHelp = "Suggestions:\n\nexit";
-		private String doneHelp = "Suggestion:\n\ndone";
 
 		public Autocomplete(JTextField textField, List<String> keywords) {
 			this.textField = textField;
@@ -82,47 +72,11 @@ public class AutoComplete {
 					String completion = match.substring(pos - w);
 					// We cannot modify Document from within notification,
 					// so we submit a task that does the change later
-					suggest(match);
 					SwingUtilities.invokeLater(new CompletionTask(completion, pos + 1));
 				}
 			} else {
 				// Nothing found
 				mode = Status.INSERT;
-			}
-		}
-
-		private void suggest(String match) {
-			switch (match) {
-			case "add":
-				Magic8UI.confirmDialog.setText(addHelp);
-				break;
-			case "delete":
-				Magic8UI.confirmDialog.setText(deleteHelp);
-				break;
-			case "display":
-				Magic8UI.confirmDialog.setText(displayHelp);
-				break;
-			case "edit":
-				Magic8UI.confirmDialog.setText(editHelp);
-				break;
-			case "undo":
-				Magic8UI.confirmDialog.setText(undoHelp);
-				break;
-			case "redo":
-				Magic8UI.confirmDialog.setText(redoHelp);
-				break;
-			case "by":
-				Magic8UI.confirmDialog.setText(deadlineHelp);
-				break;
-			case "search":
-				Magic8UI.confirmDialog.setText(findHelp);
-				break;
-			case "exit":
-				Magic8UI.confirmDialog.setText(exitHelp);
-				break;
-			case "done":
-				Magic8UI.confirmDialog.setText(doneHelp);
-				break;
 			}
 		}
 
