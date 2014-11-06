@@ -7,6 +7,7 @@ import fantasticfour.magiceight.command.AddCommand;
 import fantasticfour.magiceight.command.ClearCommand;
 import fantasticfour.magiceight.command.DeleteCommand;
 import fantasticfour.magiceight.command.DisplayCommand;
+import fantasticfour.magiceight.command.DoneCommand;
 import fantasticfour.magiceight.command.EditCommand;
 import fantasticfour.magiceight.command.ExitCommand;
 import fantasticfour.magiceight.command.HelpCommand;
@@ -20,6 +21,7 @@ public class Magic8Controller {
     private ICommand command;
     private static final String ADD_FUNCTION = "add";
     private static final String CLEAR_FUNCTION = "clear";
+    private static final String DONE_FUNCTION = "done";
     private static final String DELETE_FUNCTION = "delete";
     private static final String DISPLAY_FUNCTION = "display";
     private static final String EDIT_FUNCTION = "edit";
@@ -55,8 +57,8 @@ public class Magic8Controller {
     private static final String UNDO_ERROR_MESSAGE = "Undo failed";
      
     public Magic8Controller(String input, Magic8TaskList tm) throws IOException {
-    	String errorMessage = null;
-    	String successMessage = null;
+    	String errorMessage = "error message";
+    	String successMessage = "success message";
         Magic8CommandObject obj = Magic8Parser.parseCommand(input);
         switch(obj.getFunction()) {
             case ADD_FUNCTION:
@@ -76,6 +78,11 @@ public class Magic8Controller {
                 break;
             case DISPLAY_FUNCTION:
                 command = new DisplayCommand(obj, tm);
+                successMessage = DISPLAY_SUCCESS_MESSAGE;
+                errorMessage = DISPLAY_ERROR_MESSAGE;
+                break;
+            case DONE_FUNCTION:
+                command = new DoneCommand(obj, tm);
                 successMessage = DISPLAY_SUCCESS_MESSAGE;
                 errorMessage = DISPLAY_ERROR_MESSAGE;
                 break;
@@ -120,6 +127,7 @@ public class Magic8Controller {
         if((command.getStatusInfo() == Magic8Status.ADD_SUCCESS)||
         	(command.getStatusInfo() == Magic8Status.DELETE_SUCCESS)||
         	(command.getStatusInfo() == Magic8Status.DISPLAY_SUCCESS)||
+            (command.getStatusInfo() == Magic8Status.DONE_SUCCESS)||
         	(command.getStatusInfo() == Magic8Status.EDIT_SUCCESS)||
         	(command.getStatusInfo() == Magic8Status.EXIT_SUCCESS)||
         	(command.getStatusInfo() == Magic8Status.HELP_SUCCESS)||

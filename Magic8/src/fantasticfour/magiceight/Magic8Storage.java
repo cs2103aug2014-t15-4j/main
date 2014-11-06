@@ -150,7 +150,7 @@ class Magic8Storage implements Magic8StorageInterface {
             throws IllegalArgumentException, ParseException {
 
         DateFormat df = new SimpleDateFormat(FORMAT_DATE);
-
+        
         if (stringArray.length >= NUM_FIELDS) {
             int id = Integer.parseInt(stringArray[INDEX_ID]);
             String desc = stringArray[INDEX_DESC];

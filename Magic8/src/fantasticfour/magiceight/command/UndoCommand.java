@@ -17,7 +17,7 @@ public class UndoCommand extends Command {
             this.setStatus(Magic8Status.UNDO_FAILURE);
         } else {
             this.setStatus(Magic8Status.UNDO_SUCCESS);
-            this.setTask(super.getTaskManager().getAllTasks());
+            this.setTask(super.getTaskManager().getAllTasks(false));
         }
     }
 }

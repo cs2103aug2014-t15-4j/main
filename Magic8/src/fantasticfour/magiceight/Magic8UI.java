@@ -109,7 +109,8 @@ public class Magic8UI {
             String endTime = "";
             String tags = "";
             Magic8Task task = tasks.get(index);
-            id = (++index).toString();
+            Integer i = index+1;
+            id = (i).toString();
             desc = task.getDesc();
             if(task.getTags().size() > 0) {
                 for(String tag : task.getTags()) {
@@ -118,16 +119,18 @@ public class Magic8UI {
             } else {
                 tags = "-";
             }
-            if((task.getStartTime() == null)&&(task.getEndTime()== null)) {
-                startTime = "-";
-                endTime = "-";
-            } else if ((task.getStartTime() != null)&& (task.getEndTime() == null)){
+            
+            startTime = "-";
+            endTime = "-";
+            
+            if (task.getStartTime() != null){
             	startTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:SS").format(task.getStartTime().getTime());
-            	endTime = "-";
-            } else if ((task.getStartTime() == null)&&(task.getEndTime() != null)){
-            	startTime = "-";
+            }
+            
+            if (task.getEndTime() != null){
             	endTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:SS").format(task.getEndTime().getTime());
             }
+            
             model.addRow(new Object[]{id, desc, startTime, endTime, tags});
         }
     }
@@ -144,6 +147,7 @@ public class Magic8UI {
                     try {
                         taskManager = new Magic8TaskList(inputStr);
                         confirmText += inputStr + " is opened\n";
+                        tasks = taskManager.getAllTasks(false);
                     } catch (IOException | ParseException e) {
                         e.printStackTrace();
                     }
@@ -153,11 +157,11 @@ public class Magic8UI {
                     try {
                         controller = new Magic8Controller(inputStr, taskManager);
                         confirmText += controller.getStatusMessage();
+                        tasks = controller.getTaskList();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-                tasks = taskManager.getAllTasks();
                 updateTable();
                 confirmDialog.setText(confirmText);
                 commandLine.setText(emptyString);

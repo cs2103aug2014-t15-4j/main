@@ -30,7 +30,7 @@ public class AddCommand extends Command {
         	super.setStatus(Magic8Status.ADD_SUCCESS);
         	ArrayList<Magic8Task> taskList = new ArrayList<Magic8Task>();
         	taskList.add(task);
-        	super.setTask(super.getTaskManager().getAllTasks(true));
+        	super.setTask(super.getTaskManager().getAllTasks(false));
         } else {
             super.setStatus(Magic8Status.ADD_FAILURE);
         }
