@@ -48,20 +48,20 @@ public class DisplayCommand extends Command {
             for(String tag : super.getTags()) {
                 ArrayList<Magic8Task> tasks = super.getTaskManager().getTasksWithWord(tag, true);
                 if(tasks == null) {
-                	this.setStatus(Magic8Status.ERROR);
+                	this.setStatus(Magic8Status.DISPLAY_FAILURE);
                 	return;
                 }
                 this.setTask(tasks);
-                this.setStatus(Magic8Status.SUCCESS);
+                this.setStatus(Magic8Status.DISPLAY_SUCCESS);
                 return;
             }
         }
         ArrayList<Magic8Task> tasks = super.getTaskManager().getAllTasks();
         if(tasks == null) {
-        	this.setStatus(Magic8Status.ERROR);
+        	this.setStatus(Magic8Status.DISPLAY_FAILURE);
         	return;
         }
         this.setTask(tasks);
-        this.setStatus(Magic8Status.SUCCESS);
+        this.setStatus(Magic8Status.DISPLAY_SUCCESS);
     }
 }

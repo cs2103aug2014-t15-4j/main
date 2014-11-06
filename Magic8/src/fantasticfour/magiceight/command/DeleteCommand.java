@@ -21,8 +21,8 @@ public class DeleteCommand extends Command {
             tasks = super.getTaskManager().clearTasks();
         } else if(super.getTags() == null) {
             for(Integer id : super.getIds()) {
-                if(id > super.getTaskManager().getAllTasks().size()) {
-                	this.setStatus(Magic8Status.ERROR);
+                if(id > super.getTaskManager().getAllTasks(true).size()) {
+                	this.setStatus(Magic8Status.DELETE_FAILURE);
                     return;
                 }
                 tasks.add(super.getTaskManager().getAllTasks().get(id-1));
@@ -34,10 +34,10 @@ public class DeleteCommand extends Command {
             }
         }
         if(tasks == null) {
-        	this.setStatus(Magic8Status.ERROR);
+        	this.setStatus(Magic8Status.DELETE_FAILURE);
             return;
         }
-        this.setStatus(Magic8Status.SUCCESS);
+        this.setStatus(Magic8Status.DELETE_SUCCESS);
         this.setTask(super.getTaskManager().getAllTasks());
     }
 }

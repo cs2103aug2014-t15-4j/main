@@ -37,9 +37,9 @@ public class SearchCommand extends Command {
         for(String keyword : super.getKeywords()) {
             ArrayList<Magic8Task> tasks = super.getTaskManager().getTasksWithWord(keyword, false);
             if(tasks == null) {
-                this.setStatus(Magic8Status.ERROR);
+                this.setStatus(Magic8Status.SEARCH_FAILURE);
             } else {
-                this.setStatus(Magic8Status.SUCCESS);
+                this.setStatus(Magic8Status.SEARCH_SUCCESS);
                 this.setTask(tasks);
             }
         }

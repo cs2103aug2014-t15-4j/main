@@ -21,13 +21,13 @@ public class EditCommand extends Command {
 	        Magic8Task task = super.getTaskManager().getAllTasks().get(id);
             task.setDesc(super.getTaskDescription());
             if(super.getTaskManager().updateTask(task)) {
-            	this.setStatus(Magic8Status.SUCCESS);
+            	this.setStatus(Magic8Status.EDIT_SUCCESS);
             	this.setTask(super.getTaskManager().getAllTasks());
                 return;
             }
 	    	
         }
-	    this.setStatus(Magic8Status.ERROR);
+	    this.setStatus(Magic8Status.EDIT_FAILURE);
 	    return;
     }
 }
