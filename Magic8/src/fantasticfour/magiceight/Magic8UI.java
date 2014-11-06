@@ -380,10 +380,28 @@ public class Magic8UI {
 
     private void helpPopup() {
     	JOptionPane.showMessageDialog(frameMagic8UI, 
-    	        "Help:\n\n"
-    	        + "", 
-    	        "Help Sheet", 
-    	        JOptionPane.INFORMATION_MESSAGE);
+    	        "                                              Help for Magic 8 software:\n\n"
+    	        + "Opening a file:\n"
+    	        + "open [filename]\n\n"
+    	        + "Adding a new task:\n"
+    	        + "add [task description] from [dd/MM/yyyy HH:mm:SS] to [dd/MM/yyyy HH:mm:SS] [tags]\n\n"
+    	        + "Deleting one task:\n"
+    	        + "delete [task ID]\n"
+    	        + "Deleting tasks in a range:\n"
+    	        + "delete [task ID] to [task ID]\n"
+    	        + "Deleting selected tasks:\n"
+    	        + "delete [task ID], [task ID], [task ID] to [task ID]\n\n"
+    	        + "Editing the description of one task:\n"
+    	        + "edit [task Id] [new task description]\n\n"
+    	        + "Searching using keywords:\n"
+    	        + "search [keyword]\n\n"
+    	        + "Displaying all tasks:\n"
+    	        + "display\n\n"
+    	        + ""
+    	        + "Press [ESC] key to exit this help sheet",
+    	        "Magic 8 Help Sheet", 
+    	        JOptionPane.INFORMATION_MESSAGE,
+    	        new ImageIcon(Toolkit.getDefaultToolkit().getImage("lib/Magic8Logo2.png")));
  	
 	        class EscapeDialog extends JDialog { 
         	public EscapeDialog(Frame owner) { 
