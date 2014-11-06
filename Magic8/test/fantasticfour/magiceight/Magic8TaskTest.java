@@ -9,6 +9,7 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
+//@author A0078774L
 public class Magic8TaskTest {
     private static final String EXCEPTION_EXPECTED_NEGATIVE_ID = "Exception expected for negative id";
     private static final String EXCEPTION_EXPECTED_ZERO_ID = "Exception expected for zero id";

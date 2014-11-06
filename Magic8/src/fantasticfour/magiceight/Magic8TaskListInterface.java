@@ -3,6 +3,7 @@ package fantasticfour.magiceight;
 import java.io.IOException;
 import java.util.ArrayList;
 
+//@author A0078774L
 public interface Magic8TaskListInterface {
     /**
      * Assigns a task id to the task and adds it to the task list.
@@ -62,6 +63,20 @@ public interface Magic8TaskListInterface {
             throws IOException;
 
     /**
+     * Replaces all tasks with the specified tasks' ids from the task list. If a
+     * specified task id cannot be found in the task list, none of the tasks are
+     * replaced.
+     *
+     * @param tasks
+     *            Tasks to replace the tasks with the same ids
+     * @return an ArrayList containing the tasks that were removed from the task
+     *         list
+     * @throws IOException
+     */
+    public ArrayList<Magic8Task> updateTasks(ArrayList<Magic8Task> tasks)
+            throws IOException;
+
+    /**
      * Removes all tasks from the task list.
      *
      * @return an ArrayList containing the tasks that were removed
@@ -86,25 +101,25 @@ public interface Magic8TaskListInterface {
     public boolean redo() throws IOException;
 
     /**
-     * Returns all tasks in the task list with end times that are not done.
+     * Returns all tasks in the task list with end times.
      *
      * @return an ArrayList containing all the tasks in the task list with end
-     *         times that are not done
+     *         times
      */
     public ArrayList<Magic8Task> getTimedTasks();
 
     /**
-     * Returns all tasks in the task list with end times.
+     * Returns either done or undone tasks in the task list with end times.
      *
      * @param isDone
-     *            indicates if tasks that are done should be included
-     * @return an ArrayList containing all the tasks in the task list with end
-     *         times
+     *            indicates if done or undone tasks are to be returned
+     * @return an ArrayList containing either done or undone tasks in the task
+     *         list with end times
      */
     public ArrayList<Magic8Task> getTimedTasks(boolean isDone);
 
     /**
-     * Returns all tasks in the task list without end times that are not done.
+     * Returns all tasks in the task list without end times.
      *
      * @return an ArrayList containing all the tasks in the task list without
      *         end times
@@ -112,12 +127,12 @@ public interface Magic8TaskListInterface {
     public ArrayList<Magic8Task> getUntimedTasks();
 
     /**
-     * Returns all tasks in the task list without end times
+     * Returns either done or undone tasks in the task list without end times.
      *
      * @param isDone
-     *            indicates if tasks that are done should be included
-     * @return an ArrayList containing all the tasks in the task list without
-     *         end times
+     *            indicates if done or undone tasks are to be returned
+     * @return an ArrayList containing either done or undone tasks in the task
+     *         list without end times
      */
     public ArrayList<Magic8Task> getUntimedTasks(boolean isDone);
 
@@ -129,11 +144,12 @@ public interface Magic8TaskListInterface {
     public ArrayList<Magic8Task> getAllTasks();
 
     /**
-     * Returns all tasks in the task list.
+     * Returns either done or undone tasks in the task list.
      *
      * @param isDone
-     *            indicates if tasks that are done should be included
-     * @return an ArrayList containing all the tasks in the task list
+     *            indicates if only done or undone tasks are to be returned
+     * @return an ArrayList containing either done or undone tasks in the task
+     *         list
      */
     public ArrayList<Magic8Task> getAllTasks(boolean isDone);
 
@@ -148,14 +164,14 @@ public interface Magic8TaskListInterface {
     public ArrayList<Magic8Task> getTasksWithWord(String word);
 
     /**
-     * Returns all tasks in the task list.
+     * Returns either done or undone tasks in the task list.
      *
      * @param word
      *            Word to retrieve tasks with
      * @param isDone
-     *            indicates if tasks that are done should be included
-     * @return an ArrayList containing all the tasks in the task list with the
-     *         specified word
+     *            indicates if only done or undone tasks are to be returned
+     * @return an ArrayList containing either done or undone tasks in the task
+     *         list with the specified word
      */
     public ArrayList<Magic8Task> getTasksWithWord(String word, boolean isDone);
 
@@ -170,14 +186,14 @@ public interface Magic8TaskListInterface {
     public ArrayList<Magic8Task> getTasksWithTag(String tag);
 
     /**
-     * Returns all tasks in the task list.
+     * Returns either done or undone tasks in the task list.
      *
      * @param word
      *            Word or tag to retrieve tasks with
      * @param isDone
-     *            indicates if tasks that are done should be included
-     * @return an ArrayList containing all the tasks in the task list with the
-     *         specified word or tag
+     *            indicates if only done or undone tasks are to be returned
+     * @return an ArrayList containing either done or undone tasks in the task
+     *         list with the specified tag
      */
     public ArrayList<Magic8Task> getTasksWithTag(String tag, boolean isDone);
 }

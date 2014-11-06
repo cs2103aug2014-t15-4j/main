@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 
+//@author A0078774L
 public class Magic8Task implements Magic8TaskInterface {
     private static final String MSG_NEGATIVE_ID = "id cannot be negative";
     private static final String MSG_ZERO_ID = "id cannot be zero";
@@ -22,7 +23,7 @@ public class Magic8Task implements Magic8TaskInterface {
 
     public Magic8Task(int id, String desc, Calendar startTime,
             Calendar endTime, HashSet<String> tags)
-                    throws IllegalArgumentException {
+            throws IllegalArgumentException {
         if (id < 0) {
             throw new IllegalArgumentException(MSG_NEGATIVE_ID);
         }

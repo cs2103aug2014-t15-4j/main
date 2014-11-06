@@ -21,6 +21,7 @@ import java.util.TreeMap;
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
+//@author A0113605U
 class Magic8Storage implements Magic8StorageInterface {
     private static final String STRING_EMPTY = "";
     private static final String STRING_PARSED_EMPTY = "@empty";

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
+//@author A0113605U
 interface Magic8StorageInterface {
     public void writeToFile(int id, Map<Integer, Magic8Task> taskList)
             throws IOException;
