@@ -25,18 +25,14 @@ public class AddCommand extends Command {
         task = new Magic8Task(super.getTaskDescription(),
                               new GregorianCalendar(),
                               super.getDeadline(), 
-                              tags);        
-        task = super.getTaskManager().addTask(task); 
-        //TODO
-        
-        if(task == null) {
-        	super.setStatus(Magic8Status.ADD_INPUT_MISMATCH);
-        } else {
+                              tags);    
+        if(super.getTaskManager().addTask(task)) {
         	super.setStatus(Magic8Status.ADD_SUCCESS);
-        	
         	ArrayList<Magic8Task> taskList = new ArrayList<Magic8Task>();
         	taskList.add(task);
-        	super.setTask(super.getTaskManager().getAllTasks());
+        	super.setTask(super.getTaskManager().getAllTasks(false));
+        } else {
+            super.setStatus(Magic8Status.ADD_FAILURE);
         }
     }
 }

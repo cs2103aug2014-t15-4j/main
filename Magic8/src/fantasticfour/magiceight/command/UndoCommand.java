@@ -14,10 +14,10 @@ public class UndoCommand extends Command {
     
     public void execute() throws IOException {
         if(!super.getTaskManager().undo()) {
-            this.setStatus(Magic8Status.UNDO_INPUT_MISMATCH);
+            this.setStatus(Magic8Status.UNDO_FAILURE);
         } else {
             this.setStatus(Magic8Status.UNDO_SUCCESS);
-            this.setTask(super.getTaskManager().getAllTasks());
+            this.setTask(super.getTaskManager().getAllTasks(false));
         }
     }
 }

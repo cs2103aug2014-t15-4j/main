@@ -24,6 +24,11 @@ public class Magic8Parser {
     
     private final static String DISPLAY_FUNCTION = "display";
     private final static String DISPLAY_BY_TAG = "(\\s#\\w+)*";
+    private final static String DISPLAY_BY_STATUS = "\\sundone|\\sdone";
+    private final static String DISPLAY_CONJUNC = "(" + DISPLAY_BY_TAG + "|" + DISPLAY_BY_STATUS + ")";
+    
+    private final static String DONE_FUNCTION = "done";
+    private final static String DONE_BY_INDEX = "\\s\\d+";
     
     private final static String EDIT_FUNCTION = "edit";
     private final static String EDIT_ID = "\\s\\d+";
@@ -48,8 +53,9 @@ public class Magic8Parser {
     private final static String ADD_REGEX = ADD_FUNCTION + ADD_DESC + ADD_DEADLINE + ADD_TAGS;
     private final static String CLEAR_REGEX = CLEAR_FUNCTION;
     private final static String DELETE_REGEX = DELETE_FUNCTION + DELETE_CONJUNC;
-    private final static String DISPLAY_REGEX = DISPLAY_FUNCTION + DISPLAY_BY_TAG;
-    private final static String EDIT_REGEX = EDIT_FUNCTION + EDIT_ID + EDIT_DESC;
+    private final static String DISPLAY_REGEX = DISPLAY_FUNCTION + DISPLAY_CONJUNC;
+    private final static String DONE_REGEX = DONE_FUNCTION + DONE_BY_INDEX;
+    private final static String EDIT_REGEX = EDIT_FUNCTION + EDIT_ID + ADD_DESC + ADD_DEADLINE + ADD_TAGS;
     private final static String EXIT_REGEX = EXIT_FUNCTION;
     private final static String HELP_REGEX = HELP_FUNCTION;
     private final static String OPEN_REGEX = OPEN_FUNCTION + OPEN_FILENAME;
@@ -64,6 +70,7 @@ public class Magic8Parser {
             add(CLEAR_REGEX);
             add(DELETE_REGEX);
             add(DISPLAY_REGEX);
+            add(DONE_REGEX);
             add(EDIT_REGEX);
             add(EXIT_REGEX);
             add(HELP_REGEX);
@@ -118,6 +125,7 @@ public class Magic8Parser {
                         if (deadlineFlag) {
                             try {
                                 deadline.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(commandParam));
+                                deadlineFlag = false;
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -163,16 +171,43 @@ public class Magic8Parser {
                         for(String commandParam : commandParams) {
                             if (commandParam.startsWith("#")) {
                                 tags.add(commandParam.substring(1));
+                            } else if(commandParam.startsWith("done")) {
+                                keywords.add("done");
+                            } else if(commandParam.startsWith("undone")) {
+                                keywords.add("undone");
                             }
                         }
                     }
                     break;
+                
+                case DONE_FUNCTION :
+                    id = Integer.parseInt(commandParams[0]);
+                    ids.add(id);
+                    break;
                     
                 case EDIT_FUNCTION :
+                    deadlineFlag = false;
                     ids.add(Integer.parseInt(commandParams[0]));
 
                     for (int i = 1; i < commandParams.length; i++) {
-                        taskDesc.add(commandParams[i]);
+                        String commandParam = commandParams[i];
+                        if (commandParam.equals("by")) {
+                            deadlineFlag = true;
+                            deadline = new GregorianCalendar();
+                            continue;
+                        }
+                        if (deadlineFlag) {
+                            try {
+                                deadline.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(commandParam));
+                                deadlineFlag = false;
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (commandParam.startsWith("#")) {
+                            tags.add(commandParam.substring(1));
+                        } else {
+                            taskDesc.add(commandParam);
+                        }
                     }                    
                     break;
                     

@@ -19,7 +19,7 @@ public class OpenCommand extends Command{
             this.setStatus(Magic8Status.OPEN_SUCCESS);
             this.setTask(super.getTaskManager().getAllTasks());
         } catch (IOException | ParseException e) {
-            this.setStatus(Magic8Status.OPEN_INPUT_MISMATCH);
+            this.setStatus(Magic8Status.OPEN_FAILURE);
         }
     }
 }
