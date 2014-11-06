@@ -31,10 +31,7 @@ public class AutoComplete {
 		private String deadlineHelp = "Suggestions:\n\nby\n\non";
 		private String exitHelp = "Suggestions:\n\nexit";
 		private String doneHelp = "Suggestion:\n\ndone";
-	
-		public Autocomplete() {
-			this.Autocomplete(null, null);
-		}
+
 		public Autocomplete(JTextField textField, List<String> keywords) {
 			this.textField = textField;
 			this.keywords = keywords;

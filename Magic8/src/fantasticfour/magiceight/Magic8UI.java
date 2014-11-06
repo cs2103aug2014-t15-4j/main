@@ -147,9 +147,8 @@ public class Magic8UI {
             public void actionPerformed(ActionEvent arg){
                 String confirmText = emptyString;
                 String inputStr = commandLine.getText();        
-                
-                if((taskManager == null)&&(!inputStr.equalsIgnoreCase("exit")||
-                    !inputStr.equalsIgnoreCase("help")|| !inputStr.equalsIgnoreCase("-h"))) {
+                if((taskManager == null)&&(!inputStr.equalsIgnoreCase("exit")&&
+                    !inputStr.equalsIgnoreCase("help")&& !inputStr.equalsIgnoreCase("-h"))) {
                     try {
                         taskManager = new Magic8TaskList(inputStr);
                         confirmText += inputStr + " is opened\n";
@@ -320,8 +319,9 @@ public class Magic8UI {
 
 		// Without this, cursor always leaves text field
 		commandLine.setFocusTraversalKeysEnabled(false);
-		Autocomplete autoComplete = new Autocomplete();
-		Autocomplete autoComplete = new Autocomplete(commandLine, keywords);
+//		Autocomplete autoComplete = new Autocomplete();
+		AutoComplete auto = new AutoComplete();
+		AutoComplete.Autocomplete autoComplete = auto.new Autocomplete(commandLine, keywords);
 		
 		//To prevent autoscrolling
 		DefaultCaret caret1 = (DefaultCaret) confirmDialog.getCaret();
