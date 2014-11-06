@@ -25,11 +25,9 @@ public class AddCommand extends Command {
         task = new Magic8Task(super.getTaskDescription(),
                               new GregorianCalendar(),
                               super.getDeadline(), 
-                              tags);        
-        
+                              tags);    
         if(super.getTaskManager().addTask(task)) {
         	super.setStatus(Magic8Status.ADD_SUCCESS);
-        	
         	ArrayList<Magic8Task> taskList = new ArrayList<Magic8Task>();
         	taskList.add(task);
         	super.setTask(super.getTaskManager().getAllTasks(true));
