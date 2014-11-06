@@ -26,7 +26,8 @@ public class AddCommand extends Command {
                               new GregorianCalendar(),
                               super.getDeadline(), 
                               tags);        
-        task = super.getTaskManager().addTask(task); //TODO
+        task = super.getTaskManager().addTask(task); 
+        //TODO
         
         if(task == null) {
         	super.setStatus(Magic8Status.ADD_INPUT_MISMATCH);
