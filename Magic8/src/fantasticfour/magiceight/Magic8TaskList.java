@@ -92,7 +92,9 @@ public class Magic8TaskList implements Magic8TaskListInterface {
                 return new ArrayList<>();
             }
 
-            result.add(new Magic8Task(taskList.remove(task.getId())));
+            Magic8Task removedTask = taskList.remove(task.getId());
+
+            result.add(new Magic8Task(removedTask));
         }
 
         updateTimeline(true);
@@ -107,8 +109,12 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         ArrayList<Magic8Task> result = new ArrayList<>();
 
         for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
-            if (entry.getValue().getTags().contains(tag)) {
-                result.add(new Magic8Task(taskList.remove(entry.getKey())));
+            Magic8Task task = entry.getValue();
+
+            if (task.getTags().contains(tag)) {
+                Magic8Task removedTask = taskList.remove(task.getId());
+
+                result.add(new Magic8Task(removedTask));
             }
         }
 
@@ -125,7 +131,9 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         if (!taskList.isEmpty()) {
             updateTimeline();
             for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
-                result.add(new Magic8Task(entry.getValue()));
+                Magic8Task task = entry.getValue();
+
+                result.add(new Magic8Task(task));
             }
             taskList.clear();
             writeToFile();
