@@ -14,9 +14,9 @@ public class RedoCommand extends Command {
     
     public void execute() throws IOException {
         if(!super.getTaskManager().redo()) {
-            this.setStatus(Magic8Status.ERROR);
+            this.setStatus(Magic8Status.REDO_INPUT_MISMATCH);
         } else {
-            this.setStatus(Magic8Status.SUCCESS);
+            this.setStatus(Magic8Status.REDO_SUCCESS);
             this.setTask(super.getTaskManager().getAllTasks());
         }
     }

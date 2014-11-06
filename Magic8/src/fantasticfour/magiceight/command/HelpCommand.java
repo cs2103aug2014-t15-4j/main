@@ -13,6 +13,6 @@ public class HelpCommand extends Command {
     }
     
     public void execute() throws IOException {
-        this.setStatus(Magic8Status.SUCCESS);
+        this.setStatus(Magic8Status.HELP_SUCCESS);
     }
 }

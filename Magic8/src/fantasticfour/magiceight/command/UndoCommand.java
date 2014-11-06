@@ -14,9 +14,9 @@ public class UndoCommand extends Command {
     
     public void execute() throws IOException {
         if(!super.getTaskManager().undo()) {
-            this.setStatus(Magic8Status.ERROR);
+            this.setStatus(Magic8Status.UNDO_INPUT_MISMATCH);
         } else {
-            this.setStatus(Magic8Status.SUCCESS);
+            this.setStatus(Magic8Status.UNDO_SUCCESS);
             this.setTask(super.getTaskManager().getAllTasks());
         }
     }
