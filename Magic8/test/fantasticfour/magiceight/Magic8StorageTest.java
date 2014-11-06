@@ -25,6 +25,7 @@ import au.com.bytecode.opencsv.CSVParser;
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
+//@author A0113605U
 public class Magic8StorageTest {
     private static final String EXPECTED_FILE_NAME = "expected";
     private static final String TEST_FILE_NAME = "storageTestFile";
