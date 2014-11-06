@@ -62,6 +62,20 @@ public interface Magic8TaskListInterface {
             throws IOException;
 
     /**
+     * Replaces all tasks with the specified tasks' ids from the task list. If a
+     * specified task id cannot be found in the task list, none of the tasks are
+     * replaced.
+     *
+     * @param tasks
+     *            Tasks to replace the tasks with the same ids
+     * @return an ArrayList containing the tasks that were removed from the task
+     *         list
+     * @throws IOException
+     */
+    public ArrayList<Magic8Task> updateTasks(ArrayList<Magic8Task> tasks)
+            throws IOException;
+
+    /**
      * Removes all tasks from the task list.
      *
      * @return an ArrayList containing the tasks that were removed

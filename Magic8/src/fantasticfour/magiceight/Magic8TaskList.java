@@ -125,6 +125,37 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     }
 
     @Override
+    public ArrayList<Magic8Task> updateTasks(ArrayList<Magic8Task> tasks)
+            throws IOException {
+        assert tasks != null;
+
+        backup();
+
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        for (Magic8Task task : tasks) {
+            assert task != null;
+
+            if (!taskList.containsKey(task.getId())) {
+                restore();
+
+                return new ArrayList<>();
+            }
+
+            Magic8Task removedTask = taskList.remove(task.getId());
+
+            result.add(new Magic8Task(removedTask));
+
+            taskList.put(task.getId(), task);
+        }
+
+        updateTimeline(true);
+        writeToFile();
+
+        return result;
+    }
+
+    @Override
     public ArrayList<Magic8Task> clearTasks() throws IOException {
         ArrayList<Magic8Task> result = new ArrayList<>();
 
