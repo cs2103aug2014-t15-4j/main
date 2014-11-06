@@ -123,13 +123,11 @@ public class Magic8TaskList implements Magic8TaskListInterface {
         ArrayList<Magic8Task> result = new ArrayList<>();
 
         if (!taskList.isEmpty()) {
+            updateTimeline();
             for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
                 result.add(new Magic8Task(entry.getValue()));
             }
-
             taskList.clear();
-
-            updateTimeline();
             writeToFile();
         }
 
