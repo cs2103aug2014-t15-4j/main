@@ -3,6 +3,7 @@ package fantasticfour.magiceight;
 import java.util.Calendar;
 import java.util.HashSet;
 
+//@author A0078774L
 public interface Magic8TaskInterface extends Comparable<Magic8Task> {
     public int getId();
 

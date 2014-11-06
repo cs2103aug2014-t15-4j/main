@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
+//@author A0078774L
 public class Magic8TaskList implements Magic8TaskListInterface {
     private Magic8Storage storage;
     private int id;

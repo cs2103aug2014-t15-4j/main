@@ -3,6 +3,7 @@ package fantasticfour.magiceight;
 import java.io.IOException;
 import java.util.ArrayList;
 
+//@author A0078774L
 public interface Magic8TaskListInterface {
     /**
      * Assigns a task id to the task and adds it to the task list.
