@@ -65,7 +65,12 @@ public class Magic8Parser {
     private final static String BLOCK_REGEX = BLOCK_FUNCTION;
     
     private static ArrayList<String> commandRegexList = new ArrayList<String>() {
-        {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		{
             add(ADD_REGEX);
             add(CLEAR_REGEX);
             add(DELETE_REGEX);

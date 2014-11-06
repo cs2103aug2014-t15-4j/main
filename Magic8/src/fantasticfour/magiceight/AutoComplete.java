@@ -11,6 +11,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
+//@author A0115693B
 public class AutoComplete {
 	private static enum Status { 
 		INSERT,
@@ -20,17 +21,20 @@ public class AutoComplete {
 		private JTextField textField;
 		private final List<String> keywords;
 		private Status mode = Status.INSERT;
-		private String addHelp = "Suggestions:\n\n;add\n\n;+\n\n;insert";
-		private String deleteHelp = "Suggestions:\n\n;delete\n\n;-\n\n;remove\n\n;rm\n\n;d";
-		private String displayHelp = "Suggestions:\n\n;view\n\n;display\n\n;\n\n;v";
-		private String editHelp = "Suggestions:\n\n;edit\n\n;update\n\n;~";
-		private String undoHelp = "Suggestions:\n\n;undo\n\n;back";
-		private String redoHelp = "Suggestions:\n\n;redo\n\n-r";
-		private String findHelp = "Suggestions:\n\n;find\n\n;search\n\n;look";
-		private String remindHelp = "Suggestions:\n\n;remind\n\n;reminder\n\n;notify";
-		private String deadlineHelp = "Suggestions:\n\n;by\n\n;on";
+		private String addHelp = "Suggestions:\n\nadd";
+		private String deleteHelp = "Suggestions:\n\ndelete";
+		private String displayHelp = "Suggestions:\n\ndisplay";
+		private String editHelp = "Suggestions:\n\nedit";
+		private String undoHelp = "Suggestions:\n\nundo";
+		private String redoHelp = "Suggestions:\n\nredo";
+		private String findHelp = "Suggestions:\n\nsearch";
+		private String deadlineHelp = "Suggestions:\n\nby\n\non";
+		private String exitHelp = "Suggestions:\n\nexit";
+		private String doneHelp = "Suggestion:\n\ndone";
 	
-
+		public Autocomplete() {
+			this.Autocomplete(null, null);
+		}
 		public Autocomplete(JTextField textField, List<String> keywords) {
 			this.textField = textField;
 			this.keywords = keywords;
@@ -113,11 +117,14 @@ public class AutoComplete {
 			case "by":
 				Magic8UI.confirmDialog.setText(deadlineHelp);
 				break;
-			case "remind":
-				Magic8UI.confirmDialog.setText(remindHelp);
-				break;
 			case "search":
 				Magic8UI.confirmDialog.setText(findHelp);
+				break;
+			case "exit":
+				Magic8UI.confirmDialog.setText(exitHelp);
+				break;
+			case "done":
+				Magic8UI.confirmDialog.setText(doneHelp);
 				break;
 			}
 		}
@@ -126,7 +133,7 @@ public class AutoComplete {
 			/**
 			 * 
 			 */
-			private static final long serialVersionUID = 5794543109646743416L;
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void actionPerformed(ActionEvent ev) {

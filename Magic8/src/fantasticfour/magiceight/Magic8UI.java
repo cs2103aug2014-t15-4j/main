@@ -1,12 +1,12 @@
 package fantasticfour.magiceight;
 
+//@author A0115693B
 import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
@@ -26,20 +26,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.InputMap;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -50,6 +43,8 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultCaret;
+
+import fantasticfour.magiceight.AutoComplete.Autocomplete;
 
 public class Magic8UI {
     private final static Integer WINDOW_HEIGHT = 600;
@@ -321,27 +316,27 @@ public class Magic8UI {
 		keywords.add("redo");//Re do function
 		keywords.add("search");//Search function
 		keywords.add("by");//'by' deadline 
-		keywords.add("remind"); //Reminder function
+		keywords.add("exit"); //Exit function
 
 		// Without this, cursor always leaves text field
 		commandLine.setFocusTraversalKeysEnabled(false);
-//		Autocomplete autocomplete = new Autocomplete();
-//		Autocomplete autoComplete = new Autocomplete(commandLine, keywords);
+		Autocomplete autoComplete = new Autocomplete();
+		Autocomplete autoComplete = new Autocomplete(commandLine, keywords);
 		
 		//To prevent autoscrolling
 		DefaultCaret caret1 = (DefaultCaret) confirmDialog.getCaret();
 		caret1.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 
-//		commandLine.getDocument().addDocumentListener(autoComplete);
+		commandLine.getDocument().addDocumentListener(autoComplete);
 
 		// Maps the tab key to the commit action, which finishes the autocomplete
 		// when given a suggestion
-//		commandLine.getInputMap().put(KeyStroke.getKeyStroke("TAB"), COMMIT_ACTION);
-//		commandLine.getActionMap().put(COMMIT_ACTION, autoComplete.new CommitAction());
+		commandLine.getInputMap().put(KeyStroke.getKeyStroke("TAB"), COMMIT_ACTION);
+		commandLine.getActionMap().put(COMMIT_ACTION, autoComplete.new CommitAction());
 
         // Clock Panel
         JPanel clockPanel = new JPanel();
-        clockPanel.setBounds(WINDOW_WIDTH-200, WINDOW_HEIGHT-150, 180, 45);
+        clockPanel.setBounds(WINDOW_WIDTH-200, 0, 180, 45);
         frameMagic8UI.getContentPane().add(clockPanel);
         clockPanel.setOpaque(false);
         clockPanel.setBackground(new Color(255,205,155,0));
@@ -384,12 +379,14 @@ public class Magic8UI {
 
     private void helpPopup() {
     	JOptionPane.showMessageDialog(frameMagic8UI, 
-    	        "                                              Help for Magic 8 software:\n\n"
-    	        + "Opening a file:\n"
+    	        "                                              Help for Magic 8 Software:\n\n"
+    	        + "Opening a file in Magic 8:\n"
     	        + "open [filename]\n\n"
     	        + "Adding a new task:\n"
     	        + "add [task description] from [dd/MM/yyyy HH:mm:SS] to [dd/MM/yyyy HH:mm:SS] [tags]\n\n"
-    	        + "Deleting one task:\n"
+    	        + "Marking a task as done:\n"
+    	        + "done [task ID]\n\n"
+    	        + "Deleting tasks:\n"
     	        + "delete [task ID]\n"
     	        + "Deleting tasks in a range:\n"
     	        + "delete [task ID] to [task ID]\n"
@@ -400,35 +397,19 @@ public class Magic8UI {
     	        + "Searching using keywords:\n"
     	        + "search [keyword]\n\n"
     	        + "Displaying all tasks:\n"
-    	        + "display\n\n"
-    	        + ""
+    	        + "display\n"
+    	        + "display done\n"
+    	        + "display undone\n\n"
+    	        + "Undoing the last action:\n"
+    	        + "undo\n"
+    	        + "Redoing the last action:\n"
+    	        + "redo\n\n"
+    	        + "Clearing all tasks off the display:\n"
+    	        + "clear\n\n"
     	        + "Press [ESC] key to exit this help sheet",
     	        "Magic 8 Help Sheet", 
-    	        JOptionPane.INFORMATION_MESSAGE,
+    	        JOptionPane.PLAIN_MESSAGE,
     	        new ImageIcon(Toolkit.getDefaultToolkit().getImage("lib/Magic8Logo2.png")));
- 	
-	        class EscapeDialog extends JDialog { 
-        	public EscapeDialog(Frame owner) { 
-    		    super(owner, true);
-    		    getContentPane().add(new JComboBox());
-    		  } 
-		  protected JRootPane createRootPane() { 
-		    JRootPane rootPane = new JRootPane();
-		    KeyStroke stroke = KeyStroke.getKeyStroke("ESCAPE");
-		    Action actionListener = new AbstractAction() { 
-				private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent actionEvent) { 
-		        setVisible(false);
-		      } 
-		    };
-		    InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		    inputMap.put(stroke, "ESCAPE");
-		    rootPane.getActionMap().put("ESCAPE", actionListener);
-
-		    return rootPane;
-		  } 
-    	}
     }
     void initSystemTray(){
 
