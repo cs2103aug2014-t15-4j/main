@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
@@ -25,15 +26,25 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -149,6 +160,8 @@ public class Magic8UI {
                     }
                 } else if ((taskManager == null)&&(inputStr.equalsIgnoreCase("exit"))) {
                     System.exit(0);
+                } else if ((inputStr.equalsIgnoreCase("help")||(inputStr.equalsIgnoreCase("-h")))){
+                	helpPopup();
                 } else {
                     try {
                         controller = new Magic8Controller(inputStr, taskManager);
@@ -345,8 +358,7 @@ public class Magic8UI {
         
         //Sets Magic 8 logo
         setFrameIcon();
-    }
-    
+    }    
 
     void setFrameIcon(){
 
@@ -366,7 +378,36 @@ public class Magic8UI {
         return false;
     }
 
+    private void helpPopup() {
+    	JOptionPane.showMessageDialog(frameMagic8UI, 
+    	        "Help:\n\n"
+    	        + "", 
+    	        "Help Sheet", 
+    	        JOptionPane.INFORMATION_MESSAGE);
+ 	
+	        class EscapeDialog extends JDialog { 
+        	public EscapeDialog(Frame owner) { 
+    		    super(owner, true);
+    		    getContentPane().add(new JComboBox());
+    		  } 
+		  protected JRootPane createRootPane() { 
+		    JRootPane rootPane = new JRootPane();
+		    KeyStroke stroke = KeyStroke.getKeyStroke("ESCAPE");
+		    Action actionListener = new AbstractAction() { 
+				private static final long serialVersionUID = 1L;
 
+			public void actionPerformed(ActionEvent actionEvent) { 
+		        setVisible(false);
+		      } 
+		    };
+		    InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		    inputMap.put(stroke, "ESCAPE");
+		    rootPane.getActionMap().put("ESCAPE", actionListener);
+
+		    return rootPane;
+		  } 
+    	}
+    }
     void initSystemTray(){
 
         //Set image when program is in system tray
