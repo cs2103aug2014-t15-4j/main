@@ -35,7 +35,7 @@ public class SearchCommand extends Command {
     
     public void execute() throws IOException {
         for(String keyword : super.getKeywords()) {
-            ArrayList<Magic8Task> tasks = super.getTaskManager().getTasksWithWord(keyword, false);
+            ArrayList<Magic8Task> tasks = super.getTaskManager().getTasksWithString(keyword, false);
             if(tasks == null) {
                 this.setStatus(Magic8Status.SEARCH_FAILURE);
             } else {

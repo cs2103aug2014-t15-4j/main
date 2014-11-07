@@ -154,26 +154,28 @@ public interface Magic8TaskListInterface {
     public ArrayList<Magic8Task> getAllTasks(boolean isDone);
 
     /**
-     * Returns all tasks in the task list.
+     * Returns all tasks in the task list that contains one or more search
+     * tokens.
      *
-     * @param word
-     *            Word to retrieve tasks with
+     * @param str
+     *            String to retrieve tasks with
      * @return an ArrayList containing all the tasks in the task list with the
      *         specified word
      */
-    public ArrayList<Magic8Task> getTasksWithWord(String word);
+    public ArrayList<Magic8Task> getTasksWithString(String str);
 
     /**
-     * Returns either done or undone tasks in the task list.
+     * Returns either done or undone tasks in the task list that contains one or
+     * more search tokens.
      *
-     * @param word
-     *            Word to retrieve tasks with
+     * @param str
+     *            String to retrieve tasks with
      * @param isDone
      *            indicates if only done or undone tasks are to be returned
      * @return an ArrayList containing either done or undone tasks in the task
      *         list with the specified word
      */
-    public ArrayList<Magic8Task> getTasksWithWord(String word, boolean isDone);
+    public ArrayList<Magic8Task> getTasksWithString(String str, boolean isDone);
 
     /**
      * Returns all tasks in the task list.

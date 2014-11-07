@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 
 //@author A0078774L
 public class Magic8TaskList implements Magic8TaskListInterface {
+    private final static String REGEX_SEARCH = "\\W+";
+
     private Magic8Storage storage;
     private int id;
     private TreeMap<Integer, Magic8Task> taskList;
@@ -351,13 +355,21 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     }
 
     @Override
-    public ArrayList<Magic8Task> getTasksWithWord(String word) {
+    public ArrayList<Magic8Task> getTasksWithString(String str) {
         ArrayList<Magic8Task> result = new ArrayList<>();
+
+        ArrayList<String> tokens = new ArrayList<>(Arrays.asList(str
+                .toLowerCase().split(REGEX_SEARCH)));
 
         for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
             Magic8Task task = entry.getValue();
 
-            if (task.getDesc().contains(word)) {
+            ArrayList<String> descTokens = new ArrayList<>(Arrays.asList(task
+                    .getDesc().toLowerCase().split(REGEX_SEARCH)));
+
+            descTokens.retainAll(new HashSet<>(tokens));
+
+            if (!descTokens.isEmpty()) {
                 result.add(new Magic8Task(task));
             }
         }
@@ -368,14 +380,23 @@ public class Magic8TaskList implements Magic8TaskListInterface {
     }
 
     @Override
-    public ArrayList<Magic8Task> getTasksWithWord(String word, boolean isDone) {
+    public ArrayList<Magic8Task> getTasksWithString(String str, boolean isDone) {
         ArrayList<Magic8Task> result = new ArrayList<>();
+
+        ArrayList<String> tokens = new ArrayList<>(Arrays.asList(str
+                .toLowerCase().split(REGEX_SEARCH)));
 
         for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
             Magic8Task task = entry.getValue();
 
-            if (task.getDesc().contains(word)) {
-                if (isDone == task.isDone()) {
+            if (isDone == task.isDone()) {
+                ArrayList<String> descTokens = new ArrayList<>(
+                        Arrays.asList(task.getDesc().toLowerCase()
+                                .split(REGEX_SEARCH)));
+
+                descTokens.retainAll(new HashSet<>(tokens));
+
+                if (!descTokens.isEmpty()) {
                     result.add(new Magic8Task(task));
                 }
             }
