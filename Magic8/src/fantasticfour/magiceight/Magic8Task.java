@@ -249,6 +249,10 @@ public class Magic8Task implements Magic8TaskInterface {
 
     @Override
     public int compareTo(Magic8Task task) {
+        if (getEndTime() == null && task.getEndTime() == null) {
+            return 0;
+        }
+
         if (getEndTime() == null) {
             return 1;
         }
