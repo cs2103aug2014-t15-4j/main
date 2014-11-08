@@ -37,6 +37,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JWindow;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
 import javax.swing.UIManager;
@@ -100,7 +101,33 @@ public class Magic8UI {
         initialize();
         launch();
     }
-    
+    class SplashScreen extends JWindow {
+    	  private int duration;
+
+    	  public SplashScreen(int d) {
+    	    duration = d;
+
+    	    JPanel content = (JPanel) getContentPane();
+    	    content.setBackground(Color.white);
+    	    int width = 450;
+    	    int height = 115;
+    	    Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+    	    int x = (screen.width - width) / 2;
+    	    int y = (screen.height - height) / 2;
+    	    setBounds(x, y, width, height);
+
+    	    content.add(new JLabel("asdf"), BorderLayout.CENTER);
+    	    Color oraRed = new Color(156, 20, 20, 255);
+    	    content.setBorder(BorderFactory.createLineBorder(oraRed, 10));
+
+    	    setVisible(true);
+    	    try {
+    	      Thread.sleep(duration);
+    	    } catch (Exception e) {
+    	    }
+    	    setVisible(false);
+    	  }
+    }
     public void updateTable() {
         if (model.getRowCount() > 0) {
             for (int i = model.getRowCount() - 1; i > -1; i--) {
@@ -160,6 +187,8 @@ public class Magic8UI {
                     System.exit(0);
                 } else if ((inputStr.equalsIgnoreCase("help")||(inputStr.equalsIgnoreCase("-h")))){
                 	helpPopup();
+                } else if ((inputStr.equalsIgnoreCase("cal")||(inputStr.equalsIgnoreCase("-c")))){
+                	CalendarProgram.frameSetUp(frameMagic8UI);
                 } else {
                     try {
                         controller = new Magic8Controller(inputStr, taskManager);
@@ -228,7 +257,6 @@ public class Magic8UI {
             clock.setText(DateFormat.getDateTimeInstance().format(new Date()));
         }
     }
-
     private void constructWindow() {
         frameMagic8UI = new JFrame(NAME_TITLE);
         frameMagic8UI.setResizable(false);
@@ -344,11 +372,11 @@ public class Magic8UI {
         frameMagic8UI.add(new ClockPane());
         frameMagic8UI.setLocationRelativeTo(null);
         clockPanel.add(new ClockPane());
-        
+        /*
         // Calendar 
         CalendarProgram.frameSetUp(frameMagic8UI);
         frameMagic8UI.setLocationRelativeTo(null);
-
+*/
         // Overall Background Panel
         colorPanel1 = new JPanel();
         colorPanel1.setBackground(new Color(255, 205, 155));
@@ -498,6 +526,8 @@ public class Magic8UI {
         Magic8UI test = new Magic8UI();
         try {
             magic8UIInit();
+     //       SplashScreen splash = new SplashScreen();
+    	//	SplashScreen.SplashScreen splashscreen = splash.new SplashScreen(10000);
         } catch (IOException e) {
             System.out.println(e.toString());
             System.exit(0);

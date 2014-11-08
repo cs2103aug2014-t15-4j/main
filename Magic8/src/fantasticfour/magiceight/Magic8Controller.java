@@ -31,6 +31,7 @@ public class Magic8Controller {
     private static final String REDO_FUNCTION = "redo";
     private static final String SEARCH_FUNCTION = "search";
     private static final String UNDO_FUNCTION = "undo";
+    private static final String CAL_FUNCTION = "cal";
     
     private static final String ADD_SUCCESS_MESSAGE = "Task successfully added";  
     private static final String CLEAR_SUCCESS_MESSAGE = "Clear is successful";
@@ -43,6 +44,7 @@ public class Magic8Controller {
     private static final String REDO_SUCCESS_MESSAGE = "Redo successful";
     private static final String SEARCH_SUCCESS_MESSAGE = "Search successful";
     private static final String UNDO_SUCCESS_MESSAGE = "Undo successful";
+    private static final String CAL_SUCCESS_MESSAGE = "Calendar display successful";
     
     private static final String ADD_ERROR_MESSAGE = "Add failed";  
     private static final String CLEAR_ERROR_MESSAGE = "Clear failed";
@@ -55,6 +57,7 @@ public class Magic8Controller {
     private static final String REDO_ERROR_MESSAGE = "Redo failed";
     private static final String SEARCH_ERROR_MESSAGE = "Search failed";
     private static final String UNDO_ERROR_MESSAGE = "Undo failed";
+    private static final String CAL_ERROR_MESSAGE = "Calendar display failed";
      
     public Magic8Controller(String input, Magic8TaskList tm) throws IOException {
     	String errorMessage = "error message";
@@ -121,6 +124,11 @@ public class Magic8Controller {
                 successMessage = UNDO_SUCCESS_MESSAGE;
                 errorMessage = UNDO_ERROR_MESSAGE;
                 break;
+            case CAL_FUNCTION:
+                command = new HelpCommand(obj, tm);
+                successMessage = CAL_SUCCESS_MESSAGE;
+                errorMessage = CAL_ERROR_MESSAGE;
+                break;
         }
         command.execute();
         
@@ -134,7 +142,8 @@ public class Magic8Controller {
         	(command.getStatusInfo() == Magic8Status.OPEN_SUCCESS)||
         	(command.getStatusInfo() == Magic8Status.REDO_SUCCESS)||
         	(command.getStatusInfo() == Magic8Status.SEARCH_SUCCESS)||
-        	(command.getStatusInfo() == Magic8Status.UNDO_SUCCESS)){
+        	(command.getStatusInfo() == Magic8Status.UNDO_SUCCESS)||
+        	(command.getStatusInfo() == Magic8Status.CAL_SUCCESS)){
             command.addStatus(successMessage);
         } else {
             command.addStatus(errorMessage);

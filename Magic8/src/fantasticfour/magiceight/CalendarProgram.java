@@ -21,17 +21,19 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 //@author A0115693B
-public class CalendarProgram {
-	static JLabel lblMonth, lblYear;
-	static JButton btnPrev, btnNext;
-	static JTable tblCalendar;
+
+public class CalendarProgram extends Component {
+	static JLabel month_Label, year_Label;
+	static JButton backButton, nextButton;
+	static JTable cal_Table;
 //	static JComboBox cmbYear;
 	static Container pane;
 	static DefaultTableModel mtblCalendar; //Table model
 	static JScrollPane stblCalendar; //The scrollpane
-	static JPanel pnlCalendar;
+	static JPanel cal_Panel;
 	static int realYear, realMonth, realDay, currentYear, currentMonth;
-
+//	static JDialog calDialog;
+	
 	public static void frameSetUp(JFrame frameMagic8UI) {
 		//Look and feel
 		try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
@@ -45,10 +47,10 @@ public class CalendarProgram {
 		pane.setLayout(null); //Apply null layout
 
 		//Create controls
-		lblMonth = new JLabel ("January");
+		month_Label = new JLabel ("January");
 //		cmbYear = new JComboBox();
-		btnPrev = new JButton ("B");
-		btnNext = new JButton ("N");
+		backButton = new JButton ("B");
+		nextButton = new JButton ("N");
 		mtblCalendar = new DefaultTableModel(){
 			/**
 			 * 
@@ -59,30 +61,30 @@ public class CalendarProgram {
 				return false;
 				}
 			};
-		tblCalendar = new JTable(mtblCalendar);
-		stblCalendar = new JScrollPane(tblCalendar);
-		pnlCalendar = new JPanel(null);
+		cal_Table = new JTable(mtblCalendar);
+		stblCalendar = new JScrollPane(cal_Table);
+		cal_Panel = new JPanel(null);
 		
 		//Register action listeners
-		btnPrev.addActionListener(new btnPrev_Action());
-		btnNext.addActionListener(new btnNext_Action());
+		backButton.addActionListener(new backButton_Action());
+		nextButton.addActionListener(new nextButton_Action());
 //		cmbYear.addActionListener(new cmbYear_Action());
 		
 		//Add controls to pane
-		pane.add(pnlCalendar);
-		pnlCalendar.add(lblMonth);
-		pnlCalendar.add(btnPrev);
-		pnlCalendar.add(btnNext);
-		pnlCalendar.add(stblCalendar);
+		pane.add(cal_Panel);
+		cal_Panel.add(month_Label);
+		cal_Panel.add(backButton);
+		cal_Panel.add(nextButton);
+		cal_Panel.add(stblCalendar);
 		
 		//Set bounds
-		pnlCalendar.setBounds(490, 20, 300, 180);
-		pnlCalendar.setBackground(new Color(255,205,155));
-//		lblMonth.setBounds(140-lblMonth.getPreferredSize().width/2, 15, 20, 5);
-		btnPrev.setBounds(10, 15, 20, 20);
-		btnPrev.setFont(new Font("Trebuchet MS", Font.PLAIN, 8));
-		btnNext.setBounds(270, 15, 20, 20);
-		btnNext.setFont(new Font("Trebuchet MS", Font.PLAIN, 8));
+		cal_Panel.setBounds(490, 20, 300, 180);
+		cal_Panel.setBackground(new Color(255,205,155));
+//		month_Label.setBounds(140-month_Label.getPreferredSize().width/2, 15, 20, 5);
+		backButton.setBounds(10, 15, 20, 20);
+		backButton.setFont(new Font("Trebuchet MS", Font.PLAIN, 8));
+		nextButton.setBounds(270, 15, 20, 20);
+		nextButton.setFont(new Font("Trebuchet MS", Font.PLAIN, 8));
 		stblCalendar.setBounds(0, 35, 300, 200);
 	
 		
@@ -100,20 +102,20 @@ public class CalendarProgram {
 			mtblCalendar.addColumn(headers[i]);
 		}
 		
-		tblCalendar.getParent().setBackground(tblCalendar.getBackground()); //Set background
+		cal_Table.getParent().setBackground(cal_Table.getBackground()); //Set background
 
 		//No resize/reorder
-		tblCalendar.getTableHeader().setResizingAllowed(false);
-		tblCalendar.getTableHeader().setReorderingAllowed(false);
+		cal_Table.getTableHeader().setResizingAllowed(false);
+		cal_Table.getTableHeader().setReorderingAllowed(false);
 
 		//Single cell selection
-		tblCalendar.setColumnSelectionAllowed(true);
-		tblCalendar.setRowSelectionAllowed(true);
-		tblCalendar.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		cal_Table.setColumnSelectionAllowed(true);
+		cal_Table.setRowSelectionAllowed(true);
+		cal_Table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		//Set row/column count
-		tblCalendar.setRowHeight(20);
-		tblCalendar.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		cal_Table.setRowHeight(20);
+		cal_Table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		mtblCalendar.setColumnCount(7);
 		mtblCalendar.setRowCount(6);
 	
@@ -124,16 +126,16 @@ public class CalendarProgram {
 	public static void refreshCalendar(int month, int year){
 		//Variables
 		String[] months =  {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-		int nod, som; //Number Of Days, Start Of Month
+		int numOfDays, startOfMonth; //Number Of Days, Start Of Month
 			
 		//Allow/disallow buttons
-		btnPrev.setEnabled(true);
-		btnNext.setEnabled(true);
-		if (month == 0 && year <= realYear-10){btnPrev.setEnabled(false);} //Too early
-		if (month == 11 && year >= realYear+100){btnNext.setEnabled(false);} //Too late
-		lblMonth.setFont(new Font("Trebuchet MS", Font.BOLD, 16));
-		lblMonth.setText(months[month]); //Refresh the month label (at the top)
-		lblMonth.setBounds(150-lblMonth.getPreferredSize().width/2, 5, 180, 25); //Re-align label with calendar
+		backButton.setEnabled(true);
+		nextButton.setEnabled(true);
+		if (month == 0 && year <= realYear-10){backButton.setEnabled(false);} //Too early
+		if (month == 11 && year >= realYear+100){nextButton.setEnabled(false);} //Too late
+		month_Label.setFont(new Font("Trebuchet MS", Font.BOLD, 16));
+		month_Label.setText(months[month]); //Refresh the month label (at the top)
+		month_Label.setBounds(150-month_Label.getPreferredSize().width/2, 5, 180, 25); //Re-align label with calendar
 		
 		//Clear table
 		for (int i=0; i<6; i++){
@@ -144,18 +146,18 @@ public class CalendarProgram {
 		
 		//Get first day of month and number of days
 		GregorianCalendar cal = new GregorianCalendar(year, month, 1);
-		nod = cal.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);
-		som = cal.get(GregorianCalendar.DAY_OF_WEEK);
+		numOfDays = cal.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);
+		startOfMonth = cal.get(GregorianCalendar.DAY_OF_WEEK);
 		
 		//Draw calendar
-		for (int i=1; i<=nod; i++){
-			int row = new Integer((i+som-2)/7);
-			int column  =  (i+som-2)%7;
+		for (int i=1; i<=numOfDays; i++){
+			int row = new Integer((i+startOfMonth-2)/7);
+			int column  =  (i+startOfMonth-2)%7;
 			mtblCalendar.setValueAt(i, row, column);
 		}
 
 		//Apply renderers
-		tblCalendar.setDefaultRenderer(tblCalendar.getColumnClass(0), new tblCalendarRenderer());
+		cal_Table.setDefaultRenderer(cal_Table.getColumnClass(0), new tblCalendarRenderer());
 	}
 
 	static class tblCalendarRenderer extends DefaultTableCellRenderer{
@@ -180,7 +182,7 @@ public class CalendarProgram {
 		}
 	}
 
-	static class btnPrev_Action implements ActionListener{
+	static class backButton_Action implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			if (currentMonth == 0){ //Back one year
 				currentMonth = 11;
@@ -193,7 +195,7 @@ public class CalendarProgram {
 		}
 	}
 	
-	static class btnNext_Action implements ActionListener{
+	static class nextButton_Action implements ActionListener{
 		public void actionPerformed (ActionEvent e){
 			if (currentMonth == 11){ //Foward one year
 				currentMonth = 0;

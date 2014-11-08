@@ -11,6 +11,7 @@ public enum Magic8Status {
     SEARCH_INPUT_MISMATCH,
     UNDO_INPUT_MISMATCH,
     REDO_INPUT_MISMATCH,
+    CAL_INPUT_MISMATCH,
     
     ADD_FAILURE,
     DELETE_FAILURE,
@@ -23,6 +24,7 @@ public enum Magic8Status {
     SEARCH_FAILURE,
     UNDO_FAILURE,
     REDO_FAILURE,
+    CAL_FAILURE,
     
     ADD_SUCCESS,
     DELETE_SUCCESS,
@@ -34,5 +36,6 @@ public enum Magic8Status {
     OPEN_SUCCESS,
     SEARCH_SUCCESS,
     UNDO_SUCCESS,
-    REDO_SUCCESS
+    REDO_SUCCESS,
+    CAL_SUCCESS
 }
