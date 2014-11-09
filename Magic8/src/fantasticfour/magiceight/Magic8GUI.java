@@ -171,7 +171,7 @@ public class Magic8GUI extends javax.swing.JFrame {
     }
     
     private void helpPopup() {
-    	JOptionPane.showMessageDialog(splitPaneMain, 
+    	JOptionPane.showMessageDialog(Magic8GUI, 
     	        "                                              Help for Magic 8 Software:\n\n"
     	        + "Opening a file in Magic 8:\n"
     	        + "open [filename]\n\n"
@@ -345,6 +345,7 @@ public class Magic8GUI extends javax.swing.JFrame {
 		keywords.add("redo");//Re do function
 		keywords.add("search");//Search function
 		keywords.add("by");//'by' deadline 
+		keywords.add("cal");//Calendar function
 		keywords.add("exit"); //Exit function
 
 		// Without this, cursor always leaves text field
@@ -416,7 +417,7 @@ public class Magic8GUI extends javax.swing.JFrame {
 
     void setFrameIcon(){
 
-        Magic8GUI.setIconImage(Toolkit.getDefaultToolkit().getImage("lib/Magic8Logo.png")); 
+       Magic8GUI.setIconImage(Toolkit.getDefaultToolkit().getImage("lib/Magic8Logo.png")); 
     }
 
     /**

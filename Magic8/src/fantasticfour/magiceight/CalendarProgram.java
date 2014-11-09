@@ -23,12 +23,17 @@ import javax.swing.table.DefaultTableModel;
 //@author A0115693B
 
 public class CalendarProgram extends Component {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	static JLabel month_Label, year_Label;
 	static JButton backButton, nextButton;
 	static JTable cal_Table;
 //	static JComboBox cmbYear;
 	static Container pane;
-	static DefaultTableModel mtblCalendar; //Table model
+	static DefaultTableModel cal_ModelTable; //Table model
 	static JScrollPane stblCalendar; //The scrollpane
 	static JPanel cal_Panel;
 	static int realYear, realMonth, realDay, currentYear, currentMonth;
@@ -51,7 +56,7 @@ public class CalendarProgram extends Component {
 //		cmbYear = new JComboBox();
 		backButton = new JButton ("B");
 		nextButton = new JButton ("N");
-		mtblCalendar = new DefaultTableModel(){
+		cal_ModelTable = new DefaultTableModel(){
 			/**
 			 * 
 			 */
@@ -61,7 +66,7 @@ public class CalendarProgram extends Component {
 				return false;
 				}
 			};
-		cal_Table = new JTable(mtblCalendar);
+		cal_Table = new JTable(cal_ModelTable);
 		stblCalendar = new JScrollPane(cal_Table);
 		cal_Panel = new JPanel(null);
 		
@@ -99,7 +104,7 @@ public class CalendarProgram extends Component {
 		//Add headers
 		String[] headers = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"}; //All headers
 		for (int i=0; i<7; i++){
-			mtblCalendar.addColumn(headers[i]);
+			cal_ModelTable.addColumn(headers[i]);
 		}
 		
 		cal_Table.getParent().setBackground(cal_Table.getBackground()); //Set background
@@ -116,8 +121,8 @@ public class CalendarProgram extends Component {
 		//Set row/column count
 		cal_Table.setRowHeight(20);
 		cal_Table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		mtblCalendar.setColumnCount(7);
-		mtblCalendar.setRowCount(6);
+		cal_ModelTable.setColumnCount(7);
+		cal_ModelTable.setRowCount(6);
 	
 		//Refresh calendar
 		refreshCalendar (realMonth, realYear); //Refresh calendar
@@ -140,7 +145,7 @@ public class CalendarProgram extends Component {
 		//Clear table
 		for (int i=0; i<6; i++){
 			for (int j=0; j<7; j++){
-				mtblCalendar.setValueAt(null, i, j);
+				cal_ModelTable.setValueAt(null, i, j);
 			}
 		}
 		
@@ -153,7 +158,7 @@ public class CalendarProgram extends Component {
 		for (int i=1; i<=numOfDays; i++){
 			int row = new Integer((i+startOfMonth-2)/7);
 			int column  =  (i+startOfMonth-2)%7;
-			mtblCalendar.setValueAt(i, row, column);
+			cal_ModelTable.setValueAt(i, row, column);
 		}
 
 		//Apply renderers
@@ -207,5 +212,4 @@ public class CalendarProgram extends Component {
 			refreshCalendar(currentMonth, currentYear);
 		}
 	}
-	
 }
