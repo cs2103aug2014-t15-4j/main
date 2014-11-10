@@ -39,6 +39,7 @@ public class Magic8GUI extends javax.swing.JFrame {
     private DefaultTableModel model;
     private javax.swing.JPanel tablePanel;
     private javax.swing.JScrollPane tableScrollPane;
+    public ImageIcon icon;
     
     private static String emptyString = "";
     private Magic8Controller controller;
@@ -306,14 +307,10 @@ public class Magic8GUI extends javax.swing.JFrame {
         getContentPane().add(splitPaneMain, java.awt.BorderLayout.CENTER);
 
         pack();
-//        setFrameIcon();
+        icon = new ImageIcon(getClass().getResource("/Magic8Logo.png"));
         launch();
     }                        
-/*
-    void setFrameIcon(){
-    	ImageIcon icon = new ImageIcon(getClass().getResource("/Magic8Logo.png"));
-    }
-  */  
+
     /**
      * @param args the command line arguments
      * @throws Exception 
