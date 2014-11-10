@@ -69,7 +69,7 @@ public class Magic8Parser {
     private final static String[] CLEAR = {CLEAR_FUNCTION};
     
     private final static String DELETE_FUNCTION = "delete";
-    private final static String[] DELETE_ALL = {DELETE_FUNCTION, "all|*"};
+    private final static String[] DELETE_ALL = {DELETE_FUNCTION, "all|\\*"};
     private final static String[] DELETE_INDEX = {DELETE_FUNCTION, NUMBER_GROUP};
     private final static String[] DELETE_TAG = {DELETE_FUNCTION, TAGS};
     
@@ -78,8 +78,8 @@ public class Magic8Parser {
     private final static String[] DISPLAY_TAG = {DISPLAY_FUNCTION, TAG};
     private final static String[] DISPLAY_KWORD = {DISPLAY_FUNCTION, WORD};
     
-    private final static String DONE_FUNCTION = "delete";
-    private final static String[] DONE_ALL = {DONE_FUNCTION, "all|*"};
+    private final static String DONE_FUNCTION = "done";
+    private final static String[] DONE_ALL = {DONE_FUNCTION, "all|\\*"};
     private final static String[] DONE_INDEX = {DONE_FUNCTION, NUMBER_GROUP};
     private final static String[] DONE_TAG = {DONE_FUNCTION, TAGS};
     
