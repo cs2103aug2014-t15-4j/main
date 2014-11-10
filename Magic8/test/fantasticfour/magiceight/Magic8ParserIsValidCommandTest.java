@@ -8,6 +8,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import fantasticfour.magiceight.parser.Magic8Parser;
+
 public class Magic8ParserIsValidCommandTest {
 
     // List of testing for add function
@@ -51,11 +53,11 @@ public class Magic8ParserIsValidCommandTest {
         POSITIVE_ADD_TESTING.add("add homework");
         POSITIVE_ADD_TESTING.add("add buy an egg's");
         POSITIVE_ADD_TESTING.add("add buy an egg");
-        POSITIVE_ADD_TESTING.add("add buy an egg by 20/14/2014");
+        POSITIVE_ADD_TESTING.add("add buy an egg (20/14/2014");
         POSITIVE_ADD_TESTING.add("add buy an egg #grocery #chores");
+        POSITIVE_ADD_TESTING.add("add buy an egg #grocery testing");
 
         NEGATIVE_ADD_TESTING.add("add");
-        NEGATIVE_ADD_TESTING.add("add buy an egg #grocery testing");
     }
 
     @Test
@@ -97,8 +99,8 @@ public class Magic8ParserIsValidCommandTest {
         POSITIVE_DELETE_TESTING.add("delete #abcd");
         POSITIVE_DELETE_TESTING.add("delete *");
         POSITIVE_DELETE_TESTING.add("delete all");
-
-        NEGATIVE_DELETE_TESTING.add("delete");
+        POSITIVE_DELETE_TESTING.add("delete");
+        
         NEGATIVE_DELETE_TESTING.add("delete abcd");
     }
 
@@ -118,8 +120,8 @@ public class Magic8ParserIsValidCommandTest {
     public void displayTestInsertion() {
         POSITIVE_DISPLAY_TESTING.add("display");
         POSITIVE_DISPLAY_TESTING.add("display #grocery");
-
-        NEGATIVE_DISPLAY_TESTING.add("display all");
+        POSITIVE_DISPLAY_TESTING.add("display keyword");
+        POSITIVE_DISPLAY_TESTING.add("display all");
     }
 
     @Test
@@ -193,13 +195,14 @@ public class Magic8ParserIsValidCommandTest {
         }
     }
 
+    /* deprecated
     @Before
     public void searchTestInsertion() {
         POSITIVE_SEARCH_TESTING.add("search homework");
 
         NEGATIVE_SEARCH_TESTING.add("search");
     }
-
+    
     @Test
     public void searchCommandTest() {
         for (String command : POSITIVE_SEARCH_TESTING) {
@@ -211,7 +214,8 @@ public class Magic8ParserIsValidCommandTest {
                     Magic8Parser.isCommandValid(command));
         }
     }
-
+	*/
+    
     @Before
     public void undoTestInsertion() {
         POSITIVE_UNDO_TESTING.add("undo");

@@ -8,12 +8,15 @@ import java.util.regex.Pattern;
 import org.junit.Before;
 import org.junit.Test;
 
+import fantasticfour.magiceight.parser.Magic8Parser;
+
 public class Magic8ParserParseCommandTest {
     private final static String FUNCTION_MISMATCH = "function is not matching";
     private final static String TASK_DESC_MISMATCH = "task description is not matching";
     private final static String TAGS_MISMATCH = "list of tags is not matching";
     private final static String KEYWORDS_MISMATCH = "list of keywords is not matching";
     private final static String IDS_MISMATCH = "list of ids is not matching";
+    private final static String STARTDATE_MISMATCH = "startDate is not matching";
     private final static String DEADLINE_MISMATCH = "deadline is not matching";
     private static String message;
     private static String inputTest;
@@ -76,6 +79,10 @@ public class Magic8ParserParseCommandTest {
             message = DEADLINE_MISMATCH;
             return false;
         }
+        if(!generalComparator(obj1.getStartDate(), obj2.getStartDate())) {
+            message = STARTDATE_MISMATCH;
+            return false;
+        }
         return true;
     }
     
@@ -96,8 +103,9 @@ public class Magic8ParserParseCommandTest {
         testCommandObj.setTags(null);
         testCommandObj.setKeywords(null);
         testCommandObj.setIds(null);
+        testCommandObj.setStartDate(null);
         testCommandObj.setDeadline(null);
-        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest)));
+        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest).getCommandObject()));
         
         // Test 2
         inputTest = "add buy egg #grocery #chores";
@@ -105,12 +113,12 @@ public class Magic8ParserParseCommandTest {
         tagsInputTest.add("grocery");
         tagsInputTest.add("chores");
         testCommandObj.setFunction("add");
-        testCommandObj.setTaskDescription("buy egg");
+        testCommandObj.setTaskDescription("buy egg ");
         testCommandObj.setTags(tagsInputTest);
         testCommandObj.setKeywords(null);
         testCommandObj.setIds(null);
         testCommandObj.setDeadline(null);
-        assertTrue("Test 2: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest)));
+        assertTrue("Test 2: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest).getCommandObject()));
     }
     
     @Test
@@ -123,7 +131,7 @@ public class Magic8ParserParseCommandTest {
         testCommandObj.setKeywords(null);
         testCommandObj.setIds(null);
         testCommandObj.setDeadline(null);
-        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest)));
+        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest).getCommandObject()));
     }
     
     @Test
@@ -141,7 +149,7 @@ public class Magic8ParserParseCommandTest {
         testCommandObj.setKeywords(null);
         testCommandObj.setIds(idsInputTest);
         testCommandObj.setDeadline(null);
-        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest)));
+        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest).getCommandObject()));
         
         // Test 2
         inputTest = "delete 1 to 3";
@@ -155,7 +163,7 @@ public class Magic8ParserParseCommandTest {
         testCommandObj.setKeywords(null);
         testCommandObj.setIds(idsInputTest);
         testCommandObj.setDeadline(null);
-        assertTrue("Test 2: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest)));
+        assertTrue("Test 2: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest).getCommandObject()));
         
         // Test 3
         inputTest = "delete #abcd";
@@ -167,7 +175,7 @@ public class Magic8ParserParseCommandTest {
         testCommandObj.setKeywords(null);
         testCommandObj.setIds(null);
         testCommandObj.setDeadline(null);
-        assertTrue("Test 3: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest)));
+        assertTrue("Test 3: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest).getCommandObject()));
         
         // Test 4
         inputTest = "delete *";
@@ -177,7 +185,7 @@ public class Magic8ParserParseCommandTest {
         testCommandObj.setKeywords(null);
         testCommandObj.setIds(null);
         testCommandObj.setDeadline(null);
-        assertTrue("Test 4: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest)));
+        assertTrue("Test 4: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest).getCommandObject()));
     }
     
     @Test
@@ -190,7 +198,7 @@ public class Magic8ParserParseCommandTest {
         testCommandObj.setKeywords(null);
         testCommandObj.setIds(null);
         testCommandObj.setDeadline(null);
-        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest)));
+        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest).getCommandObject()));
         
         // Test 2
         inputTest = "display #grocery #abcd";
@@ -203,7 +211,7 @@ public class Magic8ParserParseCommandTest {
         testCommandObj.setKeywords(null);
         testCommandObj.setIds(null);
         testCommandObj.setDeadline(null);
-        assertTrue("Test 2: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest)));
+        assertTrue("Test 2: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest).getCommandObject()));
     }
     @Test
     public void editCommandTest() {
@@ -217,7 +225,7 @@ public class Magic8ParserParseCommandTest {
         testCommandObj.setKeywords(null);
         testCommandObj.setIds(idsInputTest);
         testCommandObj.setDeadline(null);
-        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest)));
+        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest).getCommandObject()));
     }
     
     @Test
@@ -230,7 +238,7 @@ public class Magic8ParserParseCommandTest {
         testCommandObj.setKeywords(null);
         testCommandObj.setIds(null);
         testCommandObj.setDeadline(null);
-        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest)));
+        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest).getCommandObject()));
     }
     
     @Test
@@ -243,7 +251,7 @@ public class Magic8ParserParseCommandTest {
         testCommandObj.setKeywords(null);
         testCommandObj.setIds(null);
         testCommandObj.setDeadline(null);
-        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest)));
+        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest).getCommandObject()));
     }
     
     @Test
@@ -258,7 +266,7 @@ public class Magic8ParserParseCommandTest {
         testCommandObj.setKeywords(keywordsInputTest);
         testCommandObj.setIds(null);
         testCommandObj.setDeadline(null);
-        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest)));
+        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest).getCommandObject()));
     }
     
     @Test
@@ -271,6 +279,6 @@ public class Magic8ParserParseCommandTest {
         testCommandObj.setKeywords(null);
         testCommandObj.setIds(null);
         testCommandObj.setDeadline(null);
-        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest)));
+        assertTrue("Test 1: " + message, parseComparator(testCommandObj, Magic8Parser.parseCommand(inputTest).getCommandObject()));
     }
 }

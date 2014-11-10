@@ -39,12 +39,12 @@ public class Magic8Parser {
     }
     
     private final static String LETTER = "[^#][\\p{Alnum}\\p{Punct}]";
-    private final static String WORD = LETTER + "+";
+    private final static String WORD = "(" + LETTER + "+)";
     private final static String TAG = "#" + WORD;
     private final static String TAGS = "(" + TAG + ")" + "*";
     private final static String SENTENCE = "(" + WORD + ")" + "+";
     private final static String NUMBER = "\\d+";
-    private final static String NUMBER_GROUP = "[" + NUMBER + "\\s,-]+"; 
+    private final static String NUMBER_GROUP = "[" + NUMBER + "\\s,-[to]]+"; 
     
     
     private static String generateRegex(String[] strArr) {
@@ -62,7 +62,7 @@ public class Magic8Parser {
     private final static String[] CLEAR = {CLEAR_FUNCTION};
     
     private final static String DELETE_FUNCTION = "delete";
-    private final static String[] DELETE_ALL = {DELETE_FUNCTION, "all|\\*"};
+    private final static String[] DELETE_ALL = {DELETE_FUNCTION, "(all|\\*)"};
     private final static String[] DELETE_INDEX = {DELETE_FUNCTION, NUMBER_GROUP};
     private final static String[] DELETE_TAG = {DELETE_FUNCTION, TAGS};
     
@@ -72,7 +72,7 @@ public class Magic8Parser {
     private final static String[] DISPLAY_KWORD = {DISPLAY_FUNCTION, WORD};
     
     private final static String DONE_FUNCTION = "done";
-    private final static String[] DONE_ALL = {DONE_FUNCTION, "all|\\*"};
+    private final static String[] DONE_ALL = {DONE_FUNCTION, "(all|\\*)"};
     private final static String[] DONE_INDEX = {DONE_FUNCTION, NUMBER_GROUP};
     private final static String[] DONE_TAG = {DONE_FUNCTION, TAGS};
     
