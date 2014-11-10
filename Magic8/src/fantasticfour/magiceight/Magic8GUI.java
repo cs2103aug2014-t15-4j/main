@@ -1,19 +1,13 @@
 package fantasticfour.magiceight;
 
-import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Image;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowStateListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -71,6 +64,7 @@ public class Magic8GUI extends javax.swing.JFrame {
     private static String MESSAGE_WELCOME = "Welcome to Magic 8!\nFor assisstance, "
             + "type 'help'  or '-h' and press ENTER.\n\nPlease "
             + "enter the specified file name to continue.";
+    
     public static final int NORMAL = 0;
     public static final int ICONIFIED = 1;
     public static final int MAXIMIZED_HORIZ = 2;
@@ -112,7 +106,7 @@ public class Magic8GUI extends javax.swing.JFrame {
                 } else if ((taskManager == null)&&(inputStr.equalsIgnoreCase("exit"))) {
                     System.exit(0);
                 } else if ((inputStr.equalsIgnoreCase("help")||(inputStr.equalsIgnoreCase("-h")))){
-                	helpPopup();
+//                	helpPopup();
                 } else if ((inputStr.equalsIgnoreCase("cal")||(inputStr.equalsIgnoreCase("-c")))){
                 } else {
                     try {
@@ -204,11 +198,9 @@ public class Magic8GUI extends javax.swing.JFrame {
     	        JOptionPane.PLAIN_MESSAGE,
     	        new ImageIcon(Toolkit.getDefaultToolkit().getImage("lib/Magic8Logo2.png")));
     }
-    
+
     public class ClockPane extends JPanel {
-	        /**
-	     * 
-	     */
+	  
 	    private static final long serialVersionUID = 1L;
 	    
 	    private JLabel clock;
@@ -239,8 +231,8 @@ public class Magic8GUI extends javax.swing.JFrame {
 	        clock.setText(DateFormat.getDateTimeInstance().format(new Date()));
 	    }
 	}
+ 
     
-    @SuppressWarnings("unchecked")                       
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
@@ -273,7 +265,7 @@ public class Magic8GUI extends javax.swing.JFrame {
         outputField = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Magic8");
+        setTitle(NAME_TITLE);
         setPreferredSize(new java.awt.Dimension(1000, 700));
 
         splitPaneMain.setBackground(new java.awt.Color(255, 255, 255));
@@ -337,6 +329,7 @@ public class Magic8GUI extends javax.swing.JFrame {
 
         commandField.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
         commandPanel.add(commandField, java.awt.BorderLayout.CENTER);
+        
         keywords.add("add"); //Add function
 		keywords.add("display");//Display function
 		keywords.add("delete");//Delete function
@@ -413,13 +406,15 @@ public class Magic8GUI extends javax.swing.JFrame {
         getContentPane().add(splitPaneMain, java.awt.BorderLayout.CENTER);
 
         pack();
+        setFrameIcon();
+ //       setVisible(true);
     }                        
 
     void setFrameIcon(){
 
-       Magic8GUI.setIconImage(Toolkit.getDefaultToolkit().getImage("lib/Magic8Logo.png")); 
+       setIconImage(Toolkit.getDefaultToolkit().getImage("lib/Magic8Logo.png")); 
     }
-
+    
     /**
      * @param args the command line arguments
      * @throws Exception 
