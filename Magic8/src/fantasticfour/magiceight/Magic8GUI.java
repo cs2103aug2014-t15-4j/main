@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -89,10 +90,51 @@ public class Magic8GUI extends javax.swing.JFrame {
                         e.printStackTrace();
                     }
                 }
+                updateTable();
                 outputField.setText(confirmText);
                 commandField.setText(emptyString);
             }
         });
+    }
+    
+    public void updateTable() {
+        if (model.getRowCount() > 0) {
+            for (int i = model.getRowCount() - 1; i > -1; i--) {
+                model.removeRow(i);
+            }
+        }
+        
+        for(Integer index = 0; index < tasks.size(); index++) {
+            String id = "";
+            String desc = "";
+            String startTime = "";
+            String endTime = "";
+            String tags = "";
+            Magic8Task task = tasks.get(index);
+            Integer i = index+1;
+            id = (i).toString();
+            desc = task.getDesc();
+            if(task.getTags().size() > 0) {
+                for(String tag : task.getTags()) {
+                    tags += tag + " ";
+                }
+            } else {
+                tags = "-";
+            }
+            
+            startTime = "-";
+            endTime = "-";
+            
+            if (task.getStartTime() != null){
+                startTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:SS").format(task.getStartTime().getTime());
+            }
+            
+            if (task.getEndTime() != null){
+                endTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:SS").format(task.getEndTime().getTime());
+            }
+            
+            model.addRow(new Object[]{id, desc, startTime, endTime, tags});
+        }
     }
   
     private void help() {
@@ -172,27 +214,28 @@ public class Magic8GUI extends javax.swing.JFrame {
         tablePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tasks", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 18))); // NOI18N
         tablePanel.setLayout(new java.awt.BorderLayout());
         
-        table.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        model = new javax.swing.table.DefaultTableModel(
+                new Object [][] {
 
-            },
-            new String [] {
-                "#", "Description", "Start", "End", "Tags"
-            }
-        ) {
-            /**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-			
-			boolean[] canEdit = new boolean [] {
-                false, false, false, true, false
+                },
+                new String [] {
+                    "#", "Description", "Start", "End", "Tags"
+                }
+            ) {
+                /**
+                 * 
+                 */
+                private static final long serialVersionUID = 1L;
+                
+                boolean[] canEdit = new boolean [] {
+                    false, false, false, true, false
+                };
+
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit [columnIndex];
+                }
             };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        table.setModel(model);
         table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         table.setFocusable(false);
         table.setRowHeight(50);
