@@ -79,7 +79,10 @@ public class Magic8GUI extends javax.swing.JFrame {
                 } else if ((taskManager == null)&&(inputStr.equalsIgnoreCase("exit"))) {
                     System.exit(0);
                 } else if ((inputStr.equalsIgnoreCase("help")||(inputStr.equalsIgnoreCase("-h")))){
-                	help();
+                 	confirmText += help();
+                    outputField.setText(confirmText);
+                    commandField.setText(emptyString);
+                    return;
                 } else {
                     try {
                         controller = new Magic8Controller(inputStr, taskManager);
@@ -136,8 +139,8 @@ public class Magic8GUI extends javax.swing.JFrame {
         }
     }
   
-    private void help() {
-    outputField.setText(
+    private String help() {
+    return 
     	        "                                              Help for Magic 8 Software:\n\n"
     	        + "Opening a file in Magic 8:\n"
     	        + "open [filename]\n\n"
@@ -165,7 +168,7 @@ public class Magic8GUI extends javax.swing.JFrame {
     	        + "redo\n\n"
     	        + "Clearing all tasks off the display:\n"
     	        + "clear\n\n"
-    	        + "Press [ESC] key to exit this help sheet");
+    	        + "Press [ESC] key to exit this help sheet";
     }
 
     private void initComponents() {
