@@ -44,18 +44,28 @@ public class DisplayCommand extends Command {
     */
     
     public void execute() throws IOException {
+    	if(super.getKeywords() == null && super.getTags() == null) {
+    		ArrayList<Magic8Task> tasks = super.getTaskManager().getAllTasks();
+            this.setTask(tasks);
+            this.setStatus(Magic8Status.DISPLAY_SUCCESS);
+            return;
+    	}
         if(super.getKeywords() != null) {
             if (super.getKeywords().get(0) == "done") {
-                System.out.println("yow");
                 ArrayList<Magic8Task> tasks = super.getTaskManager().getAllTasks(true);
                 this.setTask(tasks);
                 this.setStatus(Magic8Status.DISPLAY_SUCCESS);
                 return;
-            } else {
+            } else if (super.getKeywords().get(0) == "undone") {
                 ArrayList<Magic8Task> tasks = super.getTaskManager().getAllTasks(false);
                 this.setTask(tasks);
                 this.setStatus(Magic8Status.DISPLAY_SUCCESS);
                 return;
+            } else {
+            	ArrayList<Magic8Task> tasks = super.getTaskManager().getTasksWithString(super.getKeywords().get(0));
+            	this.setTask(tasks);
+            	this.setStatus(Magic8Status.DISPLAY_SUCCESS);
+            	return;
             }
         }
         if(super.getTags() != null) {
