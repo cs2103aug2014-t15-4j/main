@@ -52,8 +52,9 @@ public class Magic8Controller {
     public Magic8Status inputStatus;
     
     public Magic8Controller(String input, Magic8TaskList tm) throws IOException {
-        Magic8CommandObject obj = Magic8Parser.parseCommand(input).getCommandObject();
-        this.inputStatus = Magic8Parser.parseCommand(input).getStatus();
+    	Magic8Parser.ReturnValues parsedValue = Magic8Parser.parseCommand(input);
+        Magic8CommandObject obj = parsedValue.getCommandObject();
+        this.inputStatus = parsedValue.getStatus();
         
         if(!Arrays.asList(INPUT_FAILURE).contains(inputStatus)) {
 	        switch(obj.getFunction()) {

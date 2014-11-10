@@ -104,11 +104,11 @@ public class Command implements ICommand {
     }
     
     public Calendar getStartDate() {
-        return deadline;
+        return startDate;
     }
 
-    public void setStartDate(Calendar deadline) {
-        this.deadline = deadline;
+    public void setStartDate(Calendar startDate) {
+        this.startDate = startDate;
     }
     
     public Command(Magic8CommandObject obj, Magic8TaskList tm) {
@@ -118,6 +118,7 @@ public class Command implements ICommand {
         this.keywords = obj.getKeywords() == null ? null : new ArrayList<String>(obj.getKeywords());
         this.ids = obj.getIds() == null ? null : new ArrayList<Integer>(obj.getIds());
         this.deadline = obj.getDeadline();
+        this.startDate = obj.getStartDate();
         this.taskManager = tm;
     }
     

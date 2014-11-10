@@ -35,7 +35,7 @@ public class DateUtil {
     	cal.set(Calendar.MINUTE, 0);
     	cal.set(Calendar.SECOND, 0);
     	
-    	for(String str : dates.split(",")) {       
+    	for(String str : dates.split(",")) {
     		if (str.equalsIgnoreCase("tomorrow")) {
         		cal.add(Calendar.DATE, 1);
         		break;
@@ -46,41 +46,41 @@ public class DateUtil {
         		break;
         	}
         	
-    		for(SimpleDateFormat df : DATE_FORMAT) {
-    			try {
-    				cDate = Calendar.getInstance();
-    				cDate.setTime(df.parse(str));
-    				break;
-    			} catch (ParseException e) {
-    				cDate = null;
-    			}    			
+    		if(cDate == null) {
+	    		for(SimpleDateFormat df : DATE_FORMAT) {
+	    			try {
+	    				cDate = Calendar.getInstance();
+	    				cDate.setTime(df.parse(str));
+	    				break;
+	    			} catch (ParseException e) {
+	    				cDate = null;
+	    			}    			
+	    		}
     		}
     		
-    		for(SimpleDateFormat tf : TIME_FORMAT) {
-    			try {
-    				cTime = Calendar.getInstance();
-    				cTime.setTime(tf.parse(str));
-    				break;
-    			} catch (ParseException e) {
-    				cTime = null;
-    			}
+    		if(cTime == null) {
+	    		for(SimpleDateFormat tf : TIME_FORMAT) {
+	    			try {
+	    				cTime = Calendar.getInstance();
+	    				cTime.setTime(tf.parse(str));
+	    				break;
+	    			} catch (ParseException e) {
+	    				cTime = null;
+	    			}
+	    		}
     		}
     	}
-    	
-    	cal.add(Calendar.DATE, 1);
     	
     	if(cDate != null) {
     		if(cDate.get(Calendar.YEAR) != 1970)
     			cal.set(Calendar.YEAR, cDate.get(Calendar.YEAR));
     		if(cDate.get(Calendar.MONTH) != 0)
     			cal.set(Calendar.MONTH, cDate.get(Calendar.MONTH));
-    		cal.set(Calendar.DAY_OF_MONTH, cDate.get(Calendar.DAY_OF_MONTH));
+    		if(cDate.get(Calendar.DAY_OF_WEEK) != cal.get(Calendar.DAY_OF_WEEK)) 
+    			cal.add(Calendar.DAY_OF_YEAR, (cDate.get(Calendar.DAY_OF_WEEK) - cal.get(Calendar.DAY_OF_WEEK)) % 7);
     	}
-    	
+
     	if(cTime != null) {
-    		if(endTime) {
-    			cal.add(Calendar.DATE, -1);
-    		}
     		cal.set(Calendar.HOUR_OF_DAY,  cTime.get(Calendar.HOUR_OF_DAY));
     		cal.set(Calendar.MINUTE, cTime.get(Calendar.MINUTE));
     		cal.set(Calendar.SECOND, cTime.get(Calendar.SECOND));
