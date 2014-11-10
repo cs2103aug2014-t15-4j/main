@@ -17,6 +17,7 @@ public class Command implements ICommand {
     private ArrayList<String> keywords;
     private ArrayList<Integer> ids;
     private Calendar deadline;
+    private Calendar startDate;
     
     private ArrayList<Magic8Task> task;
 	private String infoMessage;
@@ -99,6 +100,14 @@ public class Command implements ICommand {
     }
 
     public void setDeadline(Calendar deadline) {
+        this.deadline = deadline;
+    }
+    
+    public Calendar getStartDate() {
+        return deadline;
+    }
+
+    public void setStartDate(Calendar deadline) {
         this.deadline = deadline;
     }
     

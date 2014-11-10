@@ -27,6 +27,7 @@ public class EditCommand extends Command {
                 tags = new HashSet<String>(super.getTags());
             }        
             task.setTags(tags);
+            task.setStartTime(super.getStartDate());
             task.setEndTime(super.getDeadline());
             if(super.getTaskManager().updateTask(task)) {
             	this.setStatus(Magic8Status.EDIT_SUCCESS);

@@ -23,7 +23,7 @@ public class AddCommand extends Command {
              tags = new HashSet<String>(super.getTags());
         }        
         task = new Magic8Task(super.getTaskDescription(),
-                              new GregorianCalendar(),
+                              super.getStartDate(),
                               super.getDeadline(), 
                               tags);    
         if(super.getTaskManager().addTask(task)) {
