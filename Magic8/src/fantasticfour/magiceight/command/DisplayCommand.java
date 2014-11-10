@@ -51,12 +51,13 @@ public class DisplayCommand extends Command {
             return;
     	}
         if(super.getKeywords() != null) {
-            if (super.getKeywords().get(0) == "done") {
+            if (super.getKeywords().get(0).equals("done")) {
+            	System.out.println("HERE LLOLOL");
                 ArrayList<Magic8Task> tasks = super.getTaskManager().getAllTasks(true);
                 this.setTask(tasks);
                 this.setStatus(Magic8Status.DISPLAY_SUCCESS);
                 return;
-            } else if (super.getKeywords().get(0) == "undone") {
+            } else if (super.getKeywords().get(0).equals("undone")) {
                 ArrayList<Magic8Task> tasks = super.getTaskManager().getAllTasks(false);
                 this.setTask(tasks);
                 this.setStatus(Magic8Status.DISPLAY_SUCCESS);
