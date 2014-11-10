@@ -52,7 +52,6 @@ public class DisplayCommand extends Command {
     	}
         if(super.getKeywords() != null) {
             if (super.getKeywords().get(0).equals("done")) {
-            	System.out.println("HERE LLOLOL");
                 ArrayList<Magic8Task> tasks = super.getTaskManager().getAllTasks(true);
                 this.setTask(tasks);
                 this.setStatus(Magic8Status.DISPLAY_SUCCESS);
