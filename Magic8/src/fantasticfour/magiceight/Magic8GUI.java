@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
@@ -170,8 +171,6 @@ public class Magic8GUI extends javax.swing.JFrame {
         tablePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tasks", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 18))); // NOI18N
         tablePanel.setLayout(new java.awt.BorderLayout());
         
-        model = new DefaultTableModel();
-        table = new JTable(model);
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -231,6 +230,13 @@ public class Magic8GUI extends javax.swing.JFrame {
 		keywords.add("search");//Search function
 		keywords.add("by");//'by' deadline 
 		keywords.add("exit"); //Exit function
+		keywords.add("help");
+		keywords.add("meeting");
+		keywords.add("finish");
+		keywords.add("complete");
+		keywords.add("homework");
+		keywords.add(".txt");
+		keywords.add("done");
 
 		// Without this, cursor always leaves text field
 		commandField.setFocusTraversalKeysEnabled(false);
@@ -300,15 +306,14 @@ public class Magic8GUI extends javax.swing.JFrame {
         getContentPane().add(splitPaneMain, java.awt.BorderLayout.CENTER);
 
         pack();
-        setFrameIcon();
+//        setFrameIcon();
         launch();
     }                        
-
+/*
     void setFrameIcon(){
-
-       setIconImage(Toolkit.getDefaultToolkit().getImage("lib/Magic8Logo.png")); 
+    	ImageIcon icon = new ImageIcon(getClass().getResource("/Magic8Logo.png"));
     }
-    
+  */  
     /**
      * @param args the command line arguments
      * @throws Exception 
