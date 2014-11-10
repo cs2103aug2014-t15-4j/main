@@ -38,13 +38,9 @@ public class DateUtil {
     	for(String str : dates.split(",")) {
     		if (str.equalsIgnoreCase("tomorrow")) {
         		cal.add(Calendar.DATE, 1);
-        		break;
         	} else if(str.equalsIgnoreCase("yesterday")) {
         		cal.add(Calendar.DATE, -1);
-        		break;
-        	} else if(str.equalsIgnoreCase("today")) {
-        		break;
-        	}
+        	} else if(str.equalsIgnoreCase("today")) {}
         	
     		if(cDate == null) {
 	    		for(SimpleDateFormat df : DATE_FORMAT) {
