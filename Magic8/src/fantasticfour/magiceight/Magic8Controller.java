@@ -33,7 +33,6 @@ public class Magic8Controller {
     private static final String REDO_FUNCTION = "redo";
     private static final String SEARCH_FUNCTION = "search";
     private static final String UNDO_FUNCTION = "undo";
-    private static final String CAL_FUNCTION = "cal";
     
     private static final Magic8Status[] INPUT_FAILURE = {
     	Magic8Status.ADD_INPUT_MISMATCH,
@@ -48,7 +47,6 @@ public class Magic8Controller {
     	Magic8Status.SEARCH_INPUT_MISMATCH,
     	Magic8Status.UNDO_INPUT_MISMATCH,
     	Magic8Status.REDO_INPUT_MISMATCH,
-    	Magic8Status.CAL_INPUT_MISMATCH
     };
     
     public Magic8Status inputStatus;
@@ -94,9 +92,6 @@ public class Magic8Controller {
 	                break;
 	            case UNDO_FUNCTION:
 	                command = new UndoCommand(obj, tm);
-	                break;
-	            case CAL_FUNCTION:
-	                command = new HelpCommand(obj, tm);
 	                break;
 	        }
         }

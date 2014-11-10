@@ -28,7 +28,6 @@ import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -37,7 +36,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JWindow;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
 import javax.swing.UIManager;
@@ -45,37 +43,27 @@ import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultCaret;
 
-import fantasticfour.magiceight.AutoComplete.Autocomplete;
-
 public class Magic8UI {
     private final static Integer WINDOW_HEIGHT = 600;
     private final static Integer WINDOW_WIDTH = 820;
-    private final static String[][] EMPTY_ROW = {{"","","","",""}};
-    private final static Integer TEXT_PANEL_LENGTH = 120;
     
     private Magic8Controller controller;
     private ArrayList<Magic8Task> tasks;
 
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     private static Magic8TaskList taskManager = null;
-//  private static String command; 
     private static String filename;
     private static JTextField commandLine; 
     private JTable table;
     private DefaultTableModel model; 
     static JTextArea taskListView; 
     static JTextArea confirmDialog; 
+    static JTextArea upcomingTasks; 
     static JFrame frameMagic8UI;
     private JPanel colorPanel1;
-    private JScrollPane scrollPane;
-    static JLabel lblMonth, lblYear;
-    static JButton btnPrev, btnNext;
-    static JTable tblCalendar;
-    static JFrame frmMain;
-    static DefaultTableModel mtblCalendar; //Table model
-    static JScrollPane stblCalendar; //The scrollpane   
-    static JPanel pnlCalendar, calPanel; //The panel
-    static int realDay, realMonth, realYear, currentMonth, currentYear;
+    private JScrollPane scrollPane, scrollPane_1;
+//    private SplashScreen splashscreen;
+    
     TrayIcon trayIcon;
     SystemTray tray;
 
@@ -101,33 +89,7 @@ public class Magic8UI {
         initialize();
         launch();
     }
-    class SplashScreen extends JWindow {
-    	  private int duration;
-
-    	  public SplashScreen(int d) {
-    	    duration = d;
-
-    	    JPanel content = (JPanel) getContentPane();
-    	    content.setBackground(Color.white);
-    	    int width = 450;
-    	    int height = 115;
-    	    Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-    	    int x = (screen.width - width) / 2;
-    	    int y = (screen.height - height) / 2;
-    	    setBounds(x, y, width, height);
-
-    	    content.add(new JLabel("asdf"), BorderLayout.CENTER);
-    	    Color oraRed = new Color(156, 20, 20, 255);
-    	    content.setBorder(BorderFactory.createLineBorder(oraRed, 10));
-
-    	    setVisible(true);
-    	    try {
-    	      Thread.sleep(duration);
-    	    } catch (Exception e) {
-    	    }
-    	    setVisible(false);
-    	  }
-    }
+    
     public void updateTable() {
         if (model.getRowCount() > 0) {
             for (int i = model.getRowCount() - 1; i > -1; i--) {
@@ -187,8 +149,6 @@ public class Magic8UI {
                     System.exit(0);
                 } else if ((inputStr.equalsIgnoreCase("help")||(inputStr.equalsIgnoreCase("-h")))){
                 	helpPopup();
-                } else if ((inputStr.equalsIgnoreCase("cal")||(inputStr.equalsIgnoreCase("-c")))){
-                	CalendarProgram.frameSetUp(frameMagic8UI);
                 } else {
                     try {
                         controller = new Magic8Controller(inputStr, taskManager);
@@ -212,7 +172,7 @@ public class Magic8UI {
             initSystemTray();
         }
         
-        //Activate Jfram windowstate listener for hiding programe into system tray
+        //Activate JFrame WindowStateListener for hiding program into system tray
         activateWindowStateListener();
         
         frameMagic8UI.pack();
@@ -229,6 +189,7 @@ public class Magic8UI {
          * 
          */
         private static final long serialVersionUID = 1L;
+        
         private JLabel clock;
 
         public ClockPane() {
@@ -296,10 +257,12 @@ public class Magic8UI {
 
         // Small Window
         JPanel confirmDialogPanel = new JPanel();
-        confirmDialogPanel.setBounds(490, 220, 300, 200);
+        confirmDialogPanel.setBounds(490, 347, 300, 100);
         frameMagic8UI.getContentPane().add(confirmDialogPanel);
-        confirmDialogPanel.setBackground(new Color(255,205,155));
+        confirmDialogPanel.setBackground(new Color(255,255,255));
         confirmDialogPanel.setLayout(null);
+        confirmDialogPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Status", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, 
+        		javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 18)));
         
         // Confirm Area for giving feedback to the user
         confirmDialog = new JTextArea();
@@ -308,13 +271,13 @@ public class Magic8UI {
         confirmDialog.setWrapStyleWord(true);
         confirmDialog.setColumns(10);
         confirmDialog.setRows(15);
-        confirmDialog.setBounds(0, 0, 300, 300);
+        confirmDialog.setBounds(0, 0, 300, 200);
         confirmDialog.setForeground(Color.DARK_GRAY);
         confirmDialog.setBackground(Color.WHITE);
         confirmDialog.setFont(new Font("Trebuchet MS", Font.BOLD, 12));
         confirmDialog.setBorder(BorderFactory.createCompoundBorder(
                 confirmDialog.getBorder(), 
-                BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+                BorderFactory.createEmptyBorder(3, 3, 3, 3)));
         confirmDialogPanel.add(confirmDialog);
         confirmDialog.setText(MESSAGE_WELCOME);
 
@@ -323,10 +286,12 @@ public class Magic8UI {
         inputPanel.setBounds(0, 490, 805, 75);
         frameMagic8UI.getContentPane().add(inputPanel);
         inputPanel.setBackground(new Color(255,151,4));
+        inputPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Command", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, 
+        			javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 18)));
         
         // Input Field
         commandLine = new JTextField();
-        inputPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 20));
+        inputPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 3));
         commandLine.putClientProperty("JTextField.variant", "search");
         commandLine.setFont(new Font("Trebuchet MS", Font.PLAIN, 14));
         commandLine.setForeground(new Color(0, 0, 0));
@@ -347,7 +312,6 @@ public class Magic8UI {
 
 		// Without this, cursor always leaves text field
 		commandLine.setFocusTraversalKeysEnabled(false);
-//		Autocomplete autoComplete = new Autocomplete();
 		AutoComplete auto = new AutoComplete();
 		AutoComplete.Autocomplete autoComplete = auto.new Autocomplete(commandLine, keywords);
 		
@@ -364,7 +328,7 @@ public class Magic8UI {
 
         // Clock Panel
         JPanel clockPanel = new JPanel();
-        clockPanel.setBounds(WINDOW_WIDTH-200, 0, 180, 45);
+        clockPanel.setBounds(WINDOW_WIDTH-200, 0, 180, 50);
         frameMagic8UI.getContentPane().add(clockPanel);
         clockPanel.setOpaque(false);
         clockPanel.setBackground(new Color(255,205,155,0));
@@ -372,6 +336,37 @@ public class Magic8UI {
         frameMagic8UI.add(new ClockPane());
         frameMagic8UI.setLocationRelativeTo(null);
         clockPanel.add(new ClockPane());
+        
+        //Upcoming Tasks window
+        JPanel upcomingTasksPanel = new JPanel();
+        upcomingTasksPanel.setBounds(490, 30, 300, 300);
+        frameMagic8UI.getContentPane().add(upcomingTasksPanel);
+        upcomingTasksPanel.setBackground(new Color(255,205,155));
+        upcomingTasksPanel.setLayout(null);
+        upcomingTasksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Upcoming", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, 
+        			javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 18)));
+        
+        // Upcoming Tasks Text Area
+        upcomingTasks = new JTextArea();
+        upcomingTasks.setEditable(false);
+        upcomingTasks.setLineWrap(true);
+        upcomingTasks.setWrapStyleWord(true);
+        upcomingTasks.setColumns(10);
+        upcomingTasks.setRows(15);
+        upcomingTasks.setBounds(0, 0, 100, 100);
+        upcomingTasks.setForeground(Color.DARK_GRAY);
+        upcomingTasks.setBackground(Color.WHITE);
+        upcomingTasks.setFont(new Font("Trebuchet MS", Font.BOLD, 12));
+        upcomingTasks.setBorder(BorderFactory.createCompoundBorder(
+                upcomingTasks.getBorder(), 
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+        confirmDialogPanel.add(upcomingTasks);
+        
+        scrollPane_1 = new JScrollPane(upcomingTasks);
+        upcomingTasksPanel.add(scrollPane_1, BorderLayout.CENTER);
+        upcomingTasksPanel.revalidate();
+        scrollPane_1.setMinimumSize(new Dimension(100,100));
+        
         /*
         // Calendar 
         CalendarProgram.frameSetUp(frameMagic8UI);
@@ -526,8 +521,6 @@ public class Magic8UI {
         Magic8UI test = new Magic8UI();
         try {
             magic8UIInit();
-     //       SplashScreen splash = new SplashScreen();
-    	//	SplashScreen.SplashScreen splashscreen = splash.new SplashScreen(10000);
         } catch (IOException e) {
             System.out.println(e.toString());
             System.exit(0);

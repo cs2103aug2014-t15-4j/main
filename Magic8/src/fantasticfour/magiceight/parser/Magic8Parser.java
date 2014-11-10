@@ -1,17 +1,10 @@
 package fantasticfour.magiceight.parser;
 
-import fantasticfour.magiceight.Magic8CommandObject;
-import fantasticfour.magiceight.Magic8Status;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.regex.Pattern;
 
 import fantasticfour.magiceight.Magic8CommandObject;
+import fantasticfour.magiceight.Magic8Status;
 
 public class Magic8Parser {
     private enum Command_t {
@@ -99,13 +92,15 @@ public class Magic8Parser {
     private final static String[] UNDO = {UNDO_FUNCTION};
     
     private final static String REDO_FUNCTION = "redo";
-    private final static String[] REDO = {REDO_FUNCTION};
-    
-    private final static String BLOCK_FUNCTION = "block";
-    
+    private final static String[] REDO = {REDO_FUNCTION};    
     
     private static ArrayList<String> REGEX_GROUP = new ArrayList<String>() {
-        {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		{
             add(generateRegex(ADD));
             add(generateRegex(CLEAR));
             add(generateRegex(DELETE_ALL));

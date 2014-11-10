@@ -1,8 +1,5 @@
 package fantasticfour.magiceight;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
@@ -11,20 +8,11 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
-import javax.swing.Timer;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultCaret;
 
@@ -58,23 +46,11 @@ public class Magic8GUI extends javax.swing.JFrame {
     private static final String COMMIT_ACTION = "commit";
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     private static Magic8TaskList taskManager = null;
-    private static String filename;
     
     private static String NAME_TITLE = "Magic 8";
     private static String MESSAGE_WELCOME = "Welcome to Magic 8!\nFor assisstance, "
             + "type 'help'  or '-h' and press ENTER.\n\nPlease "
             + "enter the specified file name to continue.";
-    
-    public static final int NORMAL = 0;
-    public static final int ICONIFIED = 1;
-    public static final int MAXIMIZED_HORIZ = 2;
-    public static final int MAXIMIZED_VERT = 4;
-    public static final int MAXIMIZED_BOTH = 6;
-    private static int timerDelay = 500;
-    private static int timerInitialDelay = 0;
-    
-    TrayIcon trayIcon;
-    SystemTray tray;
     
     /**
      * Creates new form Magic8UI
@@ -83,17 +59,12 @@ public class Magic8GUI extends javax.swing.JFrame {
         initComponents();
     }
     
-    private static void magic8GUIInit() throws IOException, ParseException {        
-        filename = br.readLine();        
-        taskManager = new Magic8TaskList(filename);
-    }
-    
     public void launch() {
         commandField.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent arg){
                 String confirmText = emptyString;
-                String inputStr = commandField.getText();        
+                String inputStr = commandField.getText(); 
                 if((taskManager == null)&&(!inputStr.equalsIgnoreCase("exit")&&
                     !inputStr.equalsIgnoreCase("help")&& !inputStr.equalsIgnoreCase("-h"))) {
                     try {
@@ -106,8 +77,7 @@ public class Magic8GUI extends javax.swing.JFrame {
                 } else if ((taskManager == null)&&(inputStr.equalsIgnoreCase("exit"))) {
                     System.exit(0);
                 } else if ((inputStr.equalsIgnoreCase("help")||(inputStr.equalsIgnoreCase("-h")))){
-//                	helpPopup();
-                } else if ((inputStr.equalsIgnoreCase("cal")||(inputStr.equalsIgnoreCase("-c")))){
+                	help();
                 } else {
                     try {
                         controller = new Magic8Controller(inputStr, taskManager);
@@ -117,55 +87,14 @@ public class Magic8GUI extends javax.swing.JFrame {
                         e.printStackTrace();
                     }
                 }
-                updateTable();
-                notificationsField.setText(confirmText);
+                outputField.setText(confirmText);
                 commandField.setText(emptyString);
             }
         });
     }
-    
-    public void updateTable() {
-        if (model.getRowCount() > 0) {
-            for (int i = model.getRowCount() - 1; i > -1; i--) {
-                model.removeRow(i);
-            }
-        }
-        
-        for(Integer index = 0; index < tasks.size(); index++) {
-            String id = "";
-            String desc = "";
-            String startTime = "";
-            String endTime = "";
-            String tags = "";
-            Magic8Task task = tasks.get(index);
-            Integer i = index+1;
-            id = (i).toString();
-            desc = task.getDesc();
-            if(task.getTags().size() > 0) {
-                for(String tag : task.getTags()) {
-                    tags += tag + " ";
-                }
-            } else {
-                tags = "-";
-            }
-            
-            startTime = "-";
-            endTime = "-";
-            
-            if (task.getStartTime() != null){
-            	startTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:SS").format(task.getStartTime().getTime());
-            }
-            
-            if (task.getEndTime() != null){
-            	endTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:SS").format(task.getEndTime().getTime());
-            }
-            
-            model.addRow(new Object[]{id, desc, startTime, endTime, tags});
-        }
-    }
-    
-    private void helpPopup() {
-    	JOptionPane.showMessageDialog(Magic8GUI, 
+  
+    private void help() {
+    outputField.setText(
     	        "                                              Help for Magic 8 Software:\n\n"
     	        + "Opening a file in Magic 8:\n"
     	        + "open [filename]\n\n"
@@ -193,46 +122,9 @@ public class Magic8GUI extends javax.swing.JFrame {
     	        + "redo\n\n"
     	        + "Clearing all tasks off the display:\n"
     	        + "clear\n\n"
-    	        + "Press [ESC] key to exit this help sheet",
-    	        "Magic 8 Help Sheet", 
-    	        JOptionPane.PLAIN_MESSAGE,
-    	        new ImageIcon(Toolkit.getDefaultToolkit().getImage("lib/Magic8Logo2.png")));
+    	        + "Press [ESC] key to exit this help sheet");
     }
 
-    public class ClockPane extends JPanel {
-	  
-	    private static final long serialVersionUID = 1L;
-	    
-	    private JLabel clock;
-	
-	    public ClockPane() {
-	        setLayout(new BorderLayout());
-	        clock = new JLabel();
-	        clock.setHorizontalAlignment(JLabel.CENTER);
-	        clock.setFont(UIManager.getFont("Label.font").deriveFont(Font.PLAIN, 16));
-	        clock.setOpaque(true);
-	        clock.setBackground(new Color(255,205,155));
-	        tickTock();
-	        add(clock);
-	
-	        Timer timer = new Timer(timerDelay, new ActionListener() {
-	            @Override
-	            public void actionPerformed(ActionEvent e) {
-	                tickTock();
-	            }
-	        });
-	        timer.setRepeats(true);
-	        timer.setCoalesce(true);
-	        timer.setInitialDelay(timerInitialDelay);
-	        timer.start();
-	    }
-	
-	    public void tickTock() {
-	        clock.setText(DateFormat.getDateTimeInstance().format(new Date()));
-	    }
-	}
- 
-    
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
@@ -338,7 +230,6 @@ public class Magic8GUI extends javax.swing.JFrame {
 		keywords.add("redo");//Re do function
 		keywords.add("search");//Search function
 		keywords.add("by");//'by' deadline 
-		keywords.add("cal");//Calendar function
 		keywords.add("exit"); //Exit function
 
 		// Without this, cursor always leaves text field
@@ -393,6 +284,9 @@ public class Magic8GUI extends javax.swing.JFrame {
         outputField.setColumns(20);
         outputField.setFont(new java.awt.Font("Monospaced", 0, 14));
         outputField.setRows(5);
+        outputField.setLineWrap(true);
+        outputField.setWrapStyleWord(true);
+        outputField.setText(MESSAGE_WELCOME);
         outputScrollPane.setViewportView(outputField);
 
         outputPanel.add(outputScrollPane, java.awt.BorderLayout.CENTER);
@@ -407,7 +301,7 @@ public class Magic8GUI extends javax.swing.JFrame {
 
         pack();
         setFrameIcon();
- //       setVisible(true);
+        launch();
     }                        
 
     void setFrameIcon(){
@@ -423,7 +317,7 @@ public class Magic8GUI extends javax.swing.JFrame {
     public static void main(String args[]) throws IOException, Exception {
 
         try {
-        	magic8GUIInit();
+//       	magic8GUIInit();
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
