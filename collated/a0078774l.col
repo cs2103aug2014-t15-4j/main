@@ -1,0 +1,1522 @@
+//@author: a0078774l
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8Task.java
+	 */
+
+public class Magic8Task implements Magic8TaskInterface {
+    private static final String MSG_NEGATIVE_ID = "id cannot be negative";
+    private static final String MSG_ZERO_ID = "id cannot be zero";
+    private static final String MSG_NULL_DESCRIPTION = "description cannot be null";
+    private static final String MSG_EMPTY_DESCRIPTION = "description cannot be empty";
+    private static final String MSG_NULL_TAG = "tag cannot be null";
+    private static final String MSG_EMPTY_TAG = "tag cannot be empty";
+    private static final String MSG_NON_ALPHANUMERIC_TAG = "tag must be alphanumeric";
+
+    private int id;
+    private String desc;
+    private boolean isDone;
+    private Calendar startTime;
+    private Calendar endTime;
+    private HashSet<String> tags;
+
+    public Magic8Task(int id, String desc, Calendar startTime,
+            Calendar endTime, HashSet<String> tags)
+            throws IllegalArgumentException {
+        if (id < 0) {
+            throw new IllegalArgumentException(MSG_NEGATIVE_ID);
+        }
+
+        this.id = id;
+        setDesc(desc);
+        setDone(false);
+        setStartTime(startTime);
+        setEndTime(endTime);
+        setTags(tags);
+    }
+
+    public Magic8Task(String desc, Calendar startTime, Calendar endTime,
+            HashSet<String> tags) throws IllegalArgumentException {
+        this(0, desc, startTime, endTime, tags);
+    }
+
+    public Magic8Task(String desc, Calendar startTime, Calendar endTime)
+            throws IllegalArgumentException {
+        this(0, desc, startTime, endTime, null);
+    }
+
+    public Magic8Task(String desc, Calendar endTime, HashSet<String> tags)
+            throws IllegalArgumentException {
+        this(0, desc, null, endTime, tags);
+    }
+
+    public Magic8Task(String desc, Calendar endTime) {
+        this(0, desc, null, endTime, null);
+    }
+
+    public Magic8Task(String desc, HashSet<String> tags)
+            throws IllegalArgumentException {
+        this(0, desc, null, null, tags);
+    }
+
+    public Magic8Task(String desc) throws IllegalArgumentException {
+        this(0, desc, null, null, null);
+    }
+
+    public Magic8Task(Magic8Task task) {
+        this(task.getId(), task.getDesc(), task.getStartTime(), task
+                .getEndTime(), task.getTags());
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(int id) throws IllegalArgumentException {
+        if (id < 0) {
+            throw new IllegalArgumentException(MSG_NEGATIVE_ID);
+        }
+        if (id == 0) {
+            throw new IllegalArgumentException(MSG_ZERO_ID);
+        }
+
+        this.id = id;
+    }
+
+    @Override
+    public String getDesc() {
+        return desc;
+    }
+
+    @Override
+    public void setDesc(String desc) throws IllegalArgumentException {
+        if (desc == null) {
+            throw new IllegalArgumentException(MSG_NULL_DESCRIPTION);
+        }
+        if (desc.isEmpty()) {
+            throw new IllegalArgumentException(MSG_EMPTY_DESCRIPTION);
+        }
+
+        this.desc = desc;
+    }
+
+    @Override
+    public boolean isDone() {
+        return isDone;
+    }
+
+    @Override
+    public void setDone(boolean isDone) {
+        this.isDone = isDone;
+    }
+
+    @Override
+    public Calendar getStartTime() {
+        if (startTime == null) {
+            return startTime;
+        }
+
+        Calendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(startTime.getTimeInMillis());
+        return cal;
+    }
+
+    @Override
+    public void setStartTime(Calendar startTime) {
+        if (startTime == null) {
+            this.startTime = startTime;
+        } else {
+            Calendar cal = new GregorianCalendar();
+            cal.setTimeInMillis(startTime.getTimeInMillis());
+            this.startTime = cal;
+        }
+    }
+
+    @Override
+    public Calendar getEndTime() {
+        if (endTime == null) {
+            return endTime;
+        }
+
+        Calendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(endTime.getTimeInMillis());
+        return cal;
+    }
+
+    @Override
+    public void setEndTime(Calendar endTime) {
+        if (endTime == null) {
+            this.endTime = endTime;
+        } else {
+            Calendar cal = new GregorianCalendar();
+            cal.setTimeInMillis(endTime.getTimeInMillis());
+            this.endTime = cal;
+        }
+    }
+
+    @Override
+    public HashSet<String> getTags() {
+        return new HashSet<String>(tags);
+    }
+
+    @Override
+    public void setTags(HashSet<String> tags) throws IllegalArgumentException {
+        if (tags == null) {
+            this.tags = new HashSet<String>();
+        } else {
+            for (String tag : tags) {
+                validateTag(tag);
+            }
+
+            this.tags = new HashSet<String>(tags);
+        }
+    }
+
+    @Override
+    public void addTag(String tag) throws IllegalArgumentException {
+        validateTag(tag);
+
+        tags.add(tag);
+    }
+
+    @Override
+    public void removeTag(String tag) {
+        tags.remove(tag);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Magic8Task)) {
+            return false;
+        } else {
+            Magic8Task other = (Magic8Task) obj;
+
+            // Check id
+            if (getId() != other.getId()) {
+                return false;
+            }
+            // Check description
+            if (!getDesc().equals(other.getDesc())) {
+                return false;
+            }
+            // Check start time
+            Calendar d1 = getStartTime();
+            Calendar d2 = other.getStartTime();
+
+            if (d1 == null && d2 != null) {
+                return false;
+            }
+            if (d1 != null && d2 == null) {
+                return false;
+            }
+            if (d1 != null && d2 != null && !d1.equals(d2)) {
+                return false;
+            }
+            // Check end time
+            d1 = getEndTime();
+            d2 = other.getEndTime();
+
+            if (d1 == null && d2 != null) {
+                return false;
+            }
+            if (d1 != null && d2 == null) {
+                return false;
+            }
+            if (d1 != null && d2 != null && !d1.equals(d2)) {
+                return false;
+            }
+
+            // Check tags
+            HashSet<String> t1 = getTags();
+            HashSet<String> t2 = getTags();
+
+            if (getTags().size() != other.getTags().size()) {
+                return false;
+            }
+
+            for (String tag : t1) {
+                if (!t2.contains(tag)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    @Override
+    public int compareTo(Magic8Task task) {
+        if (getEndTime() == null && task.getEndTime() == null) {
+            return 0;
+        }
+
+        if (getEndTime() == null) {
+            return 1;
+        }
+        if (task.getEndTime() == null) {
+            return -1;
+        }
+
+        return getEndTime().compareTo(task.getEndTime());
+    }
+
+    private static void validateTag(String tag) {
+        if (tag == null) {
+            throw new IllegalArgumentException(MSG_NULL_TAG);
+        }
+        if (tag.isEmpty()) {
+            throw new IllegalArgumentException(MSG_EMPTY_TAG);
+        }
+        if (!tag.matches("[A-Za-z0-9]+")) {
+            throw new IllegalArgumentException(MSG_NON_ALPHANUMERIC_TAG);
+        }
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8Task.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8TaskInterface.java
+	 */
+
+public interface Magic8TaskInterface extends Comparable<Magic8Task> {
+    public int getId();
+
+    public void setId(int id);
+
+    public String getDesc();
+
+    public void setDesc(String desc);
+
+    public boolean isDone();
+
+    public void setDone(boolean isDone);
+
+    public Calendar getStartTime();
+
+    public void setStartTime(Calendar startTime);
+
+    public Calendar getEndTime();
+
+    public void setEndTime(Calendar endTime);
+
+    public HashSet<String> getTags();
+
+    public void setTags(HashSet<String> tags);
+
+    public void addTag(String tag);
+
+    public void removeTag(String tag);
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8TaskInterface.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8TaskList.java
+	 */
+
+public class Magic8TaskList implements Magic8TaskListInterface {
+    private final static String REGEX_SEARCH = "\\W+";
+
+    private Magic8Storage storage;
+    private int id;
+    private TreeMap<Integer, Magic8Task> taskList;
+
+    private int tempId;
+    private TreeMap<Integer, Magic8Task> tempTaskList;
+    private ArrayDeque<Integer> idPast;
+    private ArrayDeque<Integer> idFuture;
+    private ArrayDeque<TreeMap<Integer, Magic8Task>> taskListPast;
+    private ArrayDeque<TreeMap<Integer, Magic8Task>> taskListFuture;
+
+    public Magic8TaskList(String fileName) throws IOException, ParseException {
+        storage = new Magic8Storage(fileName);
+        id = storage.getId();
+        taskList = storage.getTaskList();
+        idPast = new ArrayDeque<>();
+        idFuture = new ArrayDeque<>();
+        taskListPast = new ArrayDeque<>();
+        taskListFuture = new ArrayDeque<>();
+    }
+
+    @Override
+    public boolean addTask(Magic8Task task) throws IOException {
+        assert task != null;
+
+        task = new Magic8Task(task);
+        task.setId(id++);
+
+        updateTimeline();
+        taskList.put(task.getId(), task);
+        writeToFile();
+
+        return true;
+    }
+
+    @Override
+    public boolean removeTask(Magic8Task task) throws IOException {
+        assert task != null;
+
+        if (taskList.containsKey(task.getId())) {
+            updateTimeline();
+            taskList.remove(task.getId());
+            writeToFile();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean updateTask(Magic8Task task) throws IOException {
+        assert task != null;
+
+        if (taskList.containsKey(task.getId())) {
+            updateTimeline();
+            taskList.put(task.getId(), task);
+            writeToFile();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> removeTasks(ArrayList<Magic8Task> tasks)
+            throws IOException {
+        assert tasks != null;
+
+        backup();
+
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        for (Magic8Task task : tasks) {
+            assert task != null;
+
+            if (!taskList.containsKey(task.getId())) {
+                restore();
+
+                return new ArrayList<>();
+            }
+
+            Magic8Task removedTask = taskList.remove(task.getId());
+
+            result.add(new Magic8Task(removedTask));
+        }
+
+        updateTimeline(true);
+        writeToFile();
+
+        return result;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> removeTasksWithTag(String tag)
+            throws IOException {
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            Magic8Task task = entry.getValue();
+
+            if (task.getTags().contains(tag)) {
+                Magic8Task removedTask = taskList.remove(task.getId());
+
+                result.add(new Magic8Task(removedTask));
+            }
+        }
+
+        updateTimeline();
+        writeToFile();
+
+        return result;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> updateTasks(ArrayList<Magic8Task> tasks)
+            throws IOException {
+        assert tasks != null;
+
+        backup();
+
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        for (Magic8Task task : tasks) {
+            assert task != null;
+
+            if (!taskList.containsKey(task.getId())) {
+                restore();
+
+                return new ArrayList<>();
+            }
+
+            Magic8Task removedTask = taskList.remove(task.getId());
+
+            result.add(new Magic8Task(removedTask));
+
+            taskList.put(task.getId(), task);
+        }
+
+        updateTimeline(true);
+        writeToFile();
+
+        return result;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> clearTasks() throws IOException {
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        if (!taskList.isEmpty()) {
+            updateTimeline();
+            for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+                Magic8Task task = entry.getValue();
+
+                result.add(new Magic8Task(task));
+            }
+            taskList.clear();
+            writeToFile();
+        }
+
+        return result;
+    }
+
+    @Override
+    public boolean undo() throws IOException {
+        if (idPast.isEmpty()) {
+            return false;
+        }
+
+        idFuture.push(id);
+        taskListFuture.push(taskList);
+
+        id = idPast.pop();
+        taskList = taskListPast.pop();
+
+        writeToFile();
+
+        return true;
+    }
+
+    @Override
+    public boolean redo() throws IOException {
+        if (idFuture.isEmpty()) {
+            return false;
+        }
+
+        idPast.push(id);
+        taskListPast.push(taskList);
+
+        id = idFuture.pop();
+        taskList = taskListFuture.pop();
+
+        writeToFile();
+
+        return true;
+    }
+
+    private TreeMap<Integer, Magic8Task> copyTaskList(
+            TreeMap<Integer, Magic8Task> tl) {
+        TreeMap<Integer, Magic8Task> copy = new TreeMap<>();
+
+        for (Map.Entry<Integer, Magic8Task> entry : tl.entrySet()) {
+            copy.put(entry.getKey(), new Magic8Task(entry.getValue()));
+        }
+
+        return copy;
+    }
+
+    private void backup() {
+        tempId = id;
+        tempTaskList = copyTaskList(taskList);
+    }
+
+    private void restore() {
+        id = tempId;
+        taskList = copyTaskList(tempTaskList);
+    }
+
+    private void updateTimeline(boolean useTemp) {
+        if (useTemp) {
+            idPast.push(tempId);
+            taskListPast.push(tempTaskList);
+        } else {
+            idPast.push(id);
+            taskListPast.push(copyTaskList(taskList));
+        }
+
+        idFuture.clear();
+        taskListFuture.clear();
+    }
+
+    private void updateTimeline() {
+        updateTimeline(false);
+    }
+
+    private void writeToFile() throws IOException {
+        storage.writeToFile(id, taskList);
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getTimedTasks() {
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            Magic8Task task = entry.getValue();
+
+            if (task.getEndTime() != null) {
+                result.add(new Magic8Task(task));
+            }
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getTimedTasks(boolean isDone) {
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            Magic8Task task = entry.getValue();
+
+            if (task.getEndTime() != null) {
+                if (isDone == task.isDone()) {
+                    result.add(new Magic8Task(task));
+                }
+            }
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getUntimedTasks() {
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            Magic8Task task = entry.getValue();
+
+            if (task.getEndTime() == null) {
+                result.add(new Magic8Task(task));
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getUntimedTasks(boolean isDone) {
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            Magic8Task task = entry.getValue();
+
+            if (task.getEndTime() == null) {
+                if (isDone == task.isDone()) {
+                    result.add(new Magic8Task(task));
+                }
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getAllTasks() {
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            Magic8Task task = entry.getValue();
+
+            result.add(new Magic8Task(task));
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getAllTasks(boolean isDone) {
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            Magic8Task task = entry.getValue();
+
+            if (isDone == task.isDone()) {
+                result.add(new Magic8Task(task));
+            }
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getTasksWithString(String str) {
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        ArrayList<String> tokens = new ArrayList<>(Arrays.asList(str
+                .toLowerCase().split(REGEX_SEARCH)));
+
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            Magic8Task task = entry.getValue();
+
+            ArrayList<String> descTokens = new ArrayList<>(Arrays.asList(task
+                    .getDesc().toLowerCase().split(REGEX_SEARCH)));
+
+            descTokens.retainAll(new HashSet<>(tokens));
+
+            if (!descTokens.isEmpty()) {
+                result.add(new Magic8Task(task));
+            }
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getTasksWithString(String str, boolean isDone) {
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        ArrayList<String> tokens = new ArrayList<>(Arrays.asList(str
+                .toLowerCase().split(REGEX_SEARCH)));
+
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            Magic8Task task = entry.getValue();
+
+            if (isDone == task.isDone()) {
+                ArrayList<String> descTokens = new ArrayList<>(
+                        Arrays.asList(task.getDesc().toLowerCase()
+                                .split(REGEX_SEARCH)));
+
+                descTokens.retainAll(new HashSet<>(tokens));
+
+                if (!descTokens.isEmpty()) {
+                    result.add(new Magic8Task(task));
+                }
+            }
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getTasksWithTag(String tag) {
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            Magic8Task task = entry.getValue();
+
+            if (task.getTags().contains(tag)) {
+                result.add(new Magic8Task(task));
+            }
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    @Override
+    public ArrayList<Magic8Task> getTasksWithTag(String tag, boolean isDone) {
+        ArrayList<Magic8Task> result = new ArrayList<>();
+
+        for (Map.Entry<Integer, Magic8Task> entry : taskList.entrySet()) {
+            Magic8Task task = entry.getValue();
+
+            if (task.getTags().contains(tag)) {
+                if (isDone == task.isDone()) {
+                    result.add(new Magic8Task(task));
+                }
+            }
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8TaskList.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8TaskListInterface.java
+	 */
+
+public interface Magic8TaskListInterface {
+    /**
+     * Assigns a task id to the task and adds it to the task list.
+     *
+     * @param task
+     *            Task whose presence in the task list is to be ensured
+     * @return true if the task list changed as a result of the call
+     * @throws IOException
+     */
+    public boolean addTask(Magic8Task task) throws IOException;
+
+    /**
+     * Removes the task with the specified task's id from the task list.
+     *
+     * @param task
+     *            Task with task id to be removed from the task list, if present
+     * @return true if the task list changed as a result of the call
+     * @throws IOException
+     */
+    public boolean removeTask(Magic8Task task) throws IOException;
+
+    /**
+     * Replaces the task with the specified task's id in the task list with the
+     * specified task.
+     *
+     * @param task
+     *            Task to replace the task with the same id
+     * @return true if the task list changed as a result of the call
+     * @throws IOException
+     */
+    public boolean updateTask(Magic8Task task) throws IOException;
+
+    /**
+     * Removes all tasks with the specified tasks' ids from the task list. If a
+     * specified task id cannot be found in the task list, none of the tasks are
+     * removed.
+     *
+     * @param tasks
+     *            Tasks with the task ids to be removed from the task list
+     * @return an ArrayList containing the tasks that were removed from the task
+     *         list
+     * @throws IOException
+     */
+    public ArrayList<Magic8Task> removeTasks(ArrayList<Magic8Task> tasks)
+            throws IOException;
+
+    /**
+     * Removes all tasks with the specified tag from the task list.
+     *
+     * @param tag
+     *            Tag to remove tasks with
+     * @return an ArrayList containing the tasks that were removed from the task
+     *         list
+     * @throws IOException
+     */
+    public ArrayList<Magic8Task> removeTasksWithTag(String tag)
+            throws IOException;
+
+    /**
+     * Replaces all tasks with the specified tasks' ids from the task list. If a
+     * specified task id cannot be found in the task list, none of the tasks are
+     * replaced.
+     *
+     * @param tasks
+     *            Tasks to replace the tasks with the same ids
+     * @return an ArrayList containing the tasks that were removed from the task
+     *         list
+     * @throws IOException
+     */
+    public ArrayList<Magic8Task> updateTasks(ArrayList<Magic8Task> tasks)
+            throws IOException;
+
+    /**
+     * Removes all tasks from the task list.
+     *
+     * @return an ArrayList containing the tasks that were removed
+     * @throws IOException
+     */
+    public ArrayList<Magic8Task> clearTasks() throws IOException;
+
+    /**
+     * Undoes the last operation.
+     *
+     * @return true if the task list changed as a result of the call
+     * @throws IOException
+     */
+    public boolean undo() throws IOException;
+
+    /**
+     * Redoes the last operation.
+     *
+     * @return true if the task list changed as a result of the call
+     * @throws IOException
+     */
+    public boolean redo() throws IOException;
+
+    /**
+     * Returns all tasks in the task list with end times.
+     *
+     * @return an ArrayList containing all the tasks in the task list with end
+     *         times
+     */
+    public ArrayList<Magic8Task> getTimedTasks();
+
+    /**
+     * Returns either done or undone tasks in the task list with end times.
+     *
+     * @param isDone
+     *            indicates if done or undone tasks are to be returned
+     * @return an ArrayList containing either done or undone tasks in the task
+     *         list with end times
+     */
+    public ArrayList<Magic8Task> getTimedTasks(boolean isDone);
+
+    /**
+     * Returns all tasks in the task list without end times.
+     *
+     * @return an ArrayList containing all the tasks in the task list without
+     *         end times
+     */
+    public ArrayList<Magic8Task> getUntimedTasks();
+
+    /**
+     * Returns either done or undone tasks in the task list without end times.
+     *
+     * @param isDone
+     *            indicates if done or undone tasks are to be returned
+     * @return an ArrayList containing either done or undone tasks in the task
+     *         list without end times
+     */
+    public ArrayList<Magic8Task> getUntimedTasks(boolean isDone);
+
+    /**
+     * Returns all tasks in the task list.
+     *
+     * @return an ArrayList containing all the tasks in the task list
+     */
+    public ArrayList<Magic8Task> getAllTasks();
+
+    /**
+     * Returns either done or undone tasks in the task list.
+     *
+     * @param isDone
+     *            indicates if only done or undone tasks are to be returned
+     * @return an ArrayList containing either done or undone tasks in the task
+     *         list
+     */
+    public ArrayList<Magic8Task> getAllTasks(boolean isDone);
+
+    /**
+     * Returns all tasks in the task list that contains one or more search
+     * tokens.
+     *
+     * @param str
+     *            String to retrieve tasks with
+     * @return an ArrayList containing all the tasks in the task list with the
+     *         specified word
+     */
+    public ArrayList<Magic8Task> getTasksWithString(String str);
+
+    /**
+     * Returns either done or undone tasks in the task list that contains one or
+     * more search tokens.
+     *
+     * @param str
+     *            String to retrieve tasks with
+     * @param isDone
+     *            indicates if only done or undone tasks are to be returned
+     * @return an ArrayList containing either done or undone tasks in the task
+     *         list with the specified word
+     */
+    public ArrayList<Magic8Task> getTasksWithString(String str, boolean isDone);
+
+    /**
+     * Returns all tasks in the task list.
+     *
+     * @param tag
+     *            Tag to retrieve tasks with
+     * @return an ArrayList containing all the tasks in the task list with the
+     *         specified tag
+     */
+    public ArrayList<Magic8Task> getTasksWithTag(String tag);
+
+    /**
+     * Returns either done or undone tasks in the task list.
+     *
+     * @param word
+     *            Word or tag to retrieve tasks with
+     * @param isDone
+     *            indicates if only done or undone tasks are to be returned
+     * @return an ArrayList containing either done or undone tasks in the task
+     *         list with the specified tag
+     */
+    public ArrayList<Magic8Task> getTasksWithTag(String tag, boolean isDone);
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8TaskListInterface.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\test\fantasticfour\magiceight\Magic8TaskTest.java
+	 */
+
+public class Magic8TaskTest {
+    private static final String EXCEPTION_EXPECTED_NEGATIVE_ID = "Exception expected for negative id";
+    private static final String EXCEPTION_EXPECTED_ZERO_ID = "Exception expected for zero id";
+    private static final String EXCEPTION_EXPECTED_NULL_DESCRIPTION = "Exception expected for null string description";
+    private static final String EXCEPTION_EXPECTED_EMPTY_DESCRIPTION = "Exception expected for empty string description";
+    private static final String EXCEPTION_EXPECTED_NULL_TAG = "Exception expected for null string tag";
+    private static final String EXCEPTION_EXPECTED_EMPTY_TAG = "Exception expected for empty string tag";
+    private static final String EXCEPTION_EXPECTED_NON_ALPHANUMERIC_TAG = "Exception expected for non-alphanumeric tag";
+
+    private static final int TEST_NEGATIVE_ID = -1;
+    private static final int TEST_ZERO_ID = 0;
+    private static final int TEST_POSITIVE_ID = 1;
+    private static final String TEST_EMPTY_STRING = "";
+    private static final String TEST_NON_ALPHANUMERIC_STRING = "string!";
+    private static final String TEST_ALPHANUMERIC_STRING = "tag4";
+    private static final Calendar TEST_DATE = new GregorianCalendar();
+    private static final HashSet<String> TEST_TAGS = new HashSet<String>(
+            Arrays.asList("tag1", "tag2", "tag3"));
+    private static final Magic8Task TEST_TASK = new Magic8Task(
+            TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING, TEST_DATE,
+            TEST_DATE, TEST_TAGS);
+
+    @Test
+    public void testMagic8Task() {
+        // Test with valid parameters
+        try {
+            new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
+                    TEST_DATE, TEST_DATE, TEST_TAGS);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test without id parameter
+        try {
+            new Magic8Task(TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_TAGS);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with zero id
+        try {
+            new Magic8Task(0, TEST_NON_ALPHANUMERIC_STRING, TEST_DATE,
+                    TEST_DATE, TEST_TAGS);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with negative id
+        try {
+            new Magic8Task(TEST_NEGATIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
+                    TEST_DATE, TEST_DATE, TEST_TAGS);
+            fail(EXCEPTION_EXPECTED_NEGATIVE_ID);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with null description
+        try {
+            new Magic8Task(TEST_POSITIVE_ID, null, TEST_DATE, TEST_DATE,
+                    TEST_TAGS);
+            fail(EXCEPTION_EXPECTED_NULL_DESCRIPTION);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with empty string description
+        try {
+            new Magic8Task(TEST_POSITIVE_ID, TEST_EMPTY_STRING, TEST_DATE,
+                    TEST_DATE, TEST_TAGS);
+            fail(EXCEPTION_EXPECTED_EMPTY_DESCRIPTION);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with null start time
+        try {
+            new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
+                    null, TEST_DATE, TEST_TAGS);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with null end time
+        try {
+            new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
+                    TEST_DATE, null, TEST_TAGS);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with null tags
+        try {
+            new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
+                    TEST_DATE, TEST_DATE, null);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with tags containing null string tag
+        try {
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
+            tags.add(null);
+
+            new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
+                    TEST_DATE, TEST_DATE, tags);
+            fail(EXCEPTION_EXPECTED_NULL_TAG);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with tags containing empty string tag
+        try {
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
+            tags.add(TEST_EMPTY_STRING);
+
+            new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
+                    TEST_DATE, TEST_DATE, tags);
+            fail(EXCEPTION_EXPECTED_EMPTY_TAG);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with tags containing non-alphanumeric tag
+        try {
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
+            tags.add(TEST_NON_ALPHANUMERIC_STRING);
+
+            new Magic8Task(TEST_POSITIVE_ID, TEST_NON_ALPHANUMERIC_STRING,
+                    TEST_DATE, TEST_DATE, tags);
+            fail(EXCEPTION_EXPECTED_NON_ALPHANUMERIC_TAG);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+    }
+
+    @Test
+    public void testEquals() {
+        // Test reflexivity
+        try {
+            assert TEST_TASK.equals(TEST_TASK);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test symmetry
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+
+            assert task.equals(TEST_TASK);
+            assert TEST_TASK.equals(task);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test transitivity
+        try {
+            Magic8Task task1 = new Magic8Task(TEST_TASK);
+            Magic8Task task2 = new Magic8Task(task1);
+
+            assert TEST_TASK.equals(task1);
+            assert task1.equals(task2);
+            assert TEST_TASK.equals(task2);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test consistency
+        try {
+            assert TEST_TASK.equals(TEST_TASK);
+            assert TEST_TASK.equals(TEST_TASK);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with null
+        try {
+            assert !TEST_TASK.equals(null);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with different id
+        try {
+            Magic8Task task = new Magic8Task(TEST_NON_ALPHANUMERIC_STRING,
+                    TEST_DATE, TEST_TAGS);
+
+            assert !task.equals(TEST_TASK);
+            assert !TEST_TASK.equals(task);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with different description
+        try {
+            Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
+                    "different description", TEST_DATE, TEST_DATE, TEST_TAGS);
+
+            assert !task.equals(TEST_TASK);
+            assert !TEST_TASK.equals(task);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with null start time
+        try {
+            Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, null, TEST_DATE, TEST_TAGS);
+
+            assert !task.equals(TEST_TASK);
+            assert !TEST_TASK.equals(task);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with null end time
+        try {
+            Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, null, TEST_TAGS);
+
+            assert !task.equals(TEST_TASK);
+            assert !TEST_TASK.equals(task);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with different start time
+        try {
+            Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, new GregorianCalendar(),
+                    TEST_DATE, TEST_TAGS);
+
+            assert !task.equals(TEST_TASK);
+            assert !TEST_TASK.equals(task);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with different end time
+        try {
+            Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE,
+                    new GregorianCalendar(), TEST_TAGS);
+
+            assert !task.equals(TEST_TASK);
+            assert !TEST_TASK.equals(task);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with null tags
+        try {
+            Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_DATE, null);
+
+            assert !task.equals(TEST_TASK);
+            assert !TEST_TASK.equals(task);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test with different tags
+        try {
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
+            tags.add(TEST_ALPHANUMERIC_STRING);
+            Magic8Task task = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_DATE, tags);
+
+            assert !task.equals(TEST_TASK);
+            assert !TEST_TASK.equals(task);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+    }
+
+    @Test
+    public void testSetId() {
+        // Test valid id
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            int id = Integer.MAX_VALUE;
+            task.setId(id);
+
+            Magic8Task expectedTask = new Magic8Task(id,
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_DATE,
+                    TEST_TAGS);
+
+            assert task.equals(expectedTask);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test zero id
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            task.setId(TEST_ZERO_ID);
+
+            fail(EXCEPTION_EXPECTED_ZERO_ID);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test negative id
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            task.setId(TEST_NEGATIVE_ID);
+
+            fail(EXCEPTION_EXPECTED_NEGATIVE_ID);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+    }
+
+    @Test
+    public void testSetDesc() {
+        // Test valid description
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            String desc = "Original cheez doodles the CHEEZIER snack";
+            task.setDesc(desc);
+
+            Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID, desc,
+                    TEST_DATE, TEST_DATE, TEST_TAGS);
+
+            assert task.equals(expectedTask);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test null string description
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            task.setDesc(null);
+
+            fail(EXCEPTION_EXPECTED_NULL_DESCRIPTION);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test empty string description
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            task.setDesc(TEST_EMPTY_STRING);
+
+            fail(EXCEPTION_EXPECTED_EMPTY_DESCRIPTION);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+    }
+
+    @Test
+    public void testSetStartTime() {
+        // Test valid date
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            Calendar date = new GregorianCalendar();
+            task.setStartTime(date);
+
+            Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, date, TEST_DATE, TEST_TAGS);
+
+            assert task.equals(expectedTask);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+    }
+
+    @Test
+    public void testSetEndTime() {
+        // Test valid date
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            Calendar date = new GregorianCalendar();
+            task.setEndTime(date);
+
+            Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, date, TEST_TAGS);
+
+            assert task.equals(expectedTask);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+    }
+
+    @Test
+    public void testSetTags() {
+        // Test valid tags
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            HashSet<String> tags = new HashSet<String>(Arrays.asList("sugar",
+                    "spice"));
+            task.setTags(tags);
+
+            Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_DATE, tags);
+
+            assert task.equals(expectedTask);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test null tags
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            task.setTags(null);
+
+            Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_DATE, null);
+
+            assert task.equals(expectedTask);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test tags containing null string tag
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
+            tags.add(null);
+            task.setTags(tags);
+
+            fail(EXCEPTION_EXPECTED_NULL_TAG);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test tags containing empty string tag
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
+            tags.add(TEST_EMPTY_STRING);
+            task.setTags(tags);
+
+            fail(EXCEPTION_EXPECTED_EMPTY_TAG);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test tags containing non-alphanumeric string tag
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
+            tags.add(TEST_NON_ALPHANUMERIC_STRING);
+            task.setTags(tags);
+
+            fail(EXCEPTION_EXPECTED_NON_ALPHANUMERIC_TAG);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+    }
+
+    @Test
+    public void testAddTag() {
+        // Test valid tag
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            String tag = "snack";
+            task.addTag(tag);
+
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
+            tags.add(tag);
+            Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_DATE, tags);
+
+            assert task.equals(expectedTask);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test null string tag
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            task.addTag(null);
+
+            fail(EXCEPTION_EXPECTED_NULL_TAG);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test empty string tag
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            task.addTag(TEST_EMPTY_STRING);
+
+            fail(EXCEPTION_EXPECTED_EMPTY_TAG);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+
+        // Test non-alphanumeric string tag
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            task.addTag(EXCEPTION_EXPECTED_NON_ALPHANUMERIC_TAG);
+
+            fail(EXCEPTION_EXPECTED_NON_ALPHANUMERIC_TAG);
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+    }
+
+    @Test
+    public void testRemoveTag() {
+        // Test valid tag
+        try {
+            Magic8Task task = new Magic8Task(TEST_TASK);
+            String tag = "tag1";
+            task.removeTag(tag);
+
+            HashSet<String> tags = new HashSet<String>(TEST_TAGS);
+            tags.remove(tag);
+
+            Magic8Task expectedTask = new Magic8Task(TEST_POSITIVE_ID,
+                    TEST_NON_ALPHANUMERIC_STRING, TEST_DATE, TEST_DATE, tags);
+
+            assert task.equals(expectedTask);
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\test\fantasticfour\magiceight\Magic8TaskTest.java
+
+
+
+
+

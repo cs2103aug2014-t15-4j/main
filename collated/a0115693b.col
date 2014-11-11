@@ -1,0 +1,260 @@
+//@author: a0115693b
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\AutoComplete.java
+	 */
+
+public class AutoComplete {
+	private static enum Status { 
+		INSERT,
+		COMPLETION
+	};
+	public class Autocomplete implements DocumentListener {
+		private JTextField commandLine;
+		private final List<String> keywords;
+		private Status mode = Status.INSERT;
+
+		public Autocomplete(JTextField commandLine, List<String> keywords) {
+			this.commandLine = commandLine;
+			this.keywords = keywords;
+			Collections.sort(keywords);
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent event) { 
+			
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent event) {
+			
+		}
+
+		@Override
+		public void insertUpdate(DocumentEvent event) {
+			if (event.getLength() != 1)
+				return;
+
+			int position = event.getOffset();
+			String content = null;
+			try {
+				content = commandLine.getText(0, position + 1);
+			} catch (BadLocationException e) {
+				e.printStackTrace();
+			}
+
+			// Find where the word starts
+			int w;
+			for (w = position; w >= 0; w--) {
+				if (!Character.isLetter((content.charAt(w)))) {
+					break;
+				}
+			}
+
+			// Too few chars
+			if (position - w < 1)
+				return;
+
+			String prefix = content.substring(w + 1).toLowerCase();
+			int n = Collections.binarySearch(keywords, prefix);
+			if (n < 0 && -n <= keywords.size()) {
+				String match = keywords.get(-n - 1);
+				if (match.startsWith(prefix)) {
+
+					String completion = match.substring(position - w);
+					SwingUtilities.invokeLater(new CompletionTask(completion, position + 1));
+				}
+			} else {
+				mode = Status.INSERT;
+			}
+		}
+
+		public class CommitAction extends AbstractAction {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				if (mode == Status.COMPLETION) {
+					int position = commandLine.getSelectionEnd();
+					StringBuffer buffer = new StringBuffer(commandLine.getText());
+					buffer.insert(position, " ");
+					commandLine.setText(buffer.toString());
+					commandLine.setCaretPosition(position + 1);
+					mode = Status.INSERT;
+				} else {
+					commandLine.replaceSelection("\t");
+				}
+			}
+		}
+
+		private class CompletionTask implements Runnable {
+			private String completion;
+			private int position;
+
+			CompletionTask(String completion, int position) {
+				this.completion = completion;
+				this.position = position;
+			}
+
+			public void run() {
+				StringBuffer buffer = new StringBuffer(commandLine.getText());
+				buffer.insert(position, completion);
+				commandLine.setText(buffer.toString());
+				commandLine.setCaretPosition(position + completion.length());
+				commandLine.moveCaretPosition(position);
+				mode = Status.COMPLETION;
+			}
+		}
+
+	}
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\AutoComplete.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8GUI.java
+	 */
+
+    public void launch() {
+        commandField.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent arg){
+                String confirmText = emptyString;
+                String inputStr = commandField.getText(); 
+                if((taskManager == null)&&(!inputStr.equalsIgnoreCase("exit")&&
+                    !inputStr.equalsIgnoreCase("help")&& !inputStr.equalsIgnoreCase("-h"))) {
+                    try {
+                        taskManager = new Magic8TaskList(inputStr);
+                        confirmText += inputStr + " is opened\n";
+                        tasks = taskManager.getAllTasks(false);
+                    } catch (IOException | ParseException e) {
+                        e.printStackTrace();
+                    }
+                } else if ((taskManager == null)&&(inputStr.equalsIgnoreCase("exit"))) {
+                    System.exit(0);
+                } else if ((inputStr.equalsIgnoreCase("help")||(inputStr.equalsIgnoreCase("-h")))){
+                 	confirmText += help();
+                    outputField.setText(confirmText);
+                    commandField.setText(emptyString);
+                    return;
+                } else {
+                    try {
+                        controller = new Magic8Controller(inputStr, taskManager);
+                        confirmText += controller.getStatusMessage();
+                        tasks = controller.getTaskList();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                updateTable();
+                outputField.setText(confirmText);
+                commandField.setText(emptyString);
+            }
+        });
+    }
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8GUI.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8GUI.java
+	 */
+
+    public void updateTable() {
+        if (model.getRowCount() > 0) {
+            for (int i = model.getRowCount() - 1; i > -1; i--) {
+                model.removeRow(i);
+            }
+        }
+        
+        for(Integer index = 0; index < tasks.size(); index++) {
+            String id = "";
+            String desc = "";
+            String startTime = "";
+            String endTime = "";
+            String tags = "";
+            Magic8Task task = tasks.get(index);
+            Integer i = index+1;
+            id = (i).toString();
+            desc = task.getDesc();
+            if(task.getTags().size() > 0) {
+                for(String tag : task.getTags()) {
+                    tags += tag + " ";
+                }
+            } else {
+                tags = "-";
+            }
+            
+            startTime = "-";
+            endTime = "-";
+            
+            if (task.getStartTime() != null){
+                startTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:SS").format(task.getStartTime().getTime());
+            }
+            
+            if (task.getEndTime() != null){
+                endTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:SS").format(task.getEndTime().getTime());
+            }
+            
+            model.addRow(new Object[]{id, desc, startTime, endTime, tags});
+        }
+    }
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8GUI.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8GUI.java
+	 */
+
+    private String help() {
+    return 
+    	        "                                              Help for Magic 8 Software:\n\n"
+    	        + "Opening a file in Magic 8:\n"
+    	        + "open [filename]\n\n"
+    	        + "Adding a new task:\n"
+    	        + "add [task description] from [dd/MM/yyyy HH:mm:SS] to [dd/MM/yyyy HH:mm:SS] [tags]\n\n"
+    	        + "Marking a task as done:\n"
+    	        + "done [task ID]\n\n"
+    	        + "Deleting tasks:\n"
+    	        + "delete [task ID]\n"
+    	        + "Deleting tasks in a range:\n"
+    	        + "delete [task ID] to [task ID]\n"
+    	        + "Deleting selected tasks:\n"
+    	        + "delete [task ID], [task ID], [task ID] to [task ID]\n\n"
+    	        + "Editing the description of one task:\n"
+    	        + "edit [task Id] [new task description]\n\n"
+    	        + "Searching using keywords:\n"
+    	        + "search [keyword]\n\n"
+    	        + "Displaying all tasks:\n"
+    	        + "display\n"
+    	        + "display done\n"
+    	        + "display undone\n\n"
+    	        + "Undoing the last action:\n"
+    	        + "undo\n"
+    	        + "Redoing the last action:\n"
+    	        + "redo\n\n"
+    	        + "Clearing all tasks off the display:\n"
+    	        + "clear\n\n"
+    	        + "Press [ESC] key to exit this help sheet";
+    }
+    
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8GUI.java
+
+
+
+
+

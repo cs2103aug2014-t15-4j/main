@@ -1,0 +1,3399 @@
+//@author: a0080527h
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\AddCommand.java
+	 */
+
+public class AddCommand extends Command {
+        
+    public AddCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        Magic8Task task = null;
+        HashSet<String> tags = null;        
+        if(super.getTags() != null) {
+             tags = new HashSet<String>(super.getTags());
+        }        
+        task = new Magic8Task(super.getTaskDescription(),
+                              super.getStartDate(),
+                              super.getDeadline(), 
+                              tags);    
+        if(super.getTaskManager().addTask(task)) {
+        	super.setStatus(Magic8Status.ADD_SUCCESS);
+        	ArrayList<Magic8Task> taskList = new ArrayList<Magic8Task>();
+        	taskList.add(task);
+        	super.setTask(super.getTaskManager().getAllTasks(false));
+        } else {
+            super.setStatus(Magic8Status.ADD_FAILURE);
+        }
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\AddCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\ClearCommand.java
+	 */
+
+public class ClearCommand extends Command {
+        
+    public ClearCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        final String ANSI_CLS = "\u001b[2J";
+        final String ANSI_HOME = "\u001b[H";
+        System.out.print(ANSI_CLS + ANSI_HOME);
+        System.out.flush();
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\ClearCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\Command.java
+	 */
+
+public class Command implements ICommand {
+    private Magic8TaskList taskManager;
+    private String function;
+    private String taskDescription;
+    private ArrayList<String> tags;
+    private ArrayList<String> keywords;
+    private ArrayList<Integer> ids;
+    private Calendar deadline;
+    private Calendar startDate;
+    
+    private ArrayList<Magic8Task> task;
+	private String infoMessage;
+    private Magic8Status status;
+    
+    public ArrayList<Magic8Task> getTask() {
+		return task;
+	}
+
+	public void setTask(ArrayList<Magic8Task> task) {
+		this.task = task;
+	}
+
+	public String getInfoMessage() {
+		return infoMessage;
+	}
+
+	public void setInfoMessage(String infoMessage) {
+		this.infoMessage = infoMessage;
+	}
+
+	public Magic8Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Magic8Status status) {
+		this.status = status;
+	}
+    
+    public Magic8TaskList getTaskManager() {
+        return taskManager;
+    }
+
+    public void setTaskManager(Magic8TaskList taskManager) {
+        this.taskManager = taskManager;
+    }
+
+    public String getFunction() {
+        return function;
+    }
+    
+    public void setFunction(String function) {
+        this.function = function;
+    }
+
+    public String getTaskDescription() {
+        return taskDescription;
+    }
+
+    public void setTaskDescription(String taskDescription) {
+        this.taskDescription = taskDescription;
+    }
+
+    public ArrayList<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
+    }
+
+    public ArrayList<String> getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(ArrayList<String> keywords) {
+        this.keywords = keywords;
+    }
+
+    public ArrayList<Integer> getIds() {
+        return ids;
+    }
+
+    public void setIds(ArrayList<Integer> ids) {
+        this.ids = ids;
+    }
+
+    public Calendar getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(Calendar deadline) {
+        this.deadline = deadline;
+    }
+    
+    public Calendar getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Calendar startDate) {
+        this.startDate = startDate;
+    }
+    
+    public Command(Magic8CommandObject obj, Magic8TaskList tm) {
+        this.function = obj.getFunction();
+        this.taskDescription = obj.getTaskDescription();
+        this.tags = obj.getTags() == null ? null : new ArrayList<String>(obj.getTags());
+        this.keywords = obj.getKeywords() == null ? null : new ArrayList<String>(obj.getKeywords());
+        this.ids = obj.getIds() == null ? null : new ArrayList<Integer>(obj.getIds());
+        this.deadline = obj.getDeadline();
+        this.startDate = obj.getStartDate();
+        this.taskManager = tm;
+    }
+    
+    public void execute() throws IOException {
+        // TODO Auto-generated method stub
+    }
+    
+    public void addStatus(String message) {
+    	this.setInfoMessage(message);
+    }    
+
+    public Magic8Status getStatusInfo() {
+    	return this.getStatus();
+    }
+    
+    public ArrayList<Magic8Task> getReturnTaskList() {
+    	return this.getTask();
+    }
+    
+    public String getStatusMessage() {
+        return this.getInfoMessage();
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\Command.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\DeleteCommand.java
+	 */
+
+public class DeleteCommand extends Command {
+        
+    public DeleteCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        ArrayList<Magic8Task> tasks = new ArrayList<Magic8Task>();
+        
+        if(super.getIds() == null && super.getTags() == null) {
+            tasks = super.getTaskManager().clearTasks();
+        } else if(super.getTags() == null) {
+            for(Integer id : super.getIds()) {
+                if(id > super.getTaskManager().getAllTasks(false).size()) {
+                	this.setStatus(Magic8Status.DELETE_FAILURE);
+                    return;
+                }
+                tasks.add(super.getTaskManager().getAllTasks(false).get(id-1));
+            }
+            tasks = super.getTaskManager().removeTasks(tasks);            
+        } else {
+            for(String tag : super.getTags()) {
+                tasks = super.getTaskManager().removeTasksWithTag(tag);
+            }
+        }
+        if(tasks == null) {
+        	this.setStatus(Magic8Status.DELETE_FAILURE);
+            return;
+        }
+        this.setStatus(Magic8Status.DELETE_SUCCESS);
+        this.setTask(super.getTaskManager().getAllTasks(false));
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\DeleteCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\DisplayCommand.java
+	 */
+
+public class DisplayCommand extends Command {
+        
+    public DisplayCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    /*
+    private void display(Magic8Task task) {
+        System.out.println(Integer.toString(task.getId()) + ": " + task.getDesc() + " ");
+        if(task.getTags() != null) {
+            System.out.print("tags: ");
+            int i = 0;
+            for(String tag : task.getTags()) {
+                System.out.print(tag);
+                if (i != task.getTags().size()-1){
+                	System.out.print(", ");
+                }
+                i++;
+            }
+            System.out.println();
+        }
+        System.out.print("deadline: ");
+        if(task.getEndTime() == null) {
+            System.out. println("not specified");
+        } else {
+        	DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            System.out.println(df.format(task.getEndTime().getTime()));
+        }
+        
+        System.out.println();
+    }
+    */
+    
+    public void execute() throws IOException {
+    	if(super.getKeywords() == null && super.getTags() == null) {
+    		ArrayList<Magic8Task> tasks = super.getTaskManager().getAllTasks();
+            this.setTask(tasks);
+            this.setStatus(Magic8Status.DISPLAY_SUCCESS);
+            return;
+    	}
+        if(super.getKeywords() != null) {
+            if (super.getKeywords().get(0).equals("done")) {
+                ArrayList<Magic8Task> tasks = super.getTaskManager().getAllTasks(true);
+                this.setTask(tasks);
+                this.setStatus(Magic8Status.DISPLAY_SUCCESS);
+                return;
+            } else if (super.getKeywords().get(0).equals("undone")) {
+                ArrayList<Magic8Task> tasks = super.getTaskManager().getAllTasks(false);
+                this.setTask(tasks);
+                this.setStatus(Magic8Status.DISPLAY_SUCCESS);
+                return;
+            } else {
+            	ArrayList<Magic8Task> tasks = super.getTaskManager().getTasksWithString(super.getKeywords().get(0));
+            	this.setTask(tasks);
+            	this.setStatus(Magic8Status.DISPLAY_SUCCESS);
+            	return;
+            }
+        }
+        if(super.getTags() != null) {
+            for(String tag : super.getTags()) {
+                ArrayList<Magic8Task> tasks = super.getTaskManager().getTasksWithTag(tag);
+                if(tasks == null) {
+                	this.setStatus(Magic8Status.DISPLAY_FAILURE);
+                	return;
+                }
+                this.setTask(tasks);
+                this.setStatus(Magic8Status.DISPLAY_SUCCESS);
+                return;
+            }
+        }
+        ArrayList<Magic8Task> tasks = super.getTaskManager().getAllTasks();
+        if(tasks == null) {
+        	this.setStatus(Magic8Status.DISPLAY_FAILURE);
+        	return;
+        }
+        this.setTask(tasks);
+        this.setStatus(Magic8Status.DISPLAY_SUCCESS);
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\DisplayCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\DoneCommand.java
+	 */
+
+public class DoneCommand extends Command {
+        
+    public DoneCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        int id = super.getIds().get(0);
+        if(id > super.getTaskManager().getAllTasks(false).size()) {
+            super.setStatus(Magic8Status.DONE_FAILURE);
+        } else {
+            Magic8Task task = super.getTaskManager().getAllTasks(false).get(id-1);
+            task.setDone(true);
+            super.getTaskManager().updateTask(task);
+            super.setStatus(Magic8Status.DONE_SUCCESS);
+            super.setTask(super.getTaskManager().getAllTasks(false));
+        }
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\DoneCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\EditCommand.java
+	 */
+
+public class EditCommand extends Command {
+        
+    public EditCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        HashSet<String> tags = null;     
+        int id = super.getIds().get(0) - 1;
+        if(id < super.getTaskManager().getAllTasks(false).size()) {
+	        Magic8Task task = super.getTaskManager().getAllTasks(false).get(id);
+            task.setDesc(super.getTaskDescription());
+            if(super.getTags() != null) {
+                tags = new HashSet<String>(super.getTags());
+            }        
+            task.setTags(tags);
+            task.setStartTime(super.getStartDate());
+            task.setEndTime(super.getDeadline());
+            if(super.getTaskManager().updateTask(task)) {
+            	this.setStatus(Magic8Status.EDIT_SUCCESS);
+            	this.setTask(super.getTaskManager().getAllTasks());
+                return;
+            }
+	    	
+        }
+	    this.setStatus(Magic8Status.EDIT_FAILURE);
+	    return;
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\EditCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\ExitCommand.java
+	 */
+
+public class ExitCommand extends Command {
+        
+    public ExitCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        System.exit(0);
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\ExitCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\HelpCommand.java
+	 */
+
+public class HelpCommand extends Command {
+        
+    public HelpCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        this.setStatus(Magic8Status.HELP_SUCCESS);
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\HelpCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\ICommand.java
+	 */
+
+public interface ICommand {
+    public abstract void execute() throws IOException;
+    public abstract void addStatus(String message);
+    public abstract String getStatusMessage();
+    public abstract Magic8Status getStatusInfo();
+    public abstract ArrayList<Magic8Task> getReturnTaskList();
+    public abstract Magic8TaskList getTaskManager();
+}   
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\ICommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\OpenCommand.java
+	 */
+
+public class OpenCommand extends Command{
+    
+    public OpenCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() {
+        try {
+            super.setTaskManager(new Magic8TaskList(super.getTaskDescription()));
+            this.setStatus(Magic8Status.OPEN_SUCCESS);
+            this.setTask(super.getTaskManager().getAllTasks());
+        } catch (IOException | ParseException e) {
+            this.setStatus(Magic8Status.OPEN_FAILURE);
+        }
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\OpenCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\RedoCommand.java
+	 */
+
+public class RedoCommand extends Command {
+        
+    public RedoCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        if(!super.getTaskManager().redo()) {
+            this.setStatus(Magic8Status.REDO_FAILURE);
+        } else {
+            this.setStatus(Magic8Status.REDO_SUCCESS);
+            this.setTask(super.getTaskManager().getAllTasks(false));
+        }
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\RedoCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\SearchCommand.java
+	 */
+
+public class SearchCommand extends Command {
+        
+    public SearchCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    /*
+    private void display(Magic8Task task) {
+        System.out.println(Integer.toString(task.getId()) + ": " + task.getDesc() + " ");
+        if(task.getTags() != null) {
+            System.out.print("tags:");
+            for(String tag : task.getTags()) {
+                System.out.print(tag + ", ");
+            }
+            System.out.println();
+        }
+        System.out.print("deadline: ");
+        if(task.getEndTime() == null) {
+            System.out. println("not specified");
+        } else {
+            System.out.println(task.getEndTime().toString());
+        }
+    }
+    */
+    
+    public void execute() throws IOException {
+        for(String keyword : super.getKeywords()) {
+            ArrayList<Magic8Task> tasks = super.getTaskManager().getTasksWithString(keyword, false);
+            if(tasks == null) {
+                this.setStatus(Magic8Status.SEARCH_FAILURE);
+            } else {
+                this.setStatus(Magic8Status.SEARCH_SUCCESS);
+                this.setTask(tasks);
+            }
+        }
+            
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\SearchCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\UndoCommand.java
+	 */
+
+public class UndoCommand extends Command {
+        
+    public UndoCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        if(!super.getTaskManager().undo()) {
+            this.setStatus(Magic8Status.UNDO_FAILURE);
+        } else {
+            this.setStatus(Magic8Status.UNDO_SUCCESS);
+            this.setTask(super.getTaskManager().getAllTasks(false));
+        }
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\UndoCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8CommandObject.java
+	 */
+
+public class Magic8CommandObject {
+    
+    String function;
+    String taskDescription;
+    ArrayList<String> tags;
+    ArrayList<String> keywords;
+    ArrayList<Integer> ids;
+    Calendar startDate;
+	Calendar deadline;
+
+    public Magic8CommandObject() {
+        function = null;
+        taskDescription = null;
+        tags = null;
+        keywords = null;
+        ids = null;
+        startDate = null;
+        deadline = null;
+    }
+    
+    public Magic8CommandObject(String fn, String td, ArrayList<String> tg, 
+    		ArrayList<String> kw, ArrayList<Integer> id, Calendar sd, Calendar dd) {
+        function = fn;
+        taskDescription = td;
+        tags = tg;
+        keywords = kw;
+        ids = id;
+        startDate = sd;
+        deadline = dd;
+    }
+
+    public String getFunction() {
+        return function;
+    }
+
+    public void setFunction(String function) {
+        this.function = function;
+    }
+
+    public String getTaskDescription() {
+        return taskDescription;
+    }
+
+    public void setTaskDescription(String taskDescription) {
+        this.taskDescription = taskDescription;
+    }
+
+    public ArrayList<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
+    }
+
+    public ArrayList<String> getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(ArrayList<String> keywords) {
+        this.keywords = keywords;
+    }
+
+    public ArrayList<Integer> getIds() {
+        return ids;
+    }
+
+    public void setIds(ArrayList<Integer> ids) {
+        this.ids = ids;
+    }
+
+    public Calendar getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Calendar startDate) {
+		this.startDate = startDate;
+	}
+	
+    public Calendar getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(Calendar deadline) {
+        this.deadline = deadline;
+    }
+    
+    public void display() {
+    	System.out.println("function: " + this.function);
+    	System.out.println("task desc: " + this.taskDescription);
+    	System.out.print("tags: ");
+    	if(this.tags != null)
+	    	for(String tag : this.tags)
+	    		System.out.print(tag + " ");
+    	System.out.println();
+    	System.out.print("keywords: ");
+    	if(this.keywords != null)
+	    	for(String k : this.keywords)
+	    		System.out.print(k + " ");
+    	System.out.println();
+    	System.out.print("ids: ");
+    	if(this.ids != null)
+	    	for(Integer id : this.ids)
+	    		System.out.print(id + " ");
+    	System.out.println();
+    	if(this.startDate != null)
+    		System.out.println("startTime: " + this.startDate.getTime());
+    	if(this.deadline != null)
+    		System.out.println("endTime: " + this.deadline.getTime());
+    	System.out.println();
+    }
+}
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8CommandObject.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8Controller.java
+	 */
+
+public class Magic8Controller {
+    private ICommand command;
+    private static final String ADD_FUNCTION = "add";
+    private static final String CLEAR_FUNCTION = "clear";
+    private static final String DONE_FUNCTION = "done";
+    private static final String DELETE_FUNCTION = "delete";
+    private static final String DISPLAY_FUNCTION = "display";
+    private static final String EDIT_FUNCTION = "edit";
+    private static final String EXIT_FUNCTION = "exit";
+    private static final String HELP_FUNCTION = "help";
+    private static final String OPEN_FUNCTION = "open";
+    private static final String REDO_FUNCTION = "redo";
+    private static final String SEARCH_FUNCTION = "search";
+    private static final String UNDO_FUNCTION = "undo";
+    
+    private static final Magic8Status[] INPUT_FAILURE = {
+    	Magic8Status.ADD_INPUT_MISMATCH,
+    	Magic8Status.CLEAR_INPUT_MISMATCH,
+    	Magic8Status.DELETE_INPUT_MISMATCH,
+    	Magic8Status.DISPLAY_INPUT_MISMATCH,
+    	Magic8Status.DONE_INPUT_MISMATCH,
+    	Magic8Status.EDIT_INPUT_MISMATCH,
+    	Magic8Status.EXIT_INPUT_MISMATCH,
+    	Magic8Status.HELP_INPUT_MISMATCH,
+    	Magic8Status.OPEN_INPUT_MISMATCH,
+    	Magic8Status.SEARCH_INPUT_MISMATCH,
+    	Magic8Status.UNDO_INPUT_MISMATCH,
+    	Magic8Status.REDO_INPUT_MISMATCH,
+    };
+    
+    public Magic8Status inputStatus;
+    
+    public Magic8Controller(String input, Magic8TaskList tm) throws IOException {
+    	Magic8Parser.ReturnValues parsedValue = Magic8Parser.parseCommand(input);
+        Magic8CommandObject obj = parsedValue.getCommandObject();
+        this.inputStatus = parsedValue.getStatus();
+        
+        if(!Arrays.asList(INPUT_FAILURE).contains(inputStatus)) {
+	        switch(obj.getFunction()) {
+	            case ADD_FUNCTION:
+	                command = new AddCommand(obj, tm);
+	                break;
+	            case CLEAR_FUNCTION:
+	                command = new ClearCommand(obj, tm);
+	                break;
+	            case DELETE_FUNCTION:
+	                command = new DeleteCommand(obj, tm);
+	                break;
+	            case DISPLAY_FUNCTION:
+	                command = new DisplayCommand(obj, tm);
+	                break;
+	            case DONE_FUNCTION:
+	                command = new DoneCommand(obj, tm);
+	                break;
+	            case EDIT_FUNCTION:
+	                command = new EditCommand(obj, tm);
+	                break;
+	            case EXIT_FUNCTION:
+	                command = new ExitCommand(obj, tm);
+	                break;
+	            case HELP_FUNCTION:
+	                command = new HelpCommand(obj, tm);
+	                break;
+	            case OPEN_FUNCTION:
+	                command = new OpenCommand(obj, tm);
+	                break;
+	            case REDO_FUNCTION:
+	                command = new RedoCommand(obj, tm);
+	                break;
+	            case SEARCH_FUNCTION:
+	                command = new SearchCommand(obj, tm);
+	                break;
+	            case UNDO_FUNCTION:
+	                command = new UndoCommand(obj, tm);
+	                break;
+	        }
+        }
+        command.execute();
+    }
+    
+    public String getStatusMessage() {
+        return command.getStatusMessage();
+    }
+    
+    public Magic8Status getStatus() {
+        return command.getStatusInfo();
+    }
+    
+    public Magic8Status getInputStatus() {
+        return this.inputStatus;
+    }
+    
+    public ArrayList<Magic8Task> getTaskList() {
+        return command.getReturnTaskList();
+    }
+    
+    public Magic8TaskList getTaskManager() {
+    	return command.getTaskManager();
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8Controller.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8Interface.java
+	 */
+
+public interface Magic8Interface {
+    Magic8Task addTask(Magic8Task task);
+
+    Magic8Task removeTask(int id);
+
+    Magic8Task updateTask(Magic8Task task);
+
+    void displayAll();
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8Interface.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8Status.java
+	 */
+
+public enum Magic8Status {
+	INPUT_MISMATCH,
+	
+    ADD_INPUT_MATCH,
+    CLEAR_INPUT_MATCH,
+    DELETE_INPUT_MATCH,
+    DONE_INPUT_MATCH,
+    DISPLAY_INPUT_MATCH,
+    EDIT_INPUT_MATCH,
+    EXIT_INPUT_MATCH,
+    HELP_INPUT_MATCH,
+    OPEN_INPUT_MATCH,
+    SEARCH_INPUT_MATCH,
+    UNDO_INPUT_MATCH,
+    REDO_INPUT_MATCH,
+	
+    ADD_INPUT_MISMATCH,
+    CLEAR_INPUT_MISMATCH,
+    DELETE_INPUT_MISMATCH,
+    DISPLAY_INPUT_MISMATCH,
+    DONE_INPUT_MISMATCH,
+    EDIT_INPUT_MISMATCH,
+    EXIT_INPUT_MISMATCH,
+    HELP_INPUT_MISMATCH,
+    OPEN_INPUT_MISMATCH,
+    SEARCH_INPUT_MISMATCH,
+    UNDO_INPUT_MISMATCH,
+    REDO_INPUT_MISMATCH,
+    
+    ADD_FAILURE,
+    CLEAR_FAILURE,
+    DELETE_FAILURE,
+    DISPLAY_FAILURE,
+    DONE_FAILURE,
+    EDIT_FAILURE,
+    EXIT_FAILURE,
+    HELP_FAILURE,
+    OPEN_FAILURE,
+    SEARCH_FAILURE,
+    UNDO_FAILURE,
+    REDO_FAILURE,
+    
+    ADD_SUCCESS,
+    CLEAR_SUCCESS,
+    DELETE_SUCCESS,
+    DISPLAY_SUCCESS,
+    DONE_SUCCESS,
+    EDIT_SUCCESS,
+    EXIT_SUCCESS,
+    HELP_SUCCESS,
+    OPEN_SUCCESS,
+    SEARCH_SUCCESS,
+    UNDO_SUCCESS,
+    REDO_SUCCESS
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8Status.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\AddParser.java
+	 */
+
+public class AddParser implements IParser {
+	public ArrayList<Token> tokenize(String input) {
+		boolean first = true;
+		ArrayList<Token> outToken = new ArrayList<Token>();
+		
+		for(String str : input.split("\\s+")) {
+			if(first) {
+				outToken.add(new Token(Token.Type.function, str));
+				first = false;
+				continue;
+			}
+			
+			if(str.startsWith("(")) {
+				outToken.add(new Token(Token.Type.startDate, str.substring(1, str.length())));
+			} else if (str.startsWith(")")) {
+				outToken.add(new Token(Token.Type.endDate, str.substring(1, str.length())));
+			} else if (str.startsWith("#")) {
+				outToken.add(new Token(Token.Type.tag, str.substring(1, str.length())));
+			} else {
+				outToken.add(new Token(Token.Type.description, str));
+			}
+		}		
+		return outToken;
+	}
+	
+    public Magic8CommandObject parse(String input) {
+    	ArrayList<Token> tokens = tokenize(input);
+    	String fn = "";
+    	String td = "";
+    	ArrayList<String> tg = new ArrayList<String>();
+		Calendar sd = null;
+		Calendar dd = null;
+    	
+    	for(Token token : tokens) {
+    		if(token.getType() == Token.Type.function){
+    			fn = token.getValue();
+    		} else if(token.getType() == Token.Type.description) {
+    			td = td + token.getValue() + " ";
+    		} else if(token.getType() == Token.Type.tag) {
+    			tg.add(token.getValue());
+    		} else if(token.getType() == Token.Type.startDate) {
+    			sd = DateUtil.parseString(token.getValue(), false);
+    		} else if(token.getType() == Token.Type.endDate) {
+    			dd = DateUtil.parseString(token.getValue(), true);
+    		}
+    	}
+    	
+    	if(tg.size() == 0) {
+    		tg = null;
+    	}
+    	
+        return new Magic8CommandObject(fn, td, tg, null, null, sd, dd);
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\AddParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\DateUtil.java
+	 */
+
+public class DateUtil {
+    private final static SimpleDateFormat[] DATE_FORMAT = {
+        new SimpleDateFormat("d/M/y"),
+        new SimpleDateFormat("d-M-y"),
+        new SimpleDateFormat("E")
+    };
+    
+    private final static SimpleDateFormat[] TIME_FORMAT = {
+    	new SimpleDateFormat("HH:mm:ss"),
+    	new SimpleDateFormat("HH:mm:ss aa"),
+    	new SimpleDateFormat("HH:mm"),
+    	new SimpleDateFormat("HH:mm aa"),
+    	new SimpleDateFormat("HHaa")
+    };
+    
+    public static Calendar parseString(String dates, boolean endTime) {
+    	Calendar cal = Calendar.getInstance();
+    	
+    	Calendar cDate = null;
+    	Calendar cTime = null;
+    	
+    	if(dates.equalsIgnoreCase("current")) {
+    		return Calendar.getInstance();
+    	} else if (dates.equalsIgnoreCase("none")) {
+    		return null;
+    	}
+    	
+    	cal.set(Calendar.HOUR_OF_DAY, 0);
+    	cal.set(Calendar.MINUTE, 0);
+    	cal.set(Calendar.SECOND, 0);
+    	
+    	for(String str : dates.split(",")) {
+    		if (str.equalsIgnoreCase("tomorrow")) {
+        		cal.add(Calendar.DATE, 1);
+        	} else if(str.equalsIgnoreCase("yesterday")) {
+        		cal.add(Calendar.DATE, -1);
+        	} else if(str.equalsIgnoreCase("today")) {}
+        	
+    		if(cDate == null) {
+	    		for(SimpleDateFormat df : DATE_FORMAT) {
+	    			try {
+	    				cDate = Calendar.getInstance();
+	    				cDate.setTime(df.parse(str));
+	    				break;
+	    			} catch (ParseException e) {
+	    				cDate = null;
+	    			}    			
+	    		}
+    		}
+    		
+    		if(cTime == null) {
+	    		for(SimpleDateFormat tf : TIME_FORMAT) {
+	    			try {
+	    				cTime = Calendar.getInstance();
+	    				cTime.setTime(tf.parse(str));
+	    				break;
+	    			} catch (ParseException e) {
+	    				cTime = null;
+	    			}
+	    		}
+    		}
+    	}
+    	
+    	if(cDate != null) {
+    		if(cDate.get(Calendar.YEAR) != 1970)
+    			cal.set(Calendar.YEAR, cDate.get(Calendar.YEAR));
+    		if(cDate.get(Calendar.MONTH) != 0)
+    			cal.set(Calendar.MONTH, cDate.get(Calendar.MONTH));
+    		if(cDate.get(Calendar.DAY_OF_WEEK) != cal.get(Calendar.DAY_OF_WEEK)) 
+    			cal.add(Calendar.DAY_OF_YEAR, (cDate.get(Calendar.DAY_OF_WEEK) - cal.get(Calendar.DAY_OF_WEEK)) % 7);
+    	}
+
+    	if(cTime != null) {
+    		cal.set(Calendar.HOUR_OF_DAY,  cTime.get(Calendar.HOUR_OF_DAY));
+    		cal.set(Calendar.MINUTE, cTime.get(Calendar.MINUTE));
+    		cal.set(Calendar.SECOND, cTime.get(Calendar.SECOND));
+    	}
+    	
+    	return cal;
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\DateUtil.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\DeleteParser.java
+	 */
+
+public class DeleteParser implements IParser {
+	
+	public ArrayList<Token> tokenize(String input) {
+		boolean first = true;
+		ArrayList<Token> outToken = new ArrayList<Token>();
+		
+		String[] seps = {"-", "to"};
+		boolean sepFound = false;
+		
+		for(String str : input.split("[\\s+,]")) {
+			if(first) {
+				outToken.add(new Token(Token.Type.function, str));
+				first = false;
+				continue;
+			}
+			
+			if(str.startsWith("#")) {
+				outToken.add(new Token(Token.Type.tag, str.substring(1, str.length())));
+			} else if(str.matches("\\d+") && sepFound) {
+				sepFound = false;
+				outToken.add(new Token(Token.Type.endIndex, str));
+			} else if(str.matches("\\d+")) {
+				outToken.add(new Token(Token.Type.index, str));
+			} else {
+				for(String sep : seps) {
+					if(str.equalsIgnoreCase(sep)) {
+						sepFound = true;
+						break;
+					} else if(str.contains(sep)) {
+						outToken.add(new Token(Token.Type.index, str.split(sep)[0]));
+						outToken.add(new Token(Token.Type.endIndex, str.split(sep)[1]));
+						break;
+					}
+				}
+			}
+		}		
+		return outToken;
+	}
+	
+    public Magic8CommandObject parse(String input) {
+    	ArrayList<Token> tokens = tokenize(input);
+    	String fn = "";
+    	ArrayList<String> tg = new ArrayList<String>();
+    	ArrayList<Integer> in = new ArrayList<Integer>();
+    	
+    	for(Integer i = 0; i < tokens.size(); i++) {
+    		Token token = tokens.get(i);
+    		if(token.getType() == Token.Type.function){
+    			fn = token.getValue();
+    		} else if(token.getType() == Token.Type.tag) {
+    			tg.add(token.getValue());
+    		} else if(token.getType() == Token.Type.index){
+    			if(i == tokens.size()-1) {
+    				in.add(Integer.parseInt(token.getValue()));
+    			} else if(tokens.get(i+1).getType() == Token.Type.index) {
+    				in.add(Integer.parseInt(token.getValue()));
+    			} else if (tokens.get(i+1).getType() == Token.Type.endIndex) {
+    				Integer startIter = Integer.parseInt(token.getValue());
+    				Integer endIter = Integer.parseInt(tokens.get(i+1).getValue());
+    				for(Integer iter = startIter; iter <= endIter; iter++) {
+    					in.add(iter);
+    				}
+    			}
+    		}
+    	}
+    	
+    	if(tg.size() == 0) {
+    		tg = null;
+    	}
+    	
+    	if(in.size() == 0) {
+    		in = null;
+    	}
+    	
+        return new Magic8CommandObject(fn, null, tg, null, in, null, null);
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\DeleteParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\DisplayParser.java
+	 */
+
+public class DisplayParser implements IParser {
+	public ArrayList<Token> tokenize(String input) {
+		boolean first = true;
+		ArrayList<Token> outToken = new ArrayList<Token>();
+		
+		for(String str : input.split("\\s+")) {
+			if(first) {
+				outToken.add(new Token(Token.Type.function, str));
+				first = false;
+				continue;
+			}
+			
+			if (str.startsWith("#")) {
+				outToken.add(new Token(Token.Type.tag, str.substring(1, str.length())));
+			} else {
+				outToken.add(new Token(Token.Type.keyword, str));
+			}
+		}		
+		return outToken;
+	}
+	
+    public Magic8CommandObject parse(String input) {
+    	ArrayList<Token> tokens = tokenize(input);
+    	String fn = "";
+    	ArrayList<String> kw = new ArrayList<String>();
+    	ArrayList<String> tg = new ArrayList<String>();
+    	
+    	for(Token token : tokens) {
+    		if(token.getType() == Token.Type.function){
+    			fn = token.getValue();
+    		} else if(token.getType() == Token.Type.tag) {
+    			tg.add(token.getValue());
+    		} else if(token.getType() == Token.Type.keyword) {
+    			kw.add(token.getValue());
+    		} 
+    	}
+    	
+    	if(tg.size() == 0) {
+    		tg = null;
+    	}
+    	
+    	if(kw.size() == 0) {
+    		kw = null;
+    	}
+    	
+        return new Magic8CommandObject(fn, null, tg, kw, null, null, null);
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\DisplayParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\DoneParser.java
+	 */
+
+public class DoneParser implements IParser {
+	
+	public ArrayList<Token> tokenize(String input) {
+		boolean first = true;
+		ArrayList<Token> outToken = new ArrayList<Token>();
+		
+		String[] seps = {"-", "to"};
+		boolean sepFound = false;
+		
+		for(String str : input.split("[\\s+,]")) {
+			if(first) {
+				outToken.add(new Token(Token.Type.function, str));
+				first = false;
+				continue;
+			}
+			
+			if(str.startsWith("#")) {
+				outToken.add(new Token(Token.Type.tag, str.substring(1, str.length())));
+			} else if(str.matches("\\d+") && sepFound) {
+				sepFound = false;
+				outToken.add(new Token(Token.Type.endIndex, str));
+			} else if(str.matches("\\d+")) {
+				outToken.add(new Token(Token.Type.index, str));
+			} else {
+				for(String sep : seps) {
+					if(str.equalsIgnoreCase(sep)) {
+						sepFound = true;
+						break;
+					} else if(str.contains(sep)) {
+						outToken.add(new Token(Token.Type.index, str.split(sep)[0]));
+						outToken.add(new Token(Token.Type.endIndex, str.split(sep)[1]));
+						break;
+					}
+				}
+			}
+		}		
+		return outToken;
+	}
+	
+    public Magic8CommandObject parse(String input) {
+    	ArrayList<Token> tokens = tokenize(input);
+    	String fn = "";
+    	ArrayList<String> tg = new ArrayList<String>();
+    	ArrayList<Integer> in = new ArrayList<Integer>();
+    	
+    	for(Integer i = 0; i < tokens.size(); i++) {
+    		Token token = tokens.get(i);
+    		if(token.getType() == Token.Type.function){
+    			fn = token.getValue();
+    		} else if(token.getType() == Token.Type.tag) {
+    			tg.add(token.getValue());
+    		} else if(token.getType() == Token.Type.index){
+    			if(i == tokens.size()-1) {
+    				in.add(Integer.parseInt(token.getValue()));
+    			} else if(tokens.get(i+1).getType() == Token.Type.index) {
+    				in.add(Integer.parseInt(token.getValue()));
+    			} else if (tokens.get(i+1).getType() == Token.Type.endIndex) {
+    				Integer startIter = Integer.parseInt(token.getValue());
+    				Integer endIter = Integer.parseInt(tokens.get(i+1).getValue());
+    				for(Integer iter = startIter; iter <= endIter; iter++) {
+    					in.add(iter);
+    				}
+    			}
+    		}
+    	}
+    	
+    	if(tg.size() == 0) {
+    		tg = null;
+    	}
+    	
+    	if(in.size() == 0) {
+    		in = null;
+    	}
+    	
+        return new Magic8CommandObject(fn, null, tg, null, in, null, null);
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\DoneParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\EditParser.java
+	 */
+
+public class EditParser implements IParser {
+	public ArrayList<Token> tokenize(String input) {
+		boolean first = true;
+		boolean second = true;
+		ArrayList<Token> outToken = new ArrayList<Token>();
+		
+		for(String str : input.split("\\s+")) {
+			if(first) {
+				outToken.add(new Token(Token.Type.function, str));
+				first = false;
+				continue;
+			}
+			
+			if(second) {
+				outToken.add(new Token(Token.Type.index, str));
+				second = false;
+				continue;
+			}
+			
+			if(str.startsWith("(")) {
+				outToken.add(new Token(Token.Type.startDate, str.substring(1, str.length())));
+			} else if (str.startsWith(")")) {
+				outToken.add(new Token(Token.Type.endDate, str.substring(1, str.length())));
+			} else if (str.startsWith("#")) {
+				outToken.add(new Token(Token.Type.tag, str.substring(1, str.length())));
+			} else {
+				outToken.add(new Token(Token.Type.description, str));
+			}
+		}		
+		return outToken;
+	}
+	
+    public Magic8CommandObject parse(String input) {
+    	ArrayList<Token> tokens = tokenize(input);
+    	String fn = "";
+    	String td = "";
+    	ArrayList<Integer> in = new ArrayList<Integer>();
+    	ArrayList<String> tg = new ArrayList<String>();
+		Calendar sd = null;
+		Calendar dd = null;
+    	
+    	for(Token token : tokens) {
+    		if(token.getType() == Token.Type.function){
+    			fn = token.getValue();
+    		} else if(token.getType() == Token.Type.index) {
+    			in.add(Integer.parseInt(token.getValue()));
+    		} else if(token.getType() == Token.Type.description) {
+    			td = td + token.getValue() + " ";
+    		} else if(token.getType() == Token.Type.tag) {
+    			tg.add(token.getValue());
+    		} else if(token.getType() == Token.Type.startDate) {
+    			sd = DateUtil.parseString(token.getValue(), false);
+    		} else if(token.getType() == Token.Type.endDate) {
+    			dd = DateUtil.parseString(token.getValue(), true);
+    		}
+    	}
+    	
+    	if(tg.size() == 0) {
+    		tg = null;
+    	}
+    	
+    	if(in.size() == 0) {
+    		in = null;
+    	}
+    	
+        return new Magic8CommandObject(fn, td, tg, null, in, sd, dd);
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\EditParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\ExitParser.java
+	 */
+
+public class ExitParser implements IParser{
+	public Magic8CommandObject parse(String input) {
+		String fn = "exit";
+		return new Magic8CommandObject(fn, null, null, null, null, null, null);
+	}
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\ExitParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\HelpParser.java
+	 */
+
+public class HelpParser implements IParser{
+	public Magic8CommandObject parse(String input) {
+		String fn = "help";
+		return new Magic8CommandObject(fn, null, null, null, null, null, null);
+	}
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\HelpParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\IParser.java
+	 */
+
+public interface IParser {
+    public abstract Magic8CommandObject parse(String str);
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\IParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\Magic8Parser.java
+	 */
+
+public class Magic8Parser {
+    private enum Command_t {
+        add,
+        clear,
+        delete,
+        display,
+        edit,
+        exit,
+        help,
+        open,
+        undo,
+        redo
+    }
+    
+    public class ReturnValues {
+        private Magic8CommandObject commandObject;
+        private Magic8Status status;
+        
+        private ReturnValues(Magic8CommandObject obj, Magic8Status stat) {
+            commandObject = obj;
+            status = stat;
+        }
+        
+        public Magic8CommandObject getCommandObject() {
+            return commandObject;
+        }
+        
+        public Magic8Status getStatus() {
+            return status;
+        }
+    }
+    
+    private final static String LETTER = "[^#][\\p{Alnum}\\p{Punct}]";
+    private final static String WORD = "(" + LETTER + "+)";
+    private final static String TAG = "#" + WORD;
+    private final static String TAGS = "(" + TAG + ")" + "*";
+    private final static String SENTENCE = "(" + WORD + ")" + "+";
+    private final static String NUMBER = "\\d+";
+    private final static String NUMBER_GROUP = "[" + NUMBER + "\\s,-[to]]+"; 
+    
+    
+    private static String generateRegex(String[] strArr) {
+        String regex = "\\s*";
+        for(String str : strArr) {
+            regex = regex + str + "\\s*";
+        }
+        return regex;
+    }
+        
+    private final static String ADD_FUNCTION = "add";
+    private final static String[] ADD = {ADD_FUNCTION, SENTENCE, TAGS};
+    
+    private final static String CLEAR_FUNCTION ="clear";
+    private final static String[] CLEAR = {CLEAR_FUNCTION};
+    
+    private final static String DELETE_FUNCTION = "delete";
+    private final static String[] DELETE_ALL = {DELETE_FUNCTION, "(all|\\*)"};
+    private final static String[] DELETE_INDEX = {DELETE_FUNCTION, NUMBER_GROUP};
+    private final static String[] DELETE_TAG = {DELETE_FUNCTION, TAGS};
+    
+    private final static String DISPLAY_FUNCTION = "display";
+    private final static String[] DISPLAY_ALL = {DISPLAY_FUNCTION};
+    private final static String[] DISPLAY_TAG = {DISPLAY_FUNCTION, TAG};
+    private final static String[] DISPLAY_KWORD = {DISPLAY_FUNCTION, WORD};
+    
+    private final static String DONE_FUNCTION = "done";
+    private final static String[] DONE_ALL = {DONE_FUNCTION, "(all|\\*)"};
+    private final static String[] DONE_INDEX = {DONE_FUNCTION, NUMBER_GROUP};
+    private final static String[] DONE_TAG = {DONE_FUNCTION, TAGS};
+    
+    private final static String EDIT_FUNCTION = "edit";
+    private final static String[] EDIT = {EDIT_FUNCTION, NUMBER, SENTENCE, TAGS};
+    
+    private final static String EXIT_FUNCTION = "exit";
+    private final static String[] EXIT = {EXIT_FUNCTION};
+    
+    private final static String HELP_FUNCTION = "help";
+    private final static String[] HELP = {HELP_FUNCTION};
+    
+    private final static String OPEN_FUNCTION = "open";
+    private final static String[] OPEN = {OPEN_FUNCTION, WORD};
+    
+    private final static String UNDO_FUNCTION = "undo";
+    private final static String[] UNDO = {UNDO_FUNCTION};
+    
+    private final static String REDO_FUNCTION = "redo";
+    private final static String[] REDO = {REDO_FUNCTION};    
+    
+    private static ArrayList<String> REGEX_GROUP = new ArrayList<String>() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		{
+            add(generateRegex(ADD));
+            add(generateRegex(CLEAR));
+            add(generateRegex(DELETE_ALL));
+            add(generateRegex(DELETE_INDEX));
+            add(generateRegex(DELETE_TAG));
+            add(generateRegex(DONE_ALL));
+            add(generateRegex(DONE_INDEX));
+            add(generateRegex(DONE_TAG));
+            add(generateRegex(DISPLAY_ALL));
+            add(generateRegex(DISPLAY_KWORD));
+            add(generateRegex(DISPLAY_TAG));
+            add(generateRegex(EDIT));
+            add(generateRegex(EXIT));
+            add(generateRegex(HELP));
+            add(generateRegex(OPEN));
+            add(generateRegex(UNDO));
+            add(generateRegex(REDO));
+        }
+    };
+
+    public static ReturnValues parseCommand(String command) throws IllegalArgumentException {
+    	Magic8Parser _this = new Magic8Parser();
+        Magic8CommandObject cmdObj = null;
+        Magic8Status status = null;
+        IParser parser = null;
+        
+        if(command.startsWith(ADD_FUNCTION)) {
+            if(isCommandValid(command)) {
+                parser = new AddParser();
+                cmdObj = parser.parse(command);
+                status = Magic8Status.ADD_INPUT_MATCH;
+            } else {
+            	status = Magic8Status.ADD_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(CLEAR_FUNCTION)) {
+            if(isCommandValid(command)) {
+                status = Magic8Status.CLEAR_INPUT_MATCH;
+            } else {
+                status = Magic8Status.CLEAR_INPUT_MISMATCH;
+            }                
+        } else if(command.startsWith(DELETE_FUNCTION)) {
+            if(isCommandValid(command)) {
+            	parser = new DeleteParser();
+                cmdObj = parser.parse(command);
+                status = Magic8Status.DELETE_INPUT_MATCH;
+            } else {
+                status = Magic8Status.DELETE_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(DONE_FUNCTION)) {
+            if(isCommandValid(command)) {
+            	parser = new DoneParser();
+                cmdObj = parser.parse(command);
+                status = Magic8Status.DONE_INPUT_MATCH;
+            } else {
+                status = Magic8Status.DONE_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(DISPLAY_FUNCTION)) {
+            if(isCommandValid(command)) {
+            	parser = new DisplayParser();
+                cmdObj = parser.parse(command);
+                status = Magic8Status.DISPLAY_INPUT_MATCH;
+            } else {
+                status =  Magic8Status.DISPLAY_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(EDIT_FUNCTION)) {
+            if(isCommandValid(command)) {
+            	parser = new EditParser();
+                cmdObj = parser.parse(command);
+                status = Magic8Status.EDIT_INPUT_MATCH;
+            } else {
+                status = Magic8Status.EDIT_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(EXIT_FUNCTION)) {
+            if(isCommandValid(command)) {
+            	parser = new ExitParser();
+                cmdObj = parser.parse(command);
+            } else {
+                status = Magic8Status.EXIT_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(HELP_FUNCTION)) {
+            if(isCommandValid(command)) {
+            	parser = new HelpParser();
+                cmdObj = parser.parse(command);
+                status = Magic8Status.HELP_INPUT_MATCH;
+            } else {
+                status = Magic8Status.HELP_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(OPEN_FUNCTION)) {
+            if(isCommandValid(command)) {
+                
+            } else {
+                status = Magic8Status.OPEN_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(UNDO_FUNCTION)) {
+            if(isCommandValid(command)) {
+            	parser = new UndoParser();
+                cmdObj = parser.parse(command);
+                status = Magic8Status.UNDO_INPUT_MATCH;
+            } else {
+                status = Magic8Status.UNDO_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(REDO_FUNCTION)) {
+            if(isCommandValid(command)) {
+            	parser = new RedoParser();
+                cmdObj = parser.parse(command);
+                status = Magic8Status.REDO_INPUT_MATCH;
+            } else {
+                status = Magic8Status.REDO_INPUT_MISMATCH;
+            }            
+        } else {
+            status = Magic8Status.INPUT_MISMATCH;
+        }
+		return _this.new ReturnValues(cmdObj, status);
+    }
+
+    public static boolean isCommandValid(String command) {
+        for (String allowedCommandRegex : REGEX_GROUP) {
+            if (Pattern.matches(allowedCommandRegex, command)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\Magic8Parser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\RedoParser.java
+	 */
+
+public class RedoParser implements IParser{
+	public Magic8CommandObject parse(String input) {
+		String fn = "redo";
+		return new Magic8CommandObject(fn, null, null, null, null, null, null);
+	}
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\RedoParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\Token.java
+	 */
+
+public class Token {
+	public enum Type {
+		function,
+		description,
+		startDate,
+		endDate,
+		tag,
+		index,
+		endIndex,
+		keyword
+	}
+	
+	private Type type;
+	private String value;
+	
+	public Token(Type ty, String str) {
+		type = ty;
+		value = str;
+	}
+	
+	public Type getType() {
+		return type;
+	}
+	
+	public String getValue() {
+		return value;
+	}
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\Token.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\UndoParser.java
+	 */
+
+public class UndoParser implements IParser{
+	public Magic8CommandObject parse(String input) {
+		String fn = "undo";
+		return new Magic8CommandObject(fn, null, null, null, null, null, null);
+	}
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\UndoParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\AddParser.java
+	 */
+
+public class AddParser implements IParser {
+	public ArrayList<Token> tokenize(String input) {
+		boolean first = true;
+		ArrayList<Token> outToken = new ArrayList<Token>();
+		
+		for(String str : input.split("\\s+")) {
+			if(first) {
+				outToken.add(new Token(Token.Type.function, str));
+				first = false;
+				continue;
+			}
+			
+			if(str.startsWith("(")) {
+				outToken.add(new Token(Token.Type.startDate, str.substring(1, str.length())));
+			} else if (str.startsWith(")")) {
+				outToken.add(new Token(Token.Type.endDate, str.substring(1, str.length())));
+			} else if (str.startsWith("#")) {
+				outToken.add(new Token(Token.Type.tag, str.substring(1, str.length())));
+			} else {
+				outToken.add(new Token(Token.Type.description, str));
+			}
+		}		
+		return outToken;
+	}
+	
+    public Magic8CommandObject parse(String input) {
+    	ArrayList<Token> tokens = tokenize(input);
+    	String fn = "";
+    	String td = "";
+    	ArrayList<String> tg = new ArrayList<String>();
+		Calendar sd = null;
+		Calendar dd = null;
+    	
+    	for(Token token : tokens) {
+    		if(token.getType() == Token.Type.function){
+    			fn = token.getValue();
+    		} else if(token.getType() == Token.Type.description) {
+    			td = td + token.getValue() + " ";
+    		} else if(token.getType() == Token.Type.tag) {
+    			tg.add(token.getValue());
+    		} else if(token.getType() == Token.Type.startDate) {
+    			sd = DateUtil.parseString(token.getValue(), false);
+    		} else if(token.getType() == Token.Type.endDate) {
+    			dd = DateUtil.parseString(token.getValue(), true);
+    		}
+    	}
+    	
+    	if(tg.size() == 0) {
+    		tg = null;
+    	}
+    	
+        return new Magic8CommandObject(fn, td, tg, null, null, sd, dd);
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\AddParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\DateUtil.java
+	 */
+
+public class DateUtil {
+    private final static SimpleDateFormat[] DATE_FORMAT = {
+        new SimpleDateFormat("d/M/y"),
+        new SimpleDateFormat("d-M-y"),
+        new SimpleDateFormat("E")
+    };
+    
+    private final static SimpleDateFormat[] TIME_FORMAT = {
+    	new SimpleDateFormat("HH:mm:ss"),
+    	new SimpleDateFormat("HH:mm:ss aa"),
+    	new SimpleDateFormat("HH:mm"),
+    	new SimpleDateFormat("HH:mm aa"),
+    	new SimpleDateFormat("HHaa")
+    };
+    
+    public static Calendar parseString(String dates, boolean endTime) {
+    	Calendar cal = Calendar.getInstance();
+    	
+    	Calendar cDate = null;
+    	Calendar cTime = null;
+    	
+    	if(dates.equalsIgnoreCase("current")) {
+    		return Calendar.getInstance();
+    	} else if (dates.equalsIgnoreCase("none")) {
+    		return null;
+    	}
+    	
+    	cal.set(Calendar.HOUR_OF_DAY, 0);
+    	cal.set(Calendar.MINUTE, 0);
+    	cal.set(Calendar.SECOND, 0);
+    	
+    	for(String str : dates.split(",")) {
+    		if (str.equalsIgnoreCase("tomorrow")) {
+        		cal.add(Calendar.DATE, 1);
+        	} else if(str.equalsIgnoreCase("yesterday")) {
+        		cal.add(Calendar.DATE, -1);
+        	} else if(str.equalsIgnoreCase("today")) {}
+        	
+    		if(cDate == null) {
+	    		for(SimpleDateFormat df : DATE_FORMAT) {
+	    			try {
+	    				cDate = Calendar.getInstance();
+	    				cDate.setTime(df.parse(str));
+	    				break;
+	    			} catch (ParseException e) {
+	    				cDate = null;
+	    			}    			
+	    		}
+    		}
+    		
+    		if(cTime == null) {
+	    		for(SimpleDateFormat tf : TIME_FORMAT) {
+	    			try {
+	    				cTime = Calendar.getInstance();
+	    				cTime.setTime(tf.parse(str));
+	    				break;
+	    			} catch (ParseException e) {
+	    				cTime = null;
+	    			}
+	    		}
+    		}
+    	}
+    	
+    	if(cDate != null) {
+    		if(cDate.get(Calendar.YEAR) != 1970)
+    			cal.set(Calendar.YEAR, cDate.get(Calendar.YEAR));
+    		if(cDate.get(Calendar.MONTH) != 0)
+    			cal.set(Calendar.MONTH, cDate.get(Calendar.MONTH));
+    		if(cDate.get(Calendar.DAY_OF_WEEK) != cal.get(Calendar.DAY_OF_WEEK)) 
+    			cal.add(Calendar.DAY_OF_YEAR, (cDate.get(Calendar.DAY_OF_WEEK) - cal.get(Calendar.DAY_OF_WEEK)) % 7);
+    	}
+
+    	if(cTime != null) {
+    		cal.set(Calendar.HOUR_OF_DAY,  cTime.get(Calendar.HOUR_OF_DAY));
+    		cal.set(Calendar.MINUTE, cTime.get(Calendar.MINUTE));
+    		cal.set(Calendar.SECOND, cTime.get(Calendar.SECOND));
+    	}
+    	
+    	return cal;
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\DateUtil.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\DeleteParser.java
+	 */
+
+public class DeleteParser implements IParser {
+	
+	public ArrayList<Token> tokenize(String input) {
+		boolean first = true;
+		ArrayList<Token> outToken = new ArrayList<Token>();
+		
+		String[] seps = {"-", "to"};
+		boolean sepFound = false;
+		
+		for(String str : input.split("[\\s+,]")) {
+			if(first) {
+				outToken.add(new Token(Token.Type.function, str));
+				first = false;
+				continue;
+			}
+			
+			if(str.startsWith("#")) {
+				outToken.add(new Token(Token.Type.tag, str.substring(1, str.length())));
+			} else if(str.matches("\\d+") && sepFound) {
+				sepFound = false;
+				outToken.add(new Token(Token.Type.endIndex, str));
+			} else if(str.matches("\\d+")) {
+				outToken.add(new Token(Token.Type.index, str));
+			} else {
+				for(String sep : seps) {
+					if(str.equalsIgnoreCase(sep)) {
+						sepFound = true;
+						break;
+					} else if(str.contains(sep)) {
+						outToken.add(new Token(Token.Type.index, str.split(sep)[0]));
+						outToken.add(new Token(Token.Type.endIndex, str.split(sep)[1]));
+						break;
+					}
+				}
+			}
+		}		
+		return outToken;
+	}
+	
+    public Magic8CommandObject parse(String input) {
+    	ArrayList<Token> tokens = tokenize(input);
+    	String fn = "";
+    	ArrayList<String> tg = new ArrayList<String>();
+    	ArrayList<Integer> in = new ArrayList<Integer>();
+    	
+    	for(Integer i = 0; i < tokens.size(); i++) {
+    		Token token = tokens.get(i);
+    		if(token.getType() == Token.Type.function){
+    			fn = token.getValue();
+    		} else if(token.getType() == Token.Type.tag) {
+    			tg.add(token.getValue());
+    		} else if(token.getType() == Token.Type.index){
+    			if(i == tokens.size()-1) {
+    				in.add(Integer.parseInt(token.getValue()));
+    			} else if(tokens.get(i+1).getType() == Token.Type.index) {
+    				in.add(Integer.parseInt(token.getValue()));
+    			} else if (tokens.get(i+1).getType() == Token.Type.endIndex) {
+    				Integer startIter = Integer.parseInt(token.getValue());
+    				Integer endIter = Integer.parseInt(tokens.get(i+1).getValue());
+    				for(Integer iter = startIter; iter <= endIter; iter++) {
+    					in.add(iter);
+    				}
+    			}
+    		}
+    	}
+    	
+    	if(tg.size() == 0) {
+    		tg = null;
+    	}
+    	
+    	if(in.size() == 0) {
+    		in = null;
+    	}
+    	
+        return new Magic8CommandObject(fn, null, tg, null, in, null, null);
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\DeleteParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\DisplayParser.java
+	 */
+
+public class DisplayParser implements IParser {
+	public ArrayList<Token> tokenize(String input) {
+		boolean first = true;
+		ArrayList<Token> outToken = new ArrayList<Token>();
+		
+		for(String str : input.split("\\s+")) {
+			if(first) {
+				outToken.add(new Token(Token.Type.function, str));
+				first = false;
+				continue;
+			}
+			
+			if (str.startsWith("#")) {
+				outToken.add(new Token(Token.Type.tag, str.substring(1, str.length())));
+			} else {
+				outToken.add(new Token(Token.Type.keyword, str));
+			}
+		}		
+		return outToken;
+	}
+	
+    public Magic8CommandObject parse(String input) {
+    	ArrayList<Token> tokens = tokenize(input);
+    	String fn = "";
+    	ArrayList<String> kw = new ArrayList<String>();
+    	ArrayList<String> tg = new ArrayList<String>();
+    	
+    	for(Token token : tokens) {
+    		if(token.getType() == Token.Type.function){
+    			fn = token.getValue();
+    		} else if(token.getType() == Token.Type.tag) {
+    			tg.add(token.getValue());
+    		} else if(token.getType() == Token.Type.keyword) {
+    			kw.add(token.getValue());
+    		} 
+    	}
+    	
+    	if(tg.size() == 0) {
+    		tg = null;
+    	}
+    	
+    	if(kw.size() == 0) {
+    		kw = null;
+    	}
+    	
+        return new Magic8CommandObject(fn, null, tg, kw, null, null, null);
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\DisplayParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\DoneParser.java
+	 */
+
+public class DoneParser implements IParser {
+	
+	public ArrayList<Token> tokenize(String input) {
+		boolean first = true;
+		ArrayList<Token> outToken = new ArrayList<Token>();
+		
+		String[] seps = {"-", "to"};
+		boolean sepFound = false;
+		
+		for(String str : input.split("[\\s+,]")) {
+			if(first) {
+				outToken.add(new Token(Token.Type.function, str));
+				first = false;
+				continue;
+			}
+			
+			if(str.startsWith("#")) {
+				outToken.add(new Token(Token.Type.tag, str.substring(1, str.length())));
+			} else if(str.matches("\\d+") && sepFound) {
+				sepFound = false;
+				outToken.add(new Token(Token.Type.endIndex, str));
+			} else if(str.matches("\\d+")) {
+				outToken.add(new Token(Token.Type.index, str));
+			} else {
+				for(String sep : seps) {
+					if(str.equalsIgnoreCase(sep)) {
+						sepFound = true;
+						break;
+					} else if(str.contains(sep)) {
+						outToken.add(new Token(Token.Type.index, str.split(sep)[0]));
+						outToken.add(new Token(Token.Type.endIndex, str.split(sep)[1]));
+						break;
+					}
+				}
+			}
+		}		
+		return outToken;
+	}
+	
+    public Magic8CommandObject parse(String input) {
+    	ArrayList<Token> tokens = tokenize(input);
+    	String fn = "";
+    	ArrayList<String> tg = new ArrayList<String>();
+    	ArrayList<Integer> in = new ArrayList<Integer>();
+    	
+    	for(Integer i = 0; i < tokens.size(); i++) {
+    		Token token = tokens.get(i);
+    		if(token.getType() == Token.Type.function){
+    			fn = token.getValue();
+    		} else if(token.getType() == Token.Type.tag) {
+    			tg.add(token.getValue());
+    		} else if(token.getType() == Token.Type.index){
+    			if(i == tokens.size()-1) {
+    				in.add(Integer.parseInt(token.getValue()));
+    			} else if(tokens.get(i+1).getType() == Token.Type.index) {
+    				in.add(Integer.parseInt(token.getValue()));
+    			} else if (tokens.get(i+1).getType() == Token.Type.endIndex) {
+    				Integer startIter = Integer.parseInt(token.getValue());
+    				Integer endIter = Integer.parseInt(tokens.get(i+1).getValue());
+    				for(Integer iter = startIter; iter <= endIter; iter++) {
+    					in.add(iter);
+    				}
+    			}
+    		}
+    	}
+    	
+    	if(tg.size() == 0) {
+    		tg = null;
+    	}
+    	
+    	if(in.size() == 0) {
+    		in = null;
+    	}
+    	
+        return new Magic8CommandObject(fn, null, tg, null, in, null, null);
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\DoneParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\EditParser.java
+	 */
+
+public class EditParser implements IParser {
+	public ArrayList<Token> tokenize(String input) {
+		boolean first = true;
+		boolean second = true;
+		ArrayList<Token> outToken = new ArrayList<Token>();
+		
+		for(String str : input.split("\\s+")) {
+			if(first) {
+				outToken.add(new Token(Token.Type.function, str));
+				first = false;
+				continue;
+			}
+			
+			if(second) {
+				outToken.add(new Token(Token.Type.index, str));
+				second = false;
+				continue;
+			}
+			
+			if(str.startsWith("(")) {
+				outToken.add(new Token(Token.Type.startDate, str.substring(1, str.length())));
+			} else if (str.startsWith(")")) {
+				outToken.add(new Token(Token.Type.endDate, str.substring(1, str.length())));
+			} else if (str.startsWith("#")) {
+				outToken.add(new Token(Token.Type.tag, str.substring(1, str.length())));
+			} else {
+				outToken.add(new Token(Token.Type.description, str));
+			}
+		}		
+		return outToken;
+	}
+	
+    public Magic8CommandObject parse(String input) {
+    	ArrayList<Token> tokens = tokenize(input);
+    	String fn = "";
+    	String td = "";
+    	ArrayList<Integer> in = new ArrayList<Integer>();
+    	ArrayList<String> tg = new ArrayList<String>();
+		Calendar sd = null;
+		Calendar dd = null;
+    	
+    	for(Token token : tokens) {
+    		if(token.getType() == Token.Type.function){
+    			fn = token.getValue();
+    		} else if(token.getType() == Token.Type.index) {
+    			in.add(Integer.parseInt(token.getValue()));
+    		} else if(token.getType() == Token.Type.description) {
+    			td = td + token.getValue() + " ";
+    		} else if(token.getType() == Token.Type.tag) {
+    			tg.add(token.getValue());
+    		} else if(token.getType() == Token.Type.startDate) {
+    			sd = DateUtil.parseString(token.getValue(), false);
+    		} else if(token.getType() == Token.Type.endDate) {
+    			dd = DateUtil.parseString(token.getValue(), true);
+    		}
+    	}
+    	
+    	if(tg.size() == 0) {
+    		tg = null;
+    	}
+    	
+    	if(in.size() == 0) {
+    		in = null;
+    	}
+    	
+        return new Magic8CommandObject(fn, td, tg, null, in, sd, dd);
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\EditParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\ExitParser.java
+	 */
+
+public class ExitParser implements IParser{
+	public Magic8CommandObject parse(String input) {
+		String fn = "exit";
+		return new Magic8CommandObject(fn, null, null, null, null, null, null);
+	}
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\ExitParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\HelpParser.java
+	 */
+
+public class HelpParser implements IParser{
+	public Magic8CommandObject parse(String input) {
+		String fn = "help";
+		return new Magic8CommandObject(fn, null, null, null, null, null, null);
+	}
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\HelpParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\IParser.java
+	 */
+
+public interface IParser {
+    public abstract Magic8CommandObject parse(String str);
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\IParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\Magic8Parser.java
+	 */
+
+public class Magic8Parser {
+    private enum Command_t {
+        add,
+        clear,
+        delete,
+        display,
+        edit,
+        exit,
+        help,
+        open,
+        undo,
+        redo
+    }
+    
+    public class ReturnValues {
+        private Magic8CommandObject commandObject;
+        private Magic8Status status;
+        
+        private ReturnValues(Magic8CommandObject obj, Magic8Status stat) {
+            commandObject = obj;
+            status = stat;
+        }
+        
+        public Magic8CommandObject getCommandObject() {
+            return commandObject;
+        }
+        
+        public Magic8Status getStatus() {
+            return status;
+        }
+    }
+    
+    private final static String LETTER = "[^#][\\p{Alnum}\\p{Punct}]";
+    private final static String WORD = "(" + LETTER + "+)";
+    private final static String TAG = "#" + WORD;
+    private final static String TAGS = "(" + TAG + ")" + "*";
+    private final static String SENTENCE = "(" + WORD + ")" + "+";
+    private final static String NUMBER = "\\d+";
+    private final static String NUMBER_GROUP = "[" + NUMBER + "\\s,-[to]]+"; 
+    
+    
+    private static String generateRegex(String[] strArr) {
+        String regex = "\\s*";
+        for(String str : strArr) {
+            regex = regex + str + "\\s*";
+        }
+        return regex;
+    }
+        
+    private final static String ADD_FUNCTION = "add";
+    private final static String[] ADD = {ADD_FUNCTION, SENTENCE, TAGS};
+    
+    private final static String CLEAR_FUNCTION ="clear";
+    private final static String[] CLEAR = {CLEAR_FUNCTION};
+    
+    private final static String DELETE_FUNCTION = "delete";
+    private final static String[] DELETE_ALL = {DELETE_FUNCTION, "(all|\\*)"};
+    private final static String[] DELETE_INDEX = {DELETE_FUNCTION, NUMBER_GROUP};
+    private final static String[] DELETE_TAG = {DELETE_FUNCTION, TAGS};
+    
+    private final static String DISPLAY_FUNCTION = "display";
+    private final static String[] DISPLAY_ALL = {DISPLAY_FUNCTION};
+    private final static String[] DISPLAY_TAG = {DISPLAY_FUNCTION, TAG};
+    private final static String[] DISPLAY_KWORD = {DISPLAY_FUNCTION, WORD};
+    
+    private final static String DONE_FUNCTION = "done";
+    private final static String[] DONE_ALL = {DONE_FUNCTION, "(all|\\*)"};
+    private final static String[] DONE_INDEX = {DONE_FUNCTION, NUMBER_GROUP};
+    private final static String[] DONE_TAG = {DONE_FUNCTION, TAGS};
+    
+    private final static String EDIT_FUNCTION = "edit";
+    private final static String[] EDIT = {EDIT_FUNCTION, NUMBER, SENTENCE, TAGS};
+    
+    private final static String EXIT_FUNCTION = "exit";
+    private final static String[] EXIT = {EXIT_FUNCTION};
+    
+    private final static String HELP_FUNCTION = "help";
+    private final static String[] HELP = {HELP_FUNCTION};
+    
+    private final static String OPEN_FUNCTION = "open";
+    private final static String[] OPEN = {OPEN_FUNCTION, WORD};
+    
+    private final static String UNDO_FUNCTION = "undo";
+    private final static String[] UNDO = {UNDO_FUNCTION};
+    
+    private final static String REDO_FUNCTION = "redo";
+    private final static String[] REDO = {REDO_FUNCTION};    
+    
+    private static ArrayList<String> REGEX_GROUP = new ArrayList<String>() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		{
+            add(generateRegex(ADD));
+            add(generateRegex(CLEAR));
+            add(generateRegex(DELETE_ALL));
+            add(generateRegex(DELETE_INDEX));
+            add(generateRegex(DELETE_TAG));
+            add(generateRegex(DONE_ALL));
+            add(generateRegex(DONE_INDEX));
+            add(generateRegex(DONE_TAG));
+            add(generateRegex(DISPLAY_ALL));
+            add(generateRegex(DISPLAY_KWORD));
+            add(generateRegex(DISPLAY_TAG));
+            add(generateRegex(EDIT));
+            add(generateRegex(EXIT));
+            add(generateRegex(HELP));
+            add(generateRegex(OPEN));
+            add(generateRegex(UNDO));
+            add(generateRegex(REDO));
+        }
+    };
+
+    public static ReturnValues parseCommand(String command) throws IllegalArgumentException {
+    	Magic8Parser _this = new Magic8Parser();
+        Magic8CommandObject cmdObj = null;
+        Magic8Status status = null;
+        IParser parser = null;
+        
+        if(command.startsWith(ADD_FUNCTION)) {
+            if(isCommandValid(command)) {
+                parser = new AddParser();
+                cmdObj = parser.parse(command);
+                status = Magic8Status.ADD_INPUT_MATCH;
+            } else {
+            	status = Magic8Status.ADD_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(CLEAR_FUNCTION)) {
+            if(isCommandValid(command)) {
+                status = Magic8Status.CLEAR_INPUT_MATCH;
+            } else {
+                status = Magic8Status.CLEAR_INPUT_MISMATCH;
+            }                
+        } else if(command.startsWith(DELETE_FUNCTION)) {
+            if(isCommandValid(command)) {
+            	parser = new DeleteParser();
+                cmdObj = parser.parse(command);
+                status = Magic8Status.DELETE_INPUT_MATCH;
+            } else {
+                status = Magic8Status.DELETE_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(DONE_FUNCTION)) {
+            if(isCommandValid(command)) {
+            	parser = new DoneParser();
+                cmdObj = parser.parse(command);
+                status = Magic8Status.DONE_INPUT_MATCH;
+            } else {
+                status = Magic8Status.DONE_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(DISPLAY_FUNCTION)) {
+            if(isCommandValid(command)) {
+            	parser = new DisplayParser();
+                cmdObj = parser.parse(command);
+                status = Magic8Status.DISPLAY_INPUT_MATCH;
+            } else {
+                status =  Magic8Status.DISPLAY_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(EDIT_FUNCTION)) {
+            if(isCommandValid(command)) {
+            	parser = new EditParser();
+                cmdObj = parser.parse(command);
+                status = Magic8Status.EDIT_INPUT_MATCH;
+            } else {
+                status = Magic8Status.EDIT_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(EXIT_FUNCTION)) {
+            if(isCommandValid(command)) {
+            	parser = new ExitParser();
+                cmdObj = parser.parse(command);
+            } else {
+                status = Magic8Status.EXIT_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(HELP_FUNCTION)) {
+            if(isCommandValid(command)) {
+            	parser = new HelpParser();
+                cmdObj = parser.parse(command);
+                status = Magic8Status.HELP_INPUT_MATCH;
+            } else {
+                status = Magic8Status.HELP_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(OPEN_FUNCTION)) {
+            if(isCommandValid(command)) {
+                
+            } else {
+                status = Magic8Status.OPEN_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(UNDO_FUNCTION)) {
+            if(isCommandValid(command)) {
+            	parser = new UndoParser();
+                cmdObj = parser.parse(command);
+                status = Magic8Status.UNDO_INPUT_MATCH;
+            } else {
+                status = Magic8Status.UNDO_INPUT_MISMATCH;
+            }            
+        } else if(command.startsWith(REDO_FUNCTION)) {
+            if(isCommandValid(command)) {
+            	parser = new RedoParser();
+                cmdObj = parser.parse(command);
+                status = Magic8Status.REDO_INPUT_MATCH;
+            } else {
+                status = Magic8Status.REDO_INPUT_MISMATCH;
+            }            
+        } else {
+            status = Magic8Status.INPUT_MISMATCH;
+        }
+		return _this.new ReturnValues(cmdObj, status);
+    }
+
+    public static boolean isCommandValid(String command) {
+        for (String allowedCommandRegex : REGEX_GROUP) {
+            if (Pattern.matches(allowedCommandRegex, command)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\Magic8Parser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\RedoParser.java
+	 */
+
+public class RedoParser implements IParser{
+	public Magic8CommandObject parse(String input) {
+		String fn = "redo";
+		return new Magic8CommandObject(fn, null, null, null, null, null, null);
+	}
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\RedoParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\Token.java
+	 */
+
+public class Token {
+	public enum Type {
+		function,
+		description,
+		startDate,
+		endDate,
+		tag,
+		index,
+		endIndex,
+		keyword
+	}
+	
+	private Type type;
+	private String value;
+	
+	public Token(Type ty, String str) {
+		type = ty;
+		value = str;
+	}
+	
+	public Type getType() {
+		return type;
+	}
+	
+	public String getValue() {
+		return value;
+	}
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\Token.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\UndoParser.java
+	 */
+
+public class UndoParser implements IParser{
+	public Magic8CommandObject parse(String input) {
+		String fn = "undo";
+		return new Magic8CommandObject(fn, null, null, null, null, null, null);
+	}
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\parser\UndoParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\AddCommand.java
+	 */
+
+public class AddCommand extends Command {
+        
+    public AddCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        Magic8Task task = null;
+        HashSet<String> tags = null;        
+        if(super.getTags() != null) {
+             tags = new HashSet<String>(super.getTags());
+        }        
+        task = new Magic8Task(super.getTaskDescription(),
+                              super.getStartDate(),
+                              super.getDeadline(), 
+                              tags);    
+        if(super.getTaskManager().addTask(task)) {
+        	super.setStatus(Magic8Status.ADD_SUCCESS);
+        	ArrayList<Magic8Task> taskList = new ArrayList<Magic8Task>();
+        	taskList.add(task);
+        	super.setTask(super.getTaskManager().getAllTasks(false));
+        } else {
+            super.setStatus(Magic8Status.ADD_FAILURE);
+        }
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\AddCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\ClearCommand.java
+	 */
+
+public class ClearCommand extends Command {
+        
+    public ClearCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        final String ANSI_CLS = "\u001b[2J";
+        final String ANSI_HOME = "\u001b[H";
+        System.out.print(ANSI_CLS + ANSI_HOME);
+        System.out.flush();
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\ClearCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\Command.java
+	 */
+
+public class Command implements ICommand {
+    private Magic8TaskList taskManager;
+    private String function;
+    private String taskDescription;
+    private ArrayList<String> tags;
+    private ArrayList<String> keywords;
+    private ArrayList<Integer> ids;
+    private Calendar deadline;
+    private Calendar startDate;
+    
+    private ArrayList<Magic8Task> task;
+	private String infoMessage;
+    private Magic8Status status;
+    
+    public ArrayList<Magic8Task> getTask() {
+		return task;
+	}
+
+	public void setTask(ArrayList<Magic8Task> task) {
+		this.task = task;
+	}
+
+	public String getInfoMessage() {
+		return infoMessage;
+	}
+
+	public void setInfoMessage(String infoMessage) {
+		this.infoMessage = infoMessage;
+	}
+
+	public Magic8Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Magic8Status status) {
+		this.status = status;
+	}
+    
+    public Magic8TaskList getTaskManager() {
+        return taskManager;
+    }
+
+    public void setTaskManager(Magic8TaskList taskManager) {
+        this.taskManager = taskManager;
+    }
+
+    public String getFunction() {
+        return function;
+    }
+    
+    public void setFunction(String function) {
+        this.function = function;
+    }
+
+    public String getTaskDescription() {
+        return taskDescription;
+    }
+
+    public void setTaskDescription(String taskDescription) {
+        this.taskDescription = taskDescription;
+    }
+
+    public ArrayList<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(ArrayList<String> tags) {
+        this.tags = tags;
+    }
+
+    public ArrayList<String> getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(ArrayList<String> keywords) {
+        this.keywords = keywords;
+    }
+
+    public ArrayList<Integer> getIds() {
+        return ids;
+    }
+
+    public void setIds(ArrayList<Integer> ids) {
+        this.ids = ids;
+    }
+
+    public Calendar getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(Calendar deadline) {
+        this.deadline = deadline;
+    }
+    
+    public Calendar getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Calendar startDate) {
+        this.startDate = startDate;
+    }
+    
+    public Command(Magic8CommandObject obj, Magic8TaskList tm) {
+        this.function = obj.getFunction();
+        this.taskDescription = obj.getTaskDescription();
+        this.tags = obj.getTags() == null ? null : new ArrayList<String>(obj.getTags());
+        this.keywords = obj.getKeywords() == null ? null : new ArrayList<String>(obj.getKeywords());
+        this.ids = obj.getIds() == null ? null : new ArrayList<Integer>(obj.getIds());
+        this.deadline = obj.getDeadline();
+        this.startDate = obj.getStartDate();
+        this.taskManager = tm;
+    }
+    
+    public void execute() throws IOException {
+        // TODO Auto-generated method stub
+    }
+    
+    public void addStatus(String message) {
+    	this.setInfoMessage(message);
+    }    
+
+    public Magic8Status getStatusInfo() {
+    	return this.getStatus();
+    }
+    
+    public ArrayList<Magic8Task> getReturnTaskList() {
+    	return this.getTask();
+    }
+    
+    public String getStatusMessage() {
+        return this.getInfoMessage();
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\Command.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\DeleteCommand.java
+	 */
+
+public class DeleteCommand extends Command {
+        
+    public DeleteCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        ArrayList<Magic8Task> tasks = new ArrayList<Magic8Task>();
+        
+        if(super.getIds() == null && super.getTags() == null) {
+            tasks = super.getTaskManager().clearTasks();
+        } else if(super.getTags() == null) {
+            for(Integer id : super.getIds()) {
+                if(id > super.getTaskManager().getAllTasks(false).size()) {
+                	this.setStatus(Magic8Status.DELETE_FAILURE);
+                    return;
+                }
+                tasks.add(super.getTaskManager().getAllTasks(false).get(id-1));
+            }
+            tasks = super.getTaskManager().removeTasks(tasks);            
+        } else {
+            for(String tag : super.getTags()) {
+                tasks = super.getTaskManager().removeTasksWithTag(tag);
+            }
+        }
+        if(tasks == null) {
+        	this.setStatus(Magic8Status.DELETE_FAILURE);
+            return;
+        }
+        this.setStatus(Magic8Status.DELETE_SUCCESS);
+        this.setTask(super.getTaskManager().getAllTasks(false));
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\DeleteCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\DisplayCommand.java
+	 */
+
+public class DisplayCommand extends Command {
+        
+    public DisplayCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    /*
+    private void display(Magic8Task task) {
+        System.out.println(Integer.toString(task.getId()) + ": " + task.getDesc() + " ");
+        if(task.getTags() != null) {
+            System.out.print("tags: ");
+            int i = 0;
+            for(String tag : task.getTags()) {
+                System.out.print(tag);
+                if (i != task.getTags().size()-1){
+                	System.out.print(", ");
+                }
+                i++;
+            }
+            System.out.println();
+        }
+        System.out.print("deadline: ");
+        if(task.getEndTime() == null) {
+            System.out. println("not specified");
+        } else {
+        	DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            System.out.println(df.format(task.getEndTime().getTime()));
+        }
+        
+        System.out.println();
+    }
+    */
+    
+    public void execute() throws IOException {
+    	if(super.getKeywords() == null && super.getTags() == null) {
+    		ArrayList<Magic8Task> tasks = super.getTaskManager().getAllTasks();
+            this.setTask(tasks);
+            this.setStatus(Magic8Status.DISPLAY_SUCCESS);
+            return;
+    	}
+        if(super.getKeywords() != null) {
+            if (super.getKeywords().get(0).equals("done")) {
+                ArrayList<Magic8Task> tasks = super.getTaskManager().getAllTasks(true);
+                this.setTask(tasks);
+                this.setStatus(Magic8Status.DISPLAY_SUCCESS);
+                return;
+            } else if (super.getKeywords().get(0).equals("undone")) {
+                ArrayList<Magic8Task> tasks = super.getTaskManager().getAllTasks(false);
+                this.setTask(tasks);
+                this.setStatus(Magic8Status.DISPLAY_SUCCESS);
+                return;
+            } else {
+            	ArrayList<Magic8Task> tasks = super.getTaskManager().getTasksWithString(super.getKeywords().get(0));
+            	this.setTask(tasks);
+            	this.setStatus(Magic8Status.DISPLAY_SUCCESS);
+            	return;
+            }
+        }
+        if(super.getTags() != null) {
+            for(String tag : super.getTags()) {
+                ArrayList<Magic8Task> tasks = super.getTaskManager().getTasksWithTag(tag);
+                if(tasks == null) {
+                	this.setStatus(Magic8Status.DISPLAY_FAILURE);
+                	return;
+                }
+                this.setTask(tasks);
+                this.setStatus(Magic8Status.DISPLAY_SUCCESS);
+                return;
+            }
+        }
+        ArrayList<Magic8Task> tasks = super.getTaskManager().getAllTasks();
+        if(tasks == null) {
+        	this.setStatus(Magic8Status.DISPLAY_FAILURE);
+        	return;
+        }
+        this.setTask(tasks);
+        this.setStatus(Magic8Status.DISPLAY_SUCCESS);
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\DisplayCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\DoneCommand.java
+	 */
+
+public class DoneCommand extends Command {
+        
+    public DoneCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        int id = super.getIds().get(0);
+        if(id > super.getTaskManager().getAllTasks(false).size()) {
+            super.setStatus(Magic8Status.DONE_FAILURE);
+        } else {
+            Magic8Task task = super.getTaskManager().getAllTasks(false).get(id-1);
+            task.setDone(true);
+            super.getTaskManager().updateTask(task);
+            super.setStatus(Magic8Status.DONE_SUCCESS);
+            super.setTask(super.getTaskManager().getAllTasks(false));
+        }
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\DoneCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\EditCommand.java
+	 */
+
+public class EditCommand extends Command {
+        
+    public EditCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        HashSet<String> tags = null;     
+        int id = super.getIds().get(0) - 1;
+        if(id < super.getTaskManager().getAllTasks(false).size()) {
+	        Magic8Task task = super.getTaskManager().getAllTasks(false).get(id);
+            task.setDesc(super.getTaskDescription());
+            if(super.getTags() != null) {
+                tags = new HashSet<String>(super.getTags());
+            }        
+            task.setTags(tags);
+            task.setStartTime(super.getStartDate());
+            task.setEndTime(super.getDeadline());
+            if(super.getTaskManager().updateTask(task)) {
+            	this.setStatus(Magic8Status.EDIT_SUCCESS);
+            	this.setTask(super.getTaskManager().getAllTasks());
+                return;
+            }
+	    	
+        }
+	    this.setStatus(Magic8Status.EDIT_FAILURE);
+	    return;
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\EditCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\ExitCommand.java
+	 */
+
+public class ExitCommand extends Command {
+        
+    public ExitCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        System.exit(0);
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\ExitCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\HelpCommand.java
+	 */
+
+public class HelpCommand extends Command {
+        
+    public HelpCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        this.setStatus(Magic8Status.HELP_SUCCESS);
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\HelpCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\ICommand.java
+	 */
+
+public interface ICommand {
+    public abstract void execute() throws IOException;
+    public abstract void addStatus(String message);
+    public abstract String getStatusMessage();
+    public abstract Magic8Status getStatusInfo();
+    public abstract ArrayList<Magic8Task> getReturnTaskList();
+    public abstract Magic8TaskList getTaskManager();
+}   
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\ICommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\OpenCommand.java
+	 */
+
+public class OpenCommand extends Command{
+    
+    public OpenCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() {
+        try {
+            super.setTaskManager(new Magic8TaskList(super.getTaskDescription()));
+            this.setStatus(Magic8Status.OPEN_SUCCESS);
+            this.setTask(super.getTaskManager().getAllTasks());
+        } catch (IOException | ParseException e) {
+            this.setStatus(Magic8Status.OPEN_FAILURE);
+        }
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\OpenCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\RedoCommand.java
+	 */
+
+public class RedoCommand extends Command {
+        
+    public RedoCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        if(!super.getTaskManager().redo()) {
+            this.setStatus(Magic8Status.REDO_FAILURE);
+        } else {
+            this.setStatus(Magic8Status.REDO_SUCCESS);
+            this.setTask(super.getTaskManager().getAllTasks(false));
+        }
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\RedoCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\SearchCommand.java
+	 */
+
+public class SearchCommand extends Command {
+        
+    public SearchCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    /*
+    private void display(Magic8Task task) {
+        System.out.println(Integer.toString(task.getId()) + ": " + task.getDesc() + " ");
+        if(task.getTags() != null) {
+            System.out.print("tags:");
+            for(String tag : task.getTags()) {
+                System.out.print(tag + ", ");
+            }
+            System.out.println();
+        }
+        System.out.print("deadline: ");
+        if(task.getEndTime() == null) {
+            System.out. println("not specified");
+        } else {
+            System.out.println(task.getEndTime().toString());
+        }
+    }
+    */
+    
+    public void execute() throws IOException {
+        for(String keyword : super.getKeywords()) {
+            ArrayList<Magic8Task> tasks = super.getTaskManager().getTasksWithString(keyword, false);
+            if(tasks == null) {
+                this.setStatus(Magic8Status.SEARCH_FAILURE);
+            } else {
+                this.setStatus(Magic8Status.SEARCH_SUCCESS);
+                this.setTask(tasks);
+            }
+        }
+            
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\SearchCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\UndoCommand.java
+	 */
+
+public class UndoCommand extends Command {
+        
+    public UndoCommand(Magic8CommandObject obj, Magic8TaskList tm) {
+        super(obj, tm);
+    }
+    
+    public void execute() throws IOException {
+        if(!super.getTaskManager().undo()) {
+            this.setStatus(Magic8Status.UNDO_FAILURE);
+        } else {
+            this.setStatus(Magic8Status.UNDO_SUCCESS);
+            this.setTask(super.getTaskManager().getAllTasks(false));
+        }
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\command\UndoCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\test\fantasticfour\magiceight\Magic8ParserIsValidCommandTest.java
+	 */
+
+public class Magic8ParserIsValidCommandTest {
+
+    // List of testing for add function
+    List<String> POSITIVE_ADD_TESTING = new ArrayList<String>();
+    List<String> NEGATIVE_ADD_TESTING = new ArrayList<String>();
+
+    // List of testing for delete function
+    List<String> POSITIVE_CLEAR_TESTING = new ArrayList<String>();
+    List<String> NEGATIVE_CLEAR_TESTING = new ArrayList<String>();
+
+    // List of testing for delete function
+    List<String> POSITIVE_DELETE_TESTING = new ArrayList<String>();
+    List<String> NEGATIVE_DELETE_TESTING = new ArrayList<String>();
+
+    // List of testing for display function
+    List<String> POSITIVE_DISPLAY_TESTING = new ArrayList<String>();
+    List<String> NEGATIVE_DISPLAY_TESTING = new ArrayList<String>();
+
+    // List of testing for edit function
+    List<String> POSITIVE_EDIT_TESTING = new ArrayList<String>();
+    List<String> NEGATIVE_EDIT_TESTING = new ArrayList<String>();
+
+    // List of testing for exit function
+    List<String> POSITIVE_EXIT_TESTING = new ArrayList<String>();
+    List<String> NEGATIVE_EXIT_TESTING = new ArrayList<String>();
+
+    // List of testing for help function
+    List<String> POSITIVE_HELP_TESTING = new ArrayList<String>();
+    List<String> NEGATIVE_HELP_TESTING = new ArrayList<String>();
+
+    // List of testing for search function
+    List<String> POSITIVE_SEARCH_TESTING = new ArrayList<String>();
+    List<String> NEGATIVE_SEARCH_TESTING = new ArrayList<String>();
+
+    // List of testing for undo function
+    List<String> POSITIVE_UNDO_TESTING = new ArrayList<String>();
+    List<String> NEGATIVE_UNDO_TESTING = new ArrayList<String>();
+
+    @Before
+    public void addTestInsertion() {
+        POSITIVE_ADD_TESTING.add("add homework");
+        POSITIVE_ADD_TESTING.add("add buy an egg's");
+        POSITIVE_ADD_TESTING.add("add buy an egg");
+        POSITIVE_ADD_TESTING.add("add buy an egg (20/14/2014");
+        POSITIVE_ADD_TESTING.add("add buy an egg #grocery #chores");
+        POSITIVE_ADD_TESTING.add("add buy an egg #grocery testing");
+
+        NEGATIVE_ADD_TESTING.add("add");
+    }
+
+    @Test
+    public void addCommandTest() {
+        for (String command : POSITIVE_ADD_TESTING) {
+            assertTrue("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+        for (String command : NEGATIVE_ADD_TESTING) {
+            assertFalse("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+    }
+
+    @Before
+    public void clearTestInsertion() {
+        POSITIVE_CLEAR_TESTING.add("clear");
+
+        NEGATIVE_CLEAR_TESTING.add("clear all");
+    }
+
+    @Test
+    public void clearCommandTest() {
+        for (String command : POSITIVE_CLEAR_TESTING) {
+            assertTrue("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+        for (String command : NEGATIVE_CLEAR_TESTING) {
+            assertFalse("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+    }
+
+    @Before
+    public void deleteTestInsertion() {
+        POSITIVE_DELETE_TESTING.add("delete 1");
+        POSITIVE_DELETE_TESTING.add("delete 1,2,3,4,5");
+        POSITIVE_DELETE_TESTING.add("delete 1 to 3");
+        POSITIVE_DELETE_TESTING.add("delete #abcd");
+        POSITIVE_DELETE_TESTING.add("delete *");
+        POSITIVE_DELETE_TESTING.add("delete all");
+        POSITIVE_DELETE_TESTING.add("delete");
+        
+        NEGATIVE_DELETE_TESTING.add("delete abcd");
+    }
+
+    @Test
+    public void deleteCommandTest() {
+        for (String command : POSITIVE_DELETE_TESTING) {
+            assertTrue("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+        for (String command : NEGATIVE_DELETE_TESTING) {
+            assertFalse("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+    }
+
+    @Before
+    public void displayTestInsertion() {
+        POSITIVE_DISPLAY_TESTING.add("display");
+        POSITIVE_DISPLAY_TESTING.add("display #grocery");
+        POSITIVE_DISPLAY_TESTING.add("display keyword");
+        POSITIVE_DISPLAY_TESTING.add("display all");
+    }
+
+    @Test
+    public void displayCommandTest() {
+        for (String command : POSITIVE_DISPLAY_TESTING) {
+            assertTrue("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+        for (String command : NEGATIVE_DISPLAY_TESTING) {
+            assertFalse("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+    }
+
+    @Before
+    public void editTestInsertion() {
+        POSITIVE_EDIT_TESTING.add("edit 1 abcd");
+
+        NEGATIVE_EDIT_TESTING.add("edit");
+        NEGATIVE_EDIT_TESTING.add("edit 1");
+        NEGATIVE_EDIT_TESTING.add("edit abcd");
+    }
+
+    @Test
+    public void editCommandTest() {
+        for (String command : POSITIVE_EDIT_TESTING) {
+            assertTrue("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+        for (String command : NEGATIVE_EDIT_TESTING) {
+            assertFalse("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+    }
+
+    @Before
+    public void exitTestInsertion() {
+        POSITIVE_EXIT_TESTING.add("exit");
+
+        NEGATIVE_EXIT_TESTING.add("exit all");
+    }
+
+    @Test
+    public void exitCommandTest() {
+        for (String command : POSITIVE_EXIT_TESTING) {
+            assertTrue("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+        for (String command : NEGATIVE_EXIT_TESTING) {
+            assertFalse("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+    }
+
+    @Before
+    public void helpTestInsertion() {
+        POSITIVE_HELP_TESTING.add("help");
+
+        NEGATIVE_HELP_TESTING.add("help all");
+    }
+
+    @Test
+    public void helpCommandTest() {
+        for (String command : POSITIVE_HELP_TESTING) {
+            assertTrue("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+        for (String command : NEGATIVE_HELP_TESTING) {
+            assertFalse("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+    }
+
+    /* deprecated
+    @Before
+    public void searchTestInsertion() {
+        POSITIVE_SEARCH_TESTING.add("search homework");
+
+        NEGATIVE_SEARCH_TESTING.add("search");
+    }
+    
+    @Test
+    public void searchCommandTest() {
+        for (String command : POSITIVE_SEARCH_TESTING) {
+            assertTrue("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+        for (String command : NEGATIVE_SEARCH_TESTING) {
+            assertFalse("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+    }
+	*/
+    
+    @Before
+    public void undoTestInsertion() {
+        POSITIVE_UNDO_TESTING.add("undo");
+
+        NEGATIVE_UNDO_TESTING.add("undo all");
+    }
+
+    @Test
+    public void undoCommandTest() {
+        for (String command : POSITIVE_UNDO_TESTING) {
+            assertTrue("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+        for (String command : NEGATIVE_UNDO_TESTING) {
+            assertFalse("error at test case: " + command,
+                    Magic8Parser.isCommandValid(command));
+        }
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\test\fantasticfour\magiceight\Magic8ParserIsValidCommandTest.java
+
+
+
+
+

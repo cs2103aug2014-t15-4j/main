@@ -1,0 +1,902 @@
+//@author: a0113605u
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8Storage.java
+	 */
+
+class Magic8Storage implements Magic8StorageInterface {
+    private static final String STRING_EMPTY = "";
+    private static final String STRING_PARSED_EMPTY = "@empty";
+    private static final String STRING_PARSED_NULL = "@null";
+    private static final String FORMAT_DATE = "dd/MM/yyyy HH:mm:ss";
+    private static final int INDEX_ID = 0;
+    private static final int INDEX_DESC = 1;
+    private static final int INDEX_IS_DONE = 2;
+    private static final int INDEX_START_TIME = 3;
+    private static final int INDEX_END_TIME = 4;
+    private static final int INDEX_TAGS = 5;
+    private static final int NUM_FIELDS = 6;
+    private static final String MSG_INSUFFICIENT_ARGUMENTS = "Error insufficient arguments";
+    
+    private String fileName;
+    private File file;
+    private int id;
+    private TreeMap<Integer, Magic8Task> taskList;
+
+    public Magic8Storage(String fileName) throws IOException, ParseException {
+        this.fileName = fileName;
+        this.file = new File(this.fileName);
+        this.taskList = new TreeMap<Integer, Magic8Task>();
+
+        if (!this.file.exists()) {
+            this.file.createNewFile();
+            this.id = 1;
+        } else if (fileIsEmpty()){
+            this.id = 1;
+        } else {
+            this.readFromFile();
+        }
+    }
+    
+    private boolean fileIsEmpty() throws IOException {
+        boolean empty = false;
+        BufferedReader br = new BufferedReader(new FileReader(fileName));     
+        if (br.readLine() == null) {
+            empty = true;
+        }
+        br.close();
+        return empty;
+    }
+    
+    private void readFromFile() throws IOException, ParseException {
+        CSVReader csvr = new CSVReader(new BufferedReader(
+                new InputStreamReader(new FileInputStream(this.file))));
+
+        this.id = Integer.parseInt(csvr.readNext()[0]);
+        this.taskList = convertListToTreeMap(csvr.readAll());
+        csvr.close();
+    }
+
+    public void writeToFile(int id, Map<Integer, Magic8Task> taskList)
+            throws IOException {
+        this.id = id;
+        CSVWriter csvw = new CSVWriter(new BufferedWriter(new FileWriter(file)));
+        String[] firstLine = { Integer.toString(id) };
+        ArrayList<String[]> list = convertMapToArrayList(taskList);
+
+        csvw.writeNext(firstLine);
+        csvw.writeAll(list);
+        csvw.close();
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public TreeMap<Integer, Magic8Task> getTaskList() {
+        return this.taskList;
+    }
+
+    private TreeMap<Integer, Magic8Task> convertListToTreeMap(List<String[]> list)
+            throws IllegalArgumentException, ParseException {
+        TreeMap<Integer, Magic8Task> treeMap = new TreeMap<Integer, Magic8Task>();
+        for (String[] stringArray : list) {
+            treeMap.put(Integer.parseInt(stringArray[0]),
+                    stringArrayToMagic8Task(stringArray));
+        }
+        return treeMap;
+    }
+
+    private ArrayList<String[]> convertMapToArrayList(
+            Map<Integer, Magic8Task> map) {
+        ArrayList<String[]> list = new ArrayList<String[]>();
+        for (Map.Entry<Integer, Magic8Task> entry : map.entrySet()) {
+            list.add(magic8TaskToStringArray(entry.getValue()));
+        }
+        return list;
+    }
+    
+    public static String[] magic8TaskToStringArray(Magic8Task task) {
+        String[] stringArray = new String[NUM_FIELDS];
+        stringArray[INDEX_ID] = Integer.toString(task.getId());
+        stringArray[INDEX_DESC] = task.getDesc();
+        
+        stringArray[INDEX_IS_DONE] = Boolean.toString(task.isDone());
+        DateFormat df = new SimpleDateFormat(FORMAT_DATE);
+
+        if (task.getStartTime() == null) {
+            stringArray[INDEX_START_TIME] = STRING_PARSED_NULL;
+        } else {
+            stringArray[INDEX_START_TIME] = df.format(task.getStartTime().getTime());
+        }
+
+        if (task.getEndTime() == null) {
+            stringArray[INDEX_END_TIME] = STRING_PARSED_NULL;
+        } else {
+            stringArray[INDEX_END_TIME] = df.format(task.getEndTime().getTime());
+        }
+
+        if (task.getTags().size() == 0) {
+            stringArray[INDEX_TAGS] = STRING_PARSED_EMPTY;
+        } else {
+            stringArray[INDEX_TAGS] = STRING_EMPTY;
+            for (String tag : task.getTags()) {
+                stringArray[INDEX_TAGS] += " " + tag;
+            }
+            stringArray[INDEX_TAGS] = stringArray[INDEX_TAGS].trim();
+        }
+
+        return stringArray;
+    }
+    
+    public static Magic8Task stringArrayToMagic8Task(String[] stringArray)
+            throws IllegalArgumentException, ParseException {
+
+        DateFormat df = new SimpleDateFormat(FORMAT_DATE);
+        
+        if (stringArray.length >= NUM_FIELDS) {
+            int id = Integer.parseInt(stringArray[INDEX_ID]);
+            String desc = stringArray[INDEX_DESC];
+            boolean isDone = Boolean.parseBoolean(stringArray[INDEX_IS_DONE]);
+            Calendar startTime = null;
+            Calendar endTime = null;
+            HashSet<String> tags;
+
+            if (!stringArray[INDEX_START_TIME].equals(STRING_PARSED_NULL)) {
+                startTime = Calendar.getInstance();
+                startTime.setTime(df.parse(stringArray[INDEX_START_TIME]));
+            }
+
+            if (!stringArray[INDEX_END_TIME].equals(STRING_PARSED_NULL)) {
+                endTime = Calendar.getInstance();
+                endTime.setTime(df.parse(stringArray[INDEX_END_TIME]));
+            }
+
+            if (stringArray[INDEX_TAGS].equals(STRING_PARSED_NULL)) {
+                tags = null;
+            } else if (stringArray[INDEX_TAGS].equals(STRING_PARSED_EMPTY)) {
+                tags = new HashSet<String>();
+            } else {
+                tags = new HashSet<String>();
+                String[] tagStrings = stringArray[INDEX_TAGS].split("\\s+");
+                for (String tagString : tagStrings) {
+                    tags.add(tagString);
+                }
+            }
+
+            Magic8Task task = new Magic8Task(id, desc, startTime, endTime, tags);
+            return task;
+        } else {
+            throw new IllegalArgumentException(MSG_INSUFFICIENT_ARGUMENTS);
+        }
+    }
+
+}
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8Storage.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8StorageInterface.java
+	 */
+
+interface Magic8StorageInterface {
+    public void writeToFile(int id, Map<Integer, Magic8Task> taskList)
+            throws IOException;
+
+    public int getId();
+
+    public TreeMap<Integer, Magic8Task> getTaskList();
+    
+    
+
+}
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8StorageInterface.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\test\fantasticfour\magiceight\Magic8StorageTest.java
+	 */
+
+public class Magic8StorageTest {
+    private static final String EXPECTED_FILE_NAME = "expected";
+    private static final String TEST_FILE_NAME = "storageTestFile";
+    private static final String SUFFIX = "tmp";
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
+            "dd/MM/yyyy HH:mm:ss");
+    private static final String START_DATE = "01/01/2014 00:00:00";
+    private static final String END_DATE = "12/12/2014 00:00:00";
+    private static Calendar startCalender = new GregorianCalendar();
+    private static Calendar endCalender = new GregorianCalendar();
+
+    @Test
+    public void testMagic8Storage() {
+        try {
+            startCalender.setTime(DATE_FORMAT.parse("01/01/2014 00:00:00"));
+            endCalender.setTime(DATE_FORMAT.parse("12/12/2014 00:00:00"));
+        } catch (ParseException e) {
+            fail(e.getMessage());
+        }
+
+        // Test with valid parameters
+        try {
+            File testFile = new File(generateRandomString());
+            new Magic8Storage(testFile.getName());
+
+            testFile.delete();
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+
+        // Test with file that does not exist
+        try {
+            File testFile = new File(generateRandomString());
+            if (testFile.exists()) {
+                testFile.delete();
+            }
+            new Magic8Storage(testFile.getName());
+            testFile.delete();
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+
+        // Test with existing empty file
+        try {
+            File testFile = new File(generateRandomString());
+            if (testFile.exists()) {
+                testFile.delete();
+            }
+            testFile.createNewFile();
+            new Magic8Storage(testFile.getName());
+            testFile.delete();
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+
+        // Test with existing non-empty file
+        try {
+            File testFile = new File(generateRandomString());
+            if (testFile.exists()) {
+                testFile.delete();
+            }
+            testFile.createNewFile();
+            CSVWriter cw = new CSVWriter(new FileWriter(testFile));
+            String[] line = new String[1];
+            line[0] = "4";
+
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "1";
+            line[1] = "Do Software Engineering homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2103T";
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "2";
+            line[1] = "Do Data Structures and Algorithms homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2010";
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "3";
+            line[1] = "Do Biology homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework LSM1302";
+            cw.writeNext(line);
+            cw.close();
+
+            Magic8Storage testStorage = new Magic8Storage(testFile.getName());
+            TreeMap<Integer, Magic8Task> testTaskList = testStorage
+                    .getTaskList();
+
+            assertTrue(testTaskList.size() == 3);
+
+            HashSet<String> testTags = new HashSet<String>();
+            testTags.add("NUS");
+            testTags.add("Homework");
+            testTags.add("CS2103T");
+            Magic8Task testMagic8Task = new Magic8Task(1,
+                    "Do Software Engineering homework", startCalender,
+                    endCalender, testTags);
+
+            assertTrue(testTaskList.get(1).equals(testMagic8Task));
+
+            testTags = new HashSet<String>();
+            testTags.add("NUS");
+            testTags.add("Homework");
+            testTags.add("CS2010");
+            testMagic8Task = new Magic8Task(2,
+                    "Do Data Structures and Algorithms homework",
+                    startCalender, endCalender, testTags);
+
+            assertTrue(testTaskList.get(2).equals(testMagic8Task));
+
+            testTags = new HashSet<String>();
+            testTags.add("NUS");
+            testTags.add("Homework");
+            testTags.add("LSM1302");
+            testMagic8Task = new Magic8Task(3, "Do Biology homework",
+                    startCalender, endCalender, testTags);
+
+            assertTrue(testTaskList.get(3).equals(testMagic8Task));
+            testFile.delete();
+        } catch (AssertionError | IOException | ParseException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testWriteToFile() {
+        CSVParser cp = new CSVParser();
+
+        try {
+            startCalender.setTime(DATE_FORMAT.parse("01/01/2014 00:00:00"));
+            endCalender.setTime(DATE_FORMAT.parse("12/12/2014 00:00:00"));
+        } catch (ParseException e) {
+            fail(e.getMessage());
+        }
+
+        // Test with file that does not exist
+        try {
+            File testFile = new File(generateRandomString());
+
+            Magic8Storage testStorage = new Magic8Storage(testFile.getName());
+
+            TreeMap<Integer, Magic8Task> testTaskList = new TreeMap<Integer, Magic8Task>();
+
+            HashSet<String> testTags = new HashSet<String>();
+            testTags.add("NUS");
+            testTags.add("Homework");
+            testTags.add("CS2103T");
+            Magic8Task testMagic8Task = new Magic8Task(1,
+                    "Do Software Engineering homework", startCalender,
+                    endCalender, testTags);
+
+            testTaskList.put(1, testMagic8Task);
+
+            testTags = new HashSet<String>();
+            testTags.add("NUS");
+            testTags.add("Homework");
+            testTags.add("CS2010");
+            testMagic8Task = new Magic8Task(2,
+                    "Do Data Structures and Algorithms homework",
+                    startCalender, endCalender, testTags);
+
+            testTaskList.put(2, testMagic8Task);
+
+            testTags = new HashSet<String>();
+            testTags.add("NUS");
+            testTags.add("Homework");
+            testTags.add("LSM1302");
+            testMagic8Task = new Magic8Task(3, "Do Biology homework",
+                    startCalender, endCalender, testTags);
+
+            testTaskList.put(3, testMagic8Task);
+
+            testStorage.writeToFile(4, testTaskList);
+
+            File expected = new File(generateRandomString());
+
+            CSVWriter cw = new CSVWriter(new FileWriter(expected));
+            String[] line = new String[1];
+            line[0] = "4";
+
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "1";
+            line[1] = "Do Software Engineering homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2103T";
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "2";
+            line[1] = "Do Data Structures and Algorithms homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2010";
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "3";
+            line[1] = "Do Biology homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework LSM1302";
+            cw.writeNext(line);
+            cw.close();
+
+            BufferedReader brExpected = new BufferedReader(new FileReader(
+                    expected));
+
+            BufferedReader brActual = new BufferedReader(new FileReader(
+                    testFile));
+            String lineExpected;
+            String lineActual;
+            while ((lineExpected = brExpected.readLine()) != null) {
+                lineActual = brActual.readLine();
+                if (lineActual == null) {
+                    fail("Actual file differs from expected file");
+                } else {
+                    if (cp.parseLine(lineExpected).length == 1) {
+
+                        assertTrue(lineExpected.equals(lineActual));
+                    } else {
+                        Magic8Task actualTask = Magic8Storage
+                                .stringArrayToMagic8Task(cp
+                                        .parseLine(lineActual));
+                        Magic8Task expectedTask = Magic8Storage
+                                .stringArrayToMagic8Task(cp
+                                        .parseLine(lineExpected));
+                        assertTrue(expectedTask.equals(actualTask));
+                    }
+                }
+            }
+            brExpected.close();
+            brActual.close();
+
+            testFile.delete();
+            expected.delete();
+
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+
+        // Test with existing empty file
+        try {
+            File testFile = new File(generateRandomString());
+
+            Magic8Storage testStorage = new Magic8Storage(testFile.getName());
+
+            TreeMap<Integer, Magic8Task> testTaskList = new TreeMap<Integer, Magic8Task>();
+
+            HashSet<String> testTags = new HashSet<String>();
+            testTags.add("NUS");
+            testTags.add("Homework");
+            testTags.add("CS2103T");
+            Magic8Task testMagic8Task = new Magic8Task(1,
+                    "Do Software Engineering homework", startCalender,
+                    endCalender, testTags);
+
+            testTaskList.put(1, testMagic8Task);
+
+            testTags = new HashSet<String>();
+            testTags.add("NUS");
+            testTags.add("Homework");
+            testTags.add("CS2010");
+            testMagic8Task = new Magic8Task(2,
+                    "Do Data Structures and Algorithms homework",
+                    startCalender, endCalender, testTags);
+
+            testTaskList.put(2, testMagic8Task);
+
+            testTags = new HashSet<String>();
+            testTags.add("NUS");
+            testTags.add("Homework");
+            testTags.add("LSM1302");
+            testMagic8Task = new Magic8Task(3, "Do Biology homework",
+                    startCalender, endCalender, testTags);
+
+            testTaskList.put(3, testMagic8Task);
+
+            testStorage.writeToFile(4, testTaskList);
+
+            File expected = new File(generateRandomString());
+
+            CSVWriter cw = new CSVWriter(new FileWriter(expected));
+            String[] line = new String[1];
+            line[0] = "4";
+
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "1";
+            line[1] = "Do Software Engineering homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2103T";
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "2";
+            line[1] = "Do Data Structures and Algorithms homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2010";
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "3";
+            line[1] = "Do Biology homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework LSM1302";
+            cw.writeNext(line);
+            cw.close();
+
+            BufferedReader brExpected = new BufferedReader(new FileReader(
+                    expected));
+
+            BufferedReader brActual = new BufferedReader(new FileReader(
+                    testFile));
+            String lineExpected;
+            String lineActual;
+            while ((lineExpected = brExpected.readLine()) != null) {
+                lineActual = brActual.readLine();
+                if (lineActual == null) {
+                    fail("Actual file differs from expected file");
+                } else {
+                    if (cp.parseLine(lineExpected).length == 1) {
+                        assertTrue(lineExpected.equals(lineActual));
+                    } else {
+                        Magic8Task actualTask = Magic8Storage
+                                .stringArrayToMagic8Task(cp
+                                        .parseLine(lineActual));
+                        Magic8Task expectedTask = Magic8Storage
+                                .stringArrayToMagic8Task(cp
+                                        .parseLine(lineExpected));
+                        assertTrue(expectedTask.equals(actualTask));
+                    }
+                }
+            }
+            brExpected.close();
+            brActual.close();
+
+            testFile.delete();
+            expected.delete();
+
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+
+        // Test with existing non-empty file
+        try {
+            File testFile = new File(generateRandomString());
+
+            CSVWriter cw = new CSVWriter(new FileWriter(testFile));
+            String[] line = new String[1];
+            line[0] = "4";
+
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "1";
+            line[1] = "Do Software Engineering homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2103T";
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "2";
+            line[1] = "Do Data Structures and Algorithms homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2010";
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "3";
+            line[1] = "Do Biology homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework LSM1302";
+            cw.writeNext(line);
+            cw.close();
+            Magic8Storage testStorage = new Magic8Storage(testFile.getName());
+
+            TreeMap<Integer, Magic8Task> testTaskList = testStorage
+                    .getTaskList();
+
+            HashSet<String> testTags = new HashSet<String>();
+            testTags.add("NUS");
+            testTags.add("Homework");
+            testTags.add("CS2105");
+            Magic8Task testMagic8Task = new Magic8Task(4,
+                    "Do Computer Networks homework", startCalender,
+                    endCalender, testTags);
+
+            testTaskList.put(4, testMagic8Task);
+
+            testTags = new HashSet<String>();
+            testTags.add("NUS");
+            testTags.add("Homework");
+            testTags.add("CS2101");
+            testMagic8Task = new Magic8Task(5,
+                    "Do Effective Communication homework", startCalender,
+                    endCalender, testTags);
+
+            testTaskList.put(5, testMagic8Task);
+
+            testStorage.writeToFile(6, testTaskList);
+
+            File expected = new File(generateRandomString());
+
+            cw = new CSVWriter(new FileWriter(expected));
+            line = new String[1];
+            line[0] = "6";
+
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "1";
+            line[1] = "Do Software Engineering homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2103T";
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "2";
+            line[1] = "Do Data Structures and Algorithms homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2010";
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "3";
+            line[1] = "Do Biology homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework LSM1302";
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "4";
+            line[1] = "Do Computer Networks homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2105";
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "5";
+            line[1] = "Do Effective Communication homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2101";
+            cw.writeNext(line);
+            cw.close();
+
+            BufferedReader brExpected = new BufferedReader(new FileReader(
+                    expected));
+
+            BufferedReader brActual = new BufferedReader(new FileReader(
+                    testFile));
+            String lineExpected;
+            String lineActual;
+            while ((lineExpected = brExpected.readLine()) != null) {
+                lineActual = brActual.readLine();
+                if (lineActual == null) {
+                    fail("Actual file differs from expected file");
+                } else {
+                    if (cp.parseLine(lineExpected).length == 1) {
+                        assertTrue(lineExpected.equals(lineActual));
+                    } else {
+                        Magic8Task actualTask = Magic8Storage
+                                .stringArrayToMagic8Task(cp
+                                        .parseLine(lineActual));
+                        Magic8Task expectedTask = Magic8Storage
+                                .stringArrayToMagic8Task(cp
+                                        .parseLine(lineExpected));
+                        assertTrue(expectedTask.equals(actualTask));
+                    }
+                }
+            }
+            brExpected.close();
+            brActual.close();
+
+            testFile.delete();
+            expected.delete();
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testGetId() {
+        // test get id for empty file
+        try {
+            File testFile = new File(generateRandomString());
+            Magic8Storage testStorage = new Magic8Storage(testFile.getName());
+            assertEquals(1, testStorage.getId());
+            testFile.delete();
+        } catch (IOException | ParseException e) {
+            fail(e.getMessage());
+        }
+
+        // test get id for non-empty file
+        try {
+            File testFile = new File(generateRandomString());
+            if (testFile.exists()) {
+                testFile.delete();
+            }
+            testFile.createNewFile();
+            CSVWriter cw = new CSVWriter(new FileWriter(testFile));
+            String[] line = new String[1];
+            line[0] = "4";
+
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "1";
+            line[1] = "Do Software Engineering homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2103T";
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "2";
+            line[1] = "Do Data Structures and Algorithms homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2010";
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "3";
+            line[1] = "Do Biology homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework LSM1302";
+            cw.writeNext(line);
+            cw.close();
+            Magic8Storage testStorage = new Magic8Storage(testFile.getName());
+            assertEquals(4, testStorage.getId());
+            testFile.delete();
+        } catch (IOException | ParseException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testGetTaskList() {
+
+        // test for file that does not exist
+        try {
+            File testFile = new File(generateRandomString());
+            Magic8Storage testStorage = new Magic8Storage(testFile.getName());
+            assertTrue(testStorage.getTaskList().isEmpty());
+            testFile.delete();
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+
+        // test for empty file
+        try {
+            File testFile = new File(generateRandomString());
+            if (testFile.exists()) {
+                testFile.delete();
+            }
+            testFile.createNewFile();
+            Magic8Storage testStorage = new Magic8Storage(testFile.getName());
+            assertTrue(testStorage.getTaskList().isEmpty());
+            testFile.delete();
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+
+        // test for non-empty file
+        try {
+            File testFile = new File(generateRandomString());
+            if (testFile.exists()) {
+                testFile.delete();
+            }
+            testFile.createNewFile();
+            CSVWriter cw = new CSVWriter(new FileWriter(testFile));
+            String[] line = new String[1];
+            line[0] = "4";
+
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "1";
+            line[1] = "Do Software Engineering homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2103T";
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "2";
+            line[1] = "Do Data Structures and Algorithms homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework CS2010";
+            cw.writeNext(line);
+            line = new String[6];
+            line[0] = "3";
+            line[1] = "Do Biology homework";
+            line[2] = "false";
+            line[3] = START_DATE;
+            line[4] = END_DATE;
+            line[5] = "NUS Homework LSM1302";
+            cw.writeNext(line);
+            cw.close();
+            
+            TreeMap<Integer, Magic8Task> expectedTaskList = new TreeMap<Integer, Magic8Task>();
+
+            HashSet<String> testTags = new HashSet<String>();
+            testTags.add("NUS");
+            testTags.add("Homework");
+            testTags.add("CS2103T");
+            Magic8Task testMagic8Task = new Magic8Task(1,
+                    "Do Software Engineering homework", startCalender,
+                    endCalender, testTags);
+
+            expectedTaskList.put(1, testMagic8Task);
+
+            testTags = new HashSet<String>();
+            testTags.add("NUS");
+            testTags.add("Homework");
+            testTags.add("CS2010");
+            testMagic8Task = new Magic8Task(2,
+                    "Do Data Structures and Algorithms homework",
+                    startCalender, endCalender, testTags);
+
+            expectedTaskList.put(2, testMagic8Task);
+
+            testTags = new HashSet<String>();
+            testTags.add("NUS");
+            testTags.add("Homework");
+            testTags.add("LSM1302");
+            testMagic8Task = new Magic8Task(3, "Do Biology homework",
+                    startCalender, endCalender, testTags);
+
+            expectedTaskList.put(3, testMagic8Task);
+
+            Magic8Storage testStorage = new Magic8Storage(testFile.getName());
+            TreeMap<Integer, Magic8Task> actualTaskList = testStorage
+                    .getTaskList();
+            assertEquals(expectedTaskList.size(), actualTaskList.size());
+            for (Map.Entry<Integer, Magic8Task> entry : expectedTaskList
+                    .entrySet()) {
+                assertEquals(entry.getValue(),
+                        actualTaskList.get(entry.getKey()));
+            }
+
+            testFile.delete();
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String generateRandomString() {
+        int leftLimit = 97; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 10;
+        StringBuilder buffer = new StringBuilder(targetStringLength);
+        for (int i = 0; i < targetStringLength; i++) {
+            int randomLimitedInt = leftLimit
+                    + (int) (new Random().nextFloat() * (rightLimit - leftLimit));
+            buffer.append((char) randomLimitedInt);
+        }
+        String generatedString = buffer.toString();
+
+        return generatedString;
+    }
+}
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\test\fantasticfour\magiceight\Magic8StorageTest.java
+
+
+
+
+

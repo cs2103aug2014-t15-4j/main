@@ -1,0 +1,241 @@
+//@author: a0113605u-generated
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8GUI.java
+	 */
+
+    private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+
+        splitPaneMain = new javax.swing.JSplitPane();
+        leftPanel = new javax.swing.JPanel();
+        tablePanel = new javax.swing.JPanel();
+        tableScrollPane = new javax.swing.JScrollPane();
+        table = new javax.swing.JTable()
+        {
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public boolean getScrollableTracksViewportWidth()
+            {
+                return getPreferredSize().width < getParent().getWidth();
+            }
+        }
+        ;
+        commandPanel = new javax.swing.JPanel();
+        commandField = new javax.swing.JTextField();
+        rightPanel = new javax.swing.JPanel();
+        splitPaneSub = new javax.swing.JSplitPane();
+        notificationsPanel = new javax.swing.JPanel();
+        notificationsScrollPane = new javax.swing.JScrollPane();
+        notificationsField = new javax.swing.JTextArea();
+        outputPanel = new javax.swing.JPanel();
+        outputScrollPane = new javax.swing.JScrollPane();
+        outputField = new javax.swing.JTextArea();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle(NAME_TITLE);
+        setPreferredSize(new java.awt.Dimension(1000, 700));
+
+        splitPaneMain.setBackground(new java.awt.Color(255, 255, 255));
+        splitPaneMain.setDividerLocation(700);
+        splitPaneMain.setResizeWeight(0.8);
+
+        leftPanel.setBackground(new java.awt.Color(255, 255, 255));
+        leftPanel.setLayout(new java.awt.GridBagLayout());
+
+        tablePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tasks", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 18))); // NOI18N
+        tablePanel.setLayout(new java.awt.BorderLayout());
+        
+        model = new javax.swing.table.DefaultTableModel(
+                new Object [][] {
+
+                },
+                new String [] {
+                    "#", "Description", "Start", "End", "Tags"
+                }
+            ) {
+                /**
+                 * 
+                 */
+                private static final long serialVersionUID = 1L;
+                
+                boolean[] canEdit = new boolean [] {
+                    false, false, false, true, false
+                };
+
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit [columnIndex];
+                }
+            };
+        table.setModel(model);
+        table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        table.setFocusable(false);
+        table.setRowHeight(50);
+        table.getTableHeader().setReorderingAllowed(false);
+        tableScrollPane.setViewportView(table);
+        if (table.getColumnModel().getColumnCount() > 0) {
+            table.getColumnModel().getColumn(0).setPreferredWidth(50);
+            table.getColumnModel().getColumn(1).setPreferredWidth(300);
+            table.getColumnModel().getColumn(2).setPreferredWidth(100);
+            table.getColumnModel().getColumn(3).setPreferredWidth(100);
+            table.getColumnModel().getColumn(4).setPreferredWidth(100);
+        }
+
+        tablePanel.add(tableScrollPane, java.awt.BorderLayout.CENTER);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.9;
+        leftPanel.add(tablePanel, gridBagConstraints);
+
+        commandPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Command", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 18))); // NOI18N
+        commandPanel.setLayout(new java.awt.BorderLayout());
+
+        commandField.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
+        commandPanel.add(commandField, java.awt.BorderLayout.CENTER);
+        
+        keywords.add("add"); //Add function
+		keywords.add("display");//Display function
+		keywords.add("delete");//Delete function
+		keywords.add("edit");//Update function
+		keywords.add("undo");//Undo function
+		keywords.add("redo");//Re do function
+		keywords.add("search");//Search function
+		keywords.add("by");//'by' deadline 
+		keywords.add("exit"); //Exit function
+		keywords.add("help");
+		keywords.add("meeting");
+		keywords.add("finish");
+		keywords.add("complete");
+		keywords.add("homework");
+		keywords.add(".txt");
+		keywords.add("done");
+
+		// Without this, cursor always leaves text field
+		commandField.setFocusTraversalKeysEnabled(false);
+		AutoComplete auto = new AutoComplete();
+		AutoComplete.Autocomplete autoComplete = auto.new Autocomplete(commandField, keywords);
+		
+		//To prevent autoscrolling
+		DefaultCaret caret1 = (DefaultCaret) notificationsField.getCaret();
+		caret1.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+
+		commandField.getDocument().addDocumentListener(autoComplete);
+
+		// Maps the tab key to the commit action, which finishes the autocomplete
+		// when given a suggestion
+		commandField.getInputMap().put(KeyStroke.getKeyStroke("TAB"), COMMIT_ACTION);
+		commandField.getActionMap().put(COMMIT_ACTION, autoComplete.new CommitAction());
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.1;
+        leftPanel.add(commandPanel, gridBagConstraints);
+
+        splitPaneMain.setLeftComponent(leftPanel);
+
+        rightPanel.setLayout(new java.awt.BorderLayout());
+
+        splitPaneSub.setDividerLocation(330);
+        splitPaneSub.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        splitPaneSub.setResizeWeight(0.5);
+
+        notificationsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Notifications", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 18))); // NOI18N
+        notificationsPanel.setLayout(new java.awt.BorderLayout());
+
+        notificationsField.setEditable(false);
+        notificationsField.setColumns(20);
+        notificationsField.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        notificationsField.setRows(5);
+        notificationsScrollPane.setViewportView(notificationsField);
+
+        notificationsPanel.add(notificationsScrollPane, java.awt.BorderLayout.CENTER);
+
+        splitPaneSub.setTopComponent(notificationsPanel);
+
+        outputPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Output", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 18))); // NOI18N
+        outputPanel.setLayout(new java.awt.BorderLayout());
+
+        outputField.setEditable(false);
+        outputField.setColumns(20);
+        outputField.setFont(new java.awt.Font("Monospaced", 0, 14));
+        outputField.setRows(5);
+        outputField.setLineWrap(true);
+        outputField.setWrapStyleWord(true);
+        outputField.setText(MESSAGE_WELCOME);
+        outputScrollPane.setViewportView(outputField);
+
+        outputPanel.add(outputScrollPane, java.awt.BorderLayout.CENTER);
+
+        splitPaneSub.setRightComponent(outputPanel);
+
+        rightPanel.add(splitPaneSub, java.awt.BorderLayout.CENTER);
+
+        splitPaneMain.setRightComponent(rightPanel);
+
+        getContentPane().add(splitPaneMain, java.awt.BorderLayout.CENTER);
+
+        pack();
+//        setFrameIcon();
+        launch();
+    }                        
+/*
+    void setFrameIcon(){
+    	ImageIcon icon = new ImageIcon(getClass().getResource("/Magic8Logo.png"));
+    }
+  */  
+
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8GUI.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8GUI.java
+	 */
+
+    public static void main(String args[]) throws IOException, Exception {
+
+        try {
+//       	magic8GUIInit();
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Magic8GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Magic8GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Magic8GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Magic8GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Magic8GUI().setVisible(true);
+            }
+        });
+    }
+}
+	// End of segment: C:\Users\kwa\git\main\Magic8\src\fantasticfour\magiceight\Magic8GUI.java
+
+
+
+
+
