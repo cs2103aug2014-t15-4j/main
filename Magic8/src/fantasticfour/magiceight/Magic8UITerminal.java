@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 
+//@author A0115693B-unused
+//Switched to Magic8GUI
 public class Magic8UITerminal {
     
     private static String cmd, filename;

@@ -10,6 +10,7 @@ import fantasticfour.magiceight.Magic8Status;
 import fantasticfour.magiceight.Magic8Task;
 import fantasticfour.magiceight.Magic8TaskList;
 
+//@author A0080527H
 public class DisplayCommand extends Command {
         
     public DisplayCommand(Magic8CommandObject obj, Magic8TaskList tm) {

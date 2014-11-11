@@ -18,6 +18,7 @@ import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultCaret;
 
+
 public class Magic8GUI extends javax.swing.JFrame {
     /**
 	 * 
@@ -54,13 +55,10 @@ public class Magic8GUI extends javax.swing.JFrame {
             + "type 'help'  or '-h' and press ENTER.\n\nPlease "
             + "enter the specified file name to continue.";
     
-    /**
-     * Creates new form Magic8UI
-     */
     public Magic8GUI() {
         initComponents();
     }
-    
+  //@author A0115693B 
     public void launch() {
         commandField.addActionListener(new ActionListener(){
             @Override
@@ -98,7 +96,7 @@ public class Magic8GUI extends javax.swing.JFrame {
             }
         });
     }
-    
+  //@author A0115693B 
     public void updateTable() {
         if (model.getRowCount() > 0) {
             for (int i = model.getRowCount() - 1; i > -1; i--) {
@@ -138,7 +136,7 @@ public class Magic8GUI extends javax.swing.JFrame {
             model.addRow(new Object[]{id, desc, startTime, endTime, tags});
         }
     }
-  
+  //@author A0115693B 
     private String help() {
     return 
     	        "                                              Help for Magic 8 Software:\n\n"
@@ -170,7 +168,8 @@ public class Magic8GUI extends javax.swing.JFrame {
     	        + "clear\n\n"
     	        + "Press [ESC] key to exit this help sheet";
     }
-
+    
+    //@author A0113605U-generated
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
@@ -360,11 +359,8 @@ public class Magic8GUI extends javax.swing.JFrame {
     	ImageIcon icon = new ImageIcon(getClass().getResource("/Magic8Logo.png"));
     }
   */  
-    /**
-     * @param args the command line arguments
-     * @throws Exception 
-     * @throws IOException 
-     */
+
+    //@author A0113605U-generated
     public static void main(String args[]) throws IOException, Exception {
 
         try {
@@ -376,13 +372,13 @@ public class Magic8GUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Magic8UI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Magic8GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Magic8UI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Magic8GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Magic8UI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Magic8GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Magic8UI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Magic8GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
         java.awt.EventQueue.invokeLater(new Runnable() {

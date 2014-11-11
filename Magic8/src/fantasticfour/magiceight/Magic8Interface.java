@@ -1,5 +1,6 @@
 package fantasticfour.magiceight;
 
+//@author A0080527H
 public interface Magic8Interface {
     Magic8Task addTask(Magic8Task task);
 

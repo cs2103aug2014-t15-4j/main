@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import fantasticfour.magiceight.parser.Magic8Parser;
 
+//@author A0080527H
 public class Magic8ParserIsValidCommandTest {
 
     // List of testing for add function

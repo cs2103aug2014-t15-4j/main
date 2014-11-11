@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import fantasticfour.magiceight.Magic8CommandObject;
 import fantasticfour.magiceight.Magic8Status;
 
+//@author A0080527H
 public class Magic8Parser {
     private enum Command_t {
         add,

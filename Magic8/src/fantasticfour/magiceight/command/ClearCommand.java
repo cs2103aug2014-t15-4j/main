@@ -5,6 +5,7 @@ import java.io.IOException;
 import fantasticfour.magiceight.Magic8CommandObject;
 import fantasticfour.magiceight.Magic8TaskList;
 
+//@author A0080527H
 public class ClearCommand extends Command {
         
     public ClearCommand(Magic8CommandObject obj, Magic8TaskList tm) {

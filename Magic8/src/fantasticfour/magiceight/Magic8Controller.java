@@ -19,6 +19,7 @@ import fantasticfour.magiceight.command.SearchCommand;
 import fantasticfour.magiceight.command.UndoCommand;
 import fantasticfour.magiceight.parser.Magic8Parser;
 
+//@author A0080527H
 public class Magic8Controller {
     private ICommand command;
     private static final String ADD_FUNCTION = "add";

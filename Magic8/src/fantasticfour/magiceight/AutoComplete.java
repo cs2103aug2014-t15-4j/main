@@ -12,7 +12,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
 //@author A0115693B
-
 public class AutoComplete {
 	private static enum Status { 
 		INSERT,

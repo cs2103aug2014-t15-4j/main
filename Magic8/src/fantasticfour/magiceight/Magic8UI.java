@@ -1,6 +1,7 @@
 package fantasticfour.magiceight;
 
-//@author A0115693B
+//@author A0115693B-unused
+//Switched to Magic8GUI
 import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;

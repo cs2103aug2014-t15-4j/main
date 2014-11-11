@@ -1,5 +1,6 @@
 package fantasticfour.magiceight;
 
+//@author A0080527H
 public enum Magic8Status {
 	INPUT_MISMATCH,
 	

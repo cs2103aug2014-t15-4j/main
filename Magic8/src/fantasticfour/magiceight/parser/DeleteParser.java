@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import fantasticfour.magiceight.Magic8CommandObject;
 
+//@author A0080527H
 public class DeleteParser implements IParser {
 	
 	public ArrayList<Token> tokenize(String input) {

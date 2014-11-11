@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import fantasticfour.magiceight.Magic8CommandObject;
 
+//@author A0080527H
 public class DisplayParser implements IParser {
 	public ArrayList<Token> tokenize(String input) {
 		boolean first = true;

@@ -3,6 +3,7 @@ package fantasticfour.magiceight;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+//@author A0080527H
 public class Magic8CommandObject {
     
     String function;

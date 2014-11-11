@@ -10,6 +10,8 @@ import org.junit.Test;
 
 import fantasticfour.magiceight.parser.Magic8Parser;
 
+//@author A0080527H-unused
+//Parser implementation wes revamped and broke this test
 public class Magic8ParserParseCommandTest {
     private final static String FUNCTION_MISMATCH = "function is not matching";
     private final static String TASK_DESC_MISMATCH = "task description is not matching";

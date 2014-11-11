@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+//@author A0080527H
 public class DateUtil {
     private final static SimpleDateFormat[] DATE_FORMAT = {
         new SimpleDateFormat("d/M/y"),

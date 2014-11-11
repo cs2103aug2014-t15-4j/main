@@ -7,6 +7,7 @@ import fantasticfour.magiceight.Magic8Status;
 import fantasticfour.magiceight.Magic8Task;
 import fantasticfour.magiceight.Magic8TaskList;
 
+//@author A0080527H
 public class DoneCommand extends Command {
         
     public DoneCommand(Magic8CommandObject obj, Magic8TaskList tm) {

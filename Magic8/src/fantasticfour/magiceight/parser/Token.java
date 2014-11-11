@@ -1,5 +1,6 @@
 package fantasticfour.magiceight.parser;
 
+//@author A0080527H
 public class Token {
 	public enum Type {
 		function,
